@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control de Abastecimiento — Flota</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root{
+    --navy:#0B2E63; --navy-2:#0A2450; --azul:#0093D0; --azul-dk:#0077AD;
+    --gold:#C9A227; --gold-dk:#A8871B; --warn:#E8880C;
+    --graphite:#0B2E63; --graphite-2:#0A2450; --body:#EEF1F5; --surface:#FFFFFF;
+    --line:#D8DEE7; --ink:#141A22; --ink-2:#5A6474;
+    --amber:#C9A227; --amber-dk:#A8871B; --green:#1F9D57; --green-dk:#177A43;
+    --wa:#25D366; --wa-dk:#1EB456; --red:#D23F3F; --blue:#1B4FA0;
+    --radius:12px; --shadow:0 1px 2px rgba(11,46,99,.06), 0 10px 26px rgba(11,46,99,.08);
+  }
+  *{box-sizing:border-box} html,body{margin:0;padding:0}
+  body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--body);
+    color:var(--ink);-webkit-font-smoothing:antialiased;line-height:1.45}
+  .num{font-variant-numeric:tabular-nums}
+  button{font-family:inherit;cursor:pointer} input,select{font-family:inherit}
+  .hidden{display:none !important}
+
+  /* LOGIN */
+  #login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+    background:radial-gradient(1200px 520px at 50% -10%, #12489A 0%, var(--navy) 55%)}
+  .login-card{width:100%;max-width:380px;background:var(--surface);border-radius:16px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);overflow:hidden}
+  .login-top{background:var(--graphite-2);padding:28px 28px 22px;color:#fff;border-bottom:3px solid var(--gold)}
+  .gauge{width:46px;height:46px;border-radius:50%;border:3px solid var(--amber);
+    display:grid;place-items:center;position:relative;margin-bottom:14px}
+  .gauge::before{content:"";position:absolute;width:2px;height:15px;background:var(--amber);
+    transform-origin:bottom center;transform:rotate(38deg) translateY(-2px);border-radius:2px}
+  .login-top h1{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;
+    line-height:1.05;margin:0;letter-spacing:.02em}
+  .login-top p{margin:6px 0 0;color:#9AA6B2;font-size:13px}
+  .login-body{padding:24px 28px 26px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+  .field input,.field select{width:100%;padding:12px 13px;border:1.5px solid var(--line);border-radius:10px;
+    font-size:15px;background:#fff;color:var(--ink);transition:border-color .15s, box-shadow .15s}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--azul);box-shadow:0 0 0 3px rgba(0,147,208,.20)}
+  .btn{width:100%;border:none;border-radius:11px;padding:13px 16px;font-size:15px;font-weight:700;letter-spacing:.02em;color:#fff;
+    background:linear-gradient(135deg,var(--azul) 0%,var(--navy) 100%);
+    box-shadow:0 6px 16px rgba(11,46,99,.26);transition:transform .12s ease, box-shadow .2s ease, filter .2s ease}
+  .btn:hover{filter:brightness(1.07);transform:translateY(-1px);box-shadow:0 12px 24px rgba(11,46,99,.32)}
+  .btn:active{transform:translateY(0);box-shadow:0 5px 12px rgba(11,46,99,.24)}
+  .btn.green{background:linear-gradient(135deg,#28B769 0%,var(--green-dk) 100%);box-shadow:0 6px 16px rgba(23,122,67,.28)}
+  .btn.wa{background:linear-gradient(135deg,#2AE274 0%,var(--wa-dk) 100%);box-shadow:0 6px 16px rgba(37,211,102,.30)}
+  .btn.gold{background:linear-gradient(135deg,#E4BE3A 0%,var(--gold-dk) 100%);color:#3a2e07;box-shadow:0 6px 16px rgba(201,162,39,.32)}
+  .btn.dl-btn{background:linear-gradient(135deg,#28B769 0%,var(--green-dk) 100%)}
+  .btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line);box-shadow:none}
+  .btn.ghost:hover{background:#f3f6fa;border-color:#c3ccd8;filter:none;transform:none}
+  .btn.sm{width:auto;padding:10px 15px;font-size:13.5px;border-radius:10px}
+  .login-hint{margin-top:16px;font-size:12.5px;color:var(--ink-2);background:#F6F7F9;
+    border:1px solid var(--line);border-radius:10px;padding:11px 12px}
+  .login-hint b{color:var(--ink)}
+  .err{color:var(--red);font-size:13px;margin-top:4px;min-height:18px}
+
+  /* CHROME */
+  header.top{background:var(--graphite);color:#fff;padding:12px 18px;display:flex;align-items:center;
+    justify-content:space-between;gap:12px;position:sticky;top:0;z-index:20;border-bottom:3px solid var(--gold)}
+  header.top .brand{display:flex;align-items:center;gap:10px;min-width:0}
+  header.top .brand .mark{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--amber);flex:none;position:relative}
+  header.top .brand .mark::before{content:"";position:absolute;left:50%;top:50%;width:2px;height:9px;background:var(--amber);
+    transform:translate(-50%,-90%) rotate(38deg);transform-origin:bottom center;border-radius:2px}
+  header.top .brand h2{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:19px;margin:0;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.02em}
+  header.top .who{display:flex;align-items:center;gap:12px;font-size:13px;color:#B9C2CC}
+  header.top .who .role{background:var(--graphite-2);padding:4px 10px;border-radius:20px;font-weight:600;color:#fff}
+  header.top .who .role.admin{color:var(--amber)}
+  .logout{background:transparent;border:1px solid #37414B;color:#cdd5dd;border-radius:8px;padding:6px 11px;font-size:12.5px}
+  .logout:hover{background:var(--graphite-2)}
+
+  main{max-width:1040px;margin:0 auto;padding:20px 16px 60px}
+  .section-h{margin:6px 2px 14px}
+  .section-h h3{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:23px;margin:0;letter-spacing:.01em;color:var(--navy)}
+  .section-h p{margin:3px 0 0;color:var(--ink-2);font-size:13.5px}
+
+  /* VEHICLE CARDS */
+  .veh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .veh-card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);padding:16px;
+    box-shadow:var(--shadow);text-align:left;display:flex;flex-direction:column;gap:12px;transition:border-color .15s}
+  .veh-card:hover{border-color:#C3C9D0}
+  .plate{background:#fff;border:2px solid #101418;border-radius:7px;overflow:hidden;width:150px;max-width:100%;
+    box-shadow:0 1px 0 rgba(0,0,0,.15)}
+  .plate .hn{background:var(--blue);color:#fff;font-size:8px;font-weight:700;text-align:center;padding:2px 0;letter-spacing:.28em}
+  .plate .no{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:27px;text-align:center;padding:3px 6px 5px;
+    color:#101418;letter-spacing:.06em}
+  .veh-meta .mk{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:20px;line-height:1}
+  .veh-meta .sub{color:var(--ink-2);font-size:13px;margin-top:3px}
+  .veh-spec{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{font-size:11.5px;background:#F1F3F5;border:1px solid var(--line);color:var(--ink-2);padding:3px 8px;border-radius:20px}
+  .veh-card .row-actions{display:flex;gap:8px;align-items:center}
+
+  /* ENTRY FORM */
+  .selected-bar{background:var(--graphite);color:#fff;border-radius:var(--radius);padding:14px 16px;display:flex;
+    align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px;flex-wrap:wrap}
+  .selected-bar .left{display:flex;align-items:center;gap:14px;min-width:0}
+  .selected-bar .plate{width:120px} .selected-bar .plate .no{font-size:22px}
+  .selected-bar .info .mk{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:600;line-height:1.05}
+  .selected-bar .info .sub{color:#AEB8C2;font-size:12.5px}
+  .change{background:transparent;border:1px solid #3a444e;color:#dfe5ea;border-radius:8px;padding:8px 12px;font-size:13px}
+  .change:hover{background:var(--graphite-2)}
+  .form-card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:20px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+  .with-suffix{position:relative}
+  .with-suffix .sfx{position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--ink-2);font-size:13px;font-weight:600;pointer-events:none}
+  .with-suffix input{padding-right:44px}
+  .photo-zone{border:1.5px dashed var(--line);border-radius:11px;padding:18px;text-align:center;background:#FAFBFC;transition:.15s}
+  .photo-zone.has{border-style:solid;border-color:var(--green);background:#F2FBF6}
+  .photo-zone .cam-ico{width:34px;height:34px;margin:0 auto 8px;color:var(--amber)}
+  .photo-zone p{margin:0;font-size:14px;color:var(--ink-2)}
+  .photo-zone .cap-btn{display:inline-block;margin-top:12px;color:#3a2e07;padding:11px 18px;border-radius:9px;font-weight:700;font-size:14px;
+    background:linear-gradient(135deg,#E4BE3A 0%,var(--gold-dk) 100%);box-shadow:0 6px 16px rgba(201,162,39,.32)}
+  .photo-zone .cap-btn:hover{filter:brightness(1.06)}
+  .preview-wrap{margin-top:14px;display:flex;align-items:center;gap:12px;justify-content:center}
+  .preview-wrap img{max-height:120px;border-radius:9px;border:1px solid var(--line)}
+  .link-red{background:none;border:none;color:var(--red);font-size:13px;font-weight:600;text-decoration:underline}
+  .save-row{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
+  .save-row .btn{width:auto;flex:1;min-width:160px}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:var(--graphite);
+    color:#fff;padding:13px 20px;border-radius:11px;font-size:14px;box-shadow:0 12px 40px rgba(0,0,0,.3);opacity:0;
+    pointer-events:none;transition:.25s;z-index:60;display:flex;align-items:center;gap:10px;max-width:90vw}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .toast .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none}
+  .toast.err .dot{background:var(--red)}
+
+  /* ADMIN */
+  .subnav{display:inline-flex;background:#F1F3F5;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;margin-bottom:16px}
+  .subnav button{border:none;background:transparent;padding:9px 16px;border-radius:8px;font-size:14px;font-weight:600;color:var(--ink-2)}
+  .subnav button.active{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+  .filters{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+    padding:16px;display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-bottom:16px}
+  .seg{display:inline-flex;background:#F1F3F5;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px}
+  .seg button{border:none;background:transparent;padding:8px 15px;border-radius:8px;font-size:13.5px;font-weight:600;color:var(--ink-2)}
+  .seg button.active{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+  .filters .fdate label{font-size:12.5px;font-weight:600;color:var(--ink-2);display:block;margin-bottom:5px}
+  .filters .fdate input{padding:9px 11px;border:1.5px solid var(--line);border-radius:9px;font-size:14px}
+  .filters .grow{flex:1}
+  .btn.dl-btn{width:auto;background:var(--green)} .btn.dl-btn:hover{background:var(--green-dk)}
+  .stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+  .stat{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);padding:14px 16px;box-shadow:var(--shadow)}
+  .stat .k{font-size:12px;color:var(--ink-2);font-weight:600}
+  .stat .v{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:30px;line-height:1;margin-top:4px}
+  .stat .v.amber{color:var(--amber-dk)}
+  .table-wrap{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .table-scroll{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:1100px}
+  thead th{background:#F6F7F9;text-align:left;padding:11px 12px;font-weight:600;color:var(--ink-2);border-bottom:1.5px solid var(--line);white-space:nowrap}
+  tbody td{padding:10px 12px;border-bottom:1px solid #EEF0F2;white-space:nowrap}
+  tbody tr:last-child td{border-bottom:none} tbody tr:hover{background:#FAFBFC}
+  td.money{font-variant-numeric:tabular-nums;font-weight:600}
+  .see{background:none;border:1px solid var(--line);border-radius:7px;padding:5px 9px;font-size:12px;color:var(--ink)}
+  .see:hover{background:#f1f3f5}
+  .empty{padding:40px 20px;text-align:center;color:var(--ink-2)}
+  .empty .big{font-family:'Barlow Condensed',sans-serif;font-size:20px;color:var(--ink);margin-bottom:4px}
+  .del{background:none;border:1px solid var(--line);border-radius:7px;padding:6px 10px;font-size:12.5px;color:var(--red)}
+  .del:hover{background:#fdecec;border-color:#f3c2c2}
+  .badge-eq{font-size:11.5px;background:#EAF4FF;border:1px solid #cfe4fb;color:#1B4FA0;padding:3px 8px;border-radius:20px}
+  .veh-card.warn{border-color:var(--warn);box-shadow:0 0 0 1px var(--warn)}
+  .veh-card.danger{border-color:var(--red);box-shadow:0 0 0 1px var(--red)}
+  .badge-mant{font-size:11.5px;padding:3px 9px;border-radius:20px;font-weight:600}
+  .badge-mant.warn{background:#FFF4E5;border:1px solid #f6d9ad;color:#a5610a}
+  .badge-mant.danger{background:#FDECEC;border:1px solid #f3c2c2;color:#b02a2a}
+  .badge-mant.ok{background:#EAF7EF;border:1px solid #bfe6cd;color:#177A43}
+  .mant-box{background:#F6F7F9;border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+  .mant-box b{color:var(--ink)}
+  .mant-ctrls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+  .mant-ctrls input{width:90px;padding:7px 9px;border:1.5px solid var(--line);border-radius:8px;font-size:13px}
+  .mini{background:#fff;border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
+  .mini:hover{background:#f1f3f5}
+  .mini.wa{background:var(--wa);color:#fff;border-color:var(--wa)} .mini.wa:hover{background:var(--wa-dk)}
+
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(10,13,16,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:70}
+  .modal.show{display:flex}
+  .modal-box{background:#fff;border-radius:14px;max-width:520px;width:100%;overflow:hidden;max-height:92vh;display:flex;flex-direction:column}
+  .modal-box .mh{padding:14px 18px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal-box .mh h4{margin:0;font-size:16px}
+  .modal-box .mb{padding:16px 18px;overflow:auto}
+  .modal-box img{width:100%;border-radius:8px;display:block}
+  .x{background:none;border:none;font-size:20px;color:var(--ink-2);cursor:pointer;line-height:1}
+  /* share */
+  .msg-prev{background:#0B141A;color:#E9EDEF;border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.5;
+    white-space:pre-wrap;font-family:'Inter',sans-serif;border:1px solid #1f2c34}
+  .share-btns{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+  .share-btns .btn{width:100%}
+  .share-photo-note{font-size:12.5px;color:var(--ink-2);margin-top:6px;text-align:center}
+
+  @media (max-width:560px){
+    .grid2,.grid3{grid-template-columns:1fr}
+    .stat-row{grid-template-columns:1fr}
+    header.top .who .uname{display:none}
+    .save-row .btn{flex:1 1 100%}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="login-card">
+    <div class="login-top">
+      <div class="gauge"></div>
+      <h1>CONTROL DE<br>ABASTECIMIENTO</h1>
+      <p>Registro de combustible de la flota</p>
+    </div>
+    <div class="login-body">
+      <div class="field"><label for="u">Correo</label>
+        <input id="u" type="email" autocomplete="username" placeholder="correo@ejemplo.com"></div>
+      <div class="field"><label for="p">Contrase&ntilde;a</label>
+        <input id="p" type="password" autocomplete="current-password" placeholder="Escribe tu contrase&ntilde;a"></div>
+      <div class="err" id="loginErr"></div>
+      <button class="btn" id="loginBtn">Entrar</button>
+      <div class="login-hint" id="loginHint">
+        Inicia sesi&oacute;n con el correo y contrase&ntilde;a que el administrador cre&oacute; en Firebase.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" class="hidden">
+  <header class="top">
+    <div class="brand"><div class="mark"></div><h2>Control de Abastecimiento</h2></div>
+    <div class="who">
+      <span class="uname" id="uName"></span>
+      <span class="role" id="uRole"></span>
+      <button class="logout" id="logoutBtn">Salir</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Barra de navegación del administrador -->
+    <div class="subnav hidden" id="adminBar">
+      <button data-v="abast" class="active">Abastecer</button>
+      <button data-v="rep">Reportes</button>
+      <button data-v="veh">Vehículos</button>
+    </div>
+
+    <!-- USUARIO: selección de vehículo -->
+    <div id="opSelect">
+      <div class="section-h"><h3>¿Qué vehículo vas a abastecer?</h3><p>Toca un vehículo para registrar el abastecimiento.</p></div>
+      <div class="veh-grid" id="vehGrid"></div>
+    </div>
+
+    <!-- USUARIO: formulario -->
+    <div id="opForm" class="hidden">
+      <div class="selected-bar">
+        <div class="left">
+          <div class="plate" id="selPlate"></div>
+          <div class="info"><div class="mk" id="selMk"></div><div class="sub" id="selSub"></div></div>
+        </div>
+        <button class="change" id="changeVeh">Cambiar vehículo</button>
+      </div>
+      <div class="form-card">
+        <div class="field"><label for="fGas">Gasolinera</label>
+          <select id="fGas">
+            <option value="">Selecciona la gasolinera…</option>
+            <option>UNO Siguatepeque><option>La Esperanza</option><option>Shell Comayagua</option>
+          </select></div>
+        <div class="grid2">
+          <div class="field"><label for="fKm">Kilometraje actual</label>
+            <div class="with-suffix"><input id="fKm" type="number" inputmode="numeric" min="0" placeholder="0"><span class="sfx">km</span></div>
+            <div class="err" id="kmHint"></div></div>
+          <div class="field"><label for="fLps">Cantidad en Lempiras</label>
+            <div class="with-suffix"><input id="fLps" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"><span class="sfx">L</span></div></div>
+        </div>
+        <div class="field"><label for="fLts">Cantidad en litros</label>
+          <div class="with-suffix"><input id="fLts" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"><span class="sfx">lts</span></div></div>
+        <div class="field"><label>Foto de la factura</label>
+          <div class="photo-zone" id="photoZone">
+            <svg class="cam-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            <p id="photoTxt">Toma una foto a la factura del combustible</p>
+            <label class="cap-btn" for="fPhoto">Abrir cámara</label>
+            <input id="fPhoto" type="file" accept="image/*" capture="environment" class="hidden">
+            <div class="preview-wrap hidden" id="prevWrap"><img id="prevImg" alt="Factura"><button class="link-red" id="removePhoto" type="button">Quitar foto</button></div>
+          </div></div>
+        <div class="err" id="formErr"></div>
+        <div class="save-row">
+          <button class="btn ghost sm" id="cancelForm" type="button" style="flex:0 0 auto">Cancelar</button>
+          <button class="btn green" id="saveBtn" type="button">Guardar y compartir</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="adminView" class="hidden">
+      <!-- Reportes -->
+      <div id="admReportes">
+        <div class="section-h"><h3>Reportes de abastecimiento</h3><p>Filtra por período y descarga el reporte en Excel.</p></div>
+        <div class="filters">
+          <div><div class="seg" id="periodSeg">
+            <button data-p="dia" class="active">Diario</button>
+            <button data-p="semana">Semanal</button>
+            <button data-p="mes">Mensual</button>
+          </div></div>
+          <div class="fdate"><label for="refDate">Fecha de referencia</label><input id="refDate" type="date"></div>
+          <div class="grow"></div>
+          <button class="btn wa sm" id="dailyPdfBtn" style="width:auto">Reporte del día (PDF) → WhatsApp</button>
+          <button class="btn dl-btn sm" id="downloadBtn">Descargar Excel</button>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="k">Abastecimientos</div><div class="v num" id="stCount">0</div></div>
+          <div class="stat"><div class="k">Total en Lempiras</div><div class="v amber num" id="stLps">L 0.00</div></div>
+          <div class="stat"><div class="k">Total en litros</div><div class="v num" id="stLts">0.00</div></div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-scroll"><table id="admTable"><thead><tr>
+            <th>Fecha</th><th>Hora</th><th>N° equipo</th><th>Marca</th><th>Modelo</th><th>Tipo</th>
+            <th>Color</th><th>Año</th><th>Placa</th><th>Motor</th><th>Chasis</th>
+            <th>Gasolinera</th><th>Kilometraje</th><th>Lempiras</th><th>Litros</th><th>Registró</th><th>Factura</th>
+          </tr></thead><tbody id="admBody"></tbody></table></div>
+          <div class="empty hidden" id="admEmpty"><div class="big">Sin abastecimientos en este período</div><div>Cambia la fecha de referencia o el período.</div></div>
+        </div>
+      </div>
+
+      <!-- Vehículos -->
+      <div id="admVehiculos" class="hidden">
+        <div class="section-h"><h3>Vehículos de la flota</h3><p>Agrega nuevos vehículos con todas sus características.</p></div>
+        <div style="margin-bottom:16px"><button class="btn sm" id="openAddVeh">+ Agregar vehículo</button></div>
+        <div class="veh-grid" id="admVehGrid"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL: agregar vehículo -->
+<div class="modal" id="vehModal">
+  <div class="modal-box">
+    <div class="mh"><h4>Agregar vehículo</h4><button class="x" id="closeVehModal">✕</button></div>
+    <div class="mb">
+      <div class="grid2">
+        <div class="field"><label>Marca</label><input id="nvMarca" placeholder="Ej. TOYOTA"></div>
+        <div class="field"><label>Modelo</label><input id="nvModelo" placeholder="Ej. HILUX"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Tipo</label><input id="nvTipo" placeholder="Ej. PICK UP"></div>
+        <div class="field"><label>Color</label><input id="nvColor" placeholder="Ej. BLANCO"></div>
+        <div class="field"><label>Año</label><input id="nvAnio" placeholder="Ej. 2025"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Placa</label><input id="nvPlaca" placeholder="Ej. JAT-8941"></div>
+        <div class="field"><label>N° de equipo</label><input id="nvEquipo" placeholder="Ej. 10007452"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Motor</label><input id="nvMotor" placeholder="N° de motor"></div>
+        <div class="field"><label>Chasis</label><input id="nvChasis" placeholder="N° de chasis"></div>
+      </div>
+      <div class="err" id="nvErr"></div>
+      <div class="save-row">
+        <button class="btn ghost sm" id="cancelVeh" style="flex:0 0 auto">Cancelar</button>
+        <button class="btn green" id="saveVeh">Guardar vehículo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: compartir a WhatsApp -->
+<div class="modal" id="shareModal">
+  <div class="modal-box">
+    <div class="mh"><h4>Compartir abastecimiento</h4><button class="x" id="closeShare">✕</button></div>
+    <div class="mb">
+      <div class="msg-prev" id="msgPrev"></div>
+      <div class="share-btns">
+        <button class="btn wa" id="shareWhats">Enviar por WhatsApp</button>
+        <button class="btn" id="shareNative">Compartir mensaje y foto</button>
+        <button class="btn ghost" id="copyMsg">Copiar mensaje</button>
+        <button class="btn ghost" id="doneShare">Listo</button>
+      </div>
+      <div class="share-photo-note" id="sharePhotoNote"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: coordinar mantenimiento -->
+<div class="modal" id="mantModal">
+  <div class="modal-box">
+    <div class="mh"><h4>Coordinar mantenimiento</h4><button class="x" id="closeMant">✕</button></div>
+    <div class="mb">
+      <div class="mant-box" id="mantInfo" style="margin-bottom:14px"></div>
+      <div class="share-btns">
+        <button class="btn wa" id="mantPrev">Coordinar preventivo por WhatsApp</button>
+        <button class="btn" id="mantCorr">Coordinar correctivo por WhatsApp</button>
+        <button class="btn ghost" id="mantClose2">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: reporte diario -->
+<div class="modal" id="dailyModal">
+  <div class="modal-box">
+    <div class="mh"><h4>Reporte diario de abastecimiento</h4><button class="x" id="closeDaily">✕</button></div>
+    <div class="mb">
+      <div class="mant-box" id="dailyInfo" style="margin-bottom:14px"></div>
+      <div class="share-btns">
+        <button class="btn wa" id="dailyShare">Enviar PDF por WhatsApp</button>
+        <button class="btn ghost" id="dailyDownload">Descargar PDF</button>
+        <button class="btn ghost" id="dailyClose2">Cerrar</button>
+      </div>
+      <div class="share-photo-note">En celular, "Enviar PDF por WhatsApp" adjunta el archivo directo. En computadora se descarga el PDF y se abre WhatsApp para adjuntarlo manualmente.</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: ver factura -->
+<div class="modal" id="photoModal">
+  <div class="modal-box">
+    <div class="mh"><h4>Factura</h4><button class="x" id="closeModal">✕</button></div>
+    <div class="mb"><img id="modalImg" alt="Factura"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
+
+<script>
+/* =====================================================================
+   CONFIGURACIÓN DE SUPABASE  — pega aquí los datos de tu proyecto
+   (Supabase → Project Settings → API → Project URL y anon public key)
+   ===================================================================== */
+const SUPABASE_URL = "https://ignvdkvunbxacvuqehzo.supabase.co";        // Project URL
+const SUPABASE_ANON_KEY = "sb_publishable_aQUXl6NAmwnBorNEU3Nzew_pNPqrpeR";       // llave publishable (pública)
+
+/* Vehículos iniciales (solo si la base está vacía y el admin los carga) */
+const DEFAULT_VEHICULOS = [
+  { marca:'NISSAN',     tipo:'PICK UP', color:'BLANCO',      modelo:'FRONTIER', motor:'YD25797681P', chasis:'3N6CD33B4ZK477663', anio:'2026', placa:'JAS 9203', numeroEquipo:'' },
+  { marca:'MITSUBISHI', tipo:'PICK UP', color:'BLANCO',      modelo:'L200',     motor:'4N16UAN4358', chasis:'MMBJJLC10SH015999', anio:'2025', placa:'JAW 2737', numeroEquipo:'' },
+  { marca:'MITSUBISHI', tipo:'PICK UP', color:'Gris Oscuro', modelo:'L200',     motor:'',            chasis:'',                  anio:'',     placa:'JAT-8941', numeroEquipo:'10007452' }
+];
+/* ===================================================================== */
+
+const CONFIG_LISTA = SUPABASE_URL.indexOf('<')===-1 && SUPABASE_ANON_KEY.indexOf('<')===-1;
+let sb=null;
+if (CONFIG_LISTA){ sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); }
+
+/* Helpers de formato */
+const $=s=>document.querySelector(s);
+const fmtLps=n=>'L '+Number(n||0).toLocaleString('es-HN',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtNum=(n,d=2)=>Number(n||0).toLocaleString('es-HN',{minimumFractionDigits:d,maximumFractionDigits:d});
+const fmtKm=n=>Number(n||0).toLocaleString('es-HN');
+const pad=n=>String(n).padStart(2,'0');
+function toDateStr(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function fechaLabel(iso){const d=new Date(iso);return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear();}
+function horaLabel(iso){const d=new Date(iso);return pad(d.getHours())+':'+pad(d.getMinutes());}
+function fechaLarga(d){
+  const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+  return dias[d.getDay()]+' '+pad(d.getDate())+' de '+meses[d.getMonth()]+' del '+d.getFullYear();
+}
+function plateHTML(p){return '<div class="hn">HONDURAS</div><div class="no">'+(p||'—')+'</div>';}
+function vehDesc(v){return v.marca+' '+v.modelo;}
+function dataURLtoBlob(dataurl){ const [head,b64]=dataurl.split(','); const mime=(head.match(/:(.*?);/)||[])[1]||'image/jpeg';
+  const bin=atob(b64); const n=bin.length; const u8=new Uint8Array(n); for(let i=0;i<n;i++)u8[i]=bin.charCodeAt(i); return new Blob([u8],{type:mime}); }
+let toastTimer;
+function toast(msg,isErr){const t=$('#toast');$('#toastMsg').textContent=msg;t.classList.toggle('err',!!isErr);
+  t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600);}
+
+/* Estado */
+let currentUser=null, selectedVeh=null, photoData=null, period='dia';
+let vehiculos=[], lastSavedRec=null;
+
+/* Adaptadores fila(BD) <-> objeto interno */
+function vehFromRow(r){ return { id:r.id, marca:r.marca, tipo:r.tipo, color:r.color, modelo:r.modelo, motor:r.motor,
+  chasis:r.chasis, anio:r.anio, placa:r.placa, numeroEquipo:r.numero_equipo,
+  limiteMantenimiento:r.limite_mantenimiento, kmBaseMantenimiento:r.km_base_mantenimiento }; }
+function recFromRow(r){ return { id:r.id, fecha:r.fecha, vehiculoId:r.vehiculo_id, vehiculoDesc:r.vehiculo_desc, vehiculoPlaca:r.vehiculo_placa,
+  marca:r.marca, tipo:r.tipo, color:r.color, modelo:r.modelo, anio:r.anio, motor:r.motor, chasis:r.chasis, numeroEquipo:r.numero_equipo,
+  gasolinera:r.gasolinera, kilometraje:Number(r.kilometraje), lempiras:Number(r.lempiras), litros:Number(r.litros),
+  fotoURL:r.foto_url, usuario:r.usuario, uid:r.uid }; }
+
+/* ---------- Datos (Supabase / Postgres) ---------- */
+async function loadVehiculos(){
+  const { data, error }=await sb.from('vehiculos').select('*');
+  if(error){ toast('Error al leer vehículos',true); vehiculos=[]; return; }
+  vehiculos=(data||[]).map(vehFromRow);
+  vehiculos.sort((a,b)=>(a.marca+a.modelo).localeCompare(b.marca+b.modelo));
+}
+async function loadAll(){
+  const { data, error }=await sb.from('abastecimientos').select('*').order('fecha',{ascending:false});
+  if(error){ toast('Error al leer abastecimientos',true); return []; }
+  return (data||[]).map(recFromRow);
+}
+async function lastKmFor(vehId){
+  const recs=await loadAll();
+  const list=recs.filter(r=>r.vehiculoId===vehId).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
+  return list.length?list[0].kilometraje:null;
+}
+async function kmActualMap(){
+  const { data }=await sb.from('abastecimientos').select('vehiculo_id,kilometraje'); const map={};
+  (data||[]).forEach(r=>{ const k=Number(r.kilometraje||0); if(map[r.vehiculo_id]==null||k>map[r.vehiculo_id]) map[r.vehiculo_id]=k; });
+  return map;
+}
+
+/* Mantenimiento (en el propio registro del vehículo) */
+function vehById(id){ return vehiculos.find(v=>v.id===id)||{}; }
+function mantOf(id){ const v=vehById(id); return { limite:(v.limiteMantenimiento!=null?Number(v.limiteMantenimiento):5000), kmBase:(v.kmBaseMantenimiento!=null?Number(v.kmBaseMantenimiento):0) }; }
+async function saveMant(id,obj){ const upd={}; if(obj.limite!=null)upd.limite_mantenimiento=obj.limite; if(obj.kmBase!=null)upd.km_base_mantenimiento=obj.kmBase;
+  const { error }=await sb.from('vehiculos').update(upd).eq('id',id); if(error){toast('No se pudo guardar',true);return;} await loadVehiculos(); }
+function mantStatus(id,currentKm){ const {limite,kmBase}=mantOf(id);
+  const cur=(currentKm!=null?currentKm:kmBase); const kmMant=Math.max(0,cur-kmBase);
+  let estado='ok'; if(kmMant>=limite)estado='vencido'; else if(kmMant>=(limite-1000))estado='proximo';
+  return {estado,kmMant,limite,kmBase,cur}; }
+function vehChars(r){
+  const base=vehById(r.vehiculoId); const pick=(a,b)=>(a!==undefined&&a!==null&&a!=='')?a:(b||'');
+  return { marca:pick(r.marca,base.marca), tipo:pick(r.tipo,base.tipo), color:pick(r.color,base.color),
+    modelo:pick(r.modelo,base.modelo), anio:pick(r.anio,base.anio), motor:pick(r.motor,base.motor),
+    chasis:pick(r.chasis,base.chasis), placa:pick(r.vehiculoPlaca,base.placa), numeroEquipo:pick(r.numeroEquipo,base.numeroEquipo) };
+}
+
+/* ---------- LOGIN (Supabase Auth) ---------- */
+$('#loginBtn').addEventListener('click',doLogin);
+$('#p').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+$('#u').addEventListener('keydown',e=>{if(e.key==='Enter')$('#p').focus();});
+async function doLogin(){
+  if(!CONFIG_LISTA){ $('#loginErr').textContent='Falta configurar Supabase (ver instrucciones).'; return; }
+  const email=$('#u').value.trim(); const pass=$('#p').value; $('#loginErr').textContent='';
+  const { error }=await sb.auth.signInWithPassword({ email, password:pass });
+  if(error){ $('#loginErr').textContent='Correo o contraseña incorrectos.'; }
+}
+$('#logoutBtn').addEventListener('click',()=>{ if(sb) sb.auth.signOut(); });
+
+if(CONFIG_LISTA){
+  sb.auth.onAuthStateChange((event, session)=>{
+    if(session && session.user){ afterLogin(session.user); }
+    else { currentUser=null; stopScheduler(); $('#adminBar').classList.add('hidden'); $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); $('#p').value=''; }
+  });
+} else {
+  const h=$('#loginHint'); if(h) h.innerHTML='⚠ Antes de usar la app, pega la URL y la llave anon de tu proyecto Supabase en el archivo (ver la guía de instalación).';
+}
+
+async function afterLogin(user){
+  if(currentUser && currentUser.uid===user.id) return;
+  const { data, error }=await sb.from('perfiles').select('nombre,rol').eq('id', user.id).single();
+  if(error||!data){ $('#loginErr').textContent='Tu usuario no tiene perfil/rol asignado.'; await sb.auth.signOut(); return; }
+  currentUser={ uid:user.id, nombre:data.nombre||user.email, rol:(data.rol==='admin'?'admin':'usuario') };
+  await loadVehiculos();
+  $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
+  $('#uName').textContent=currentUser.nombre;
+  $('#uRole').textContent=currentUser.rol==='admin'?'Administrador':'Usuario';
+  $('#uRole').classList.toggle('admin',currentUser.rol==='admin');
+  if(currentUser.rol==='admin')showAdmin(); else showOperador();
+}
+
+/* ---------- Flujo de abastecer ---------- */
+function renderSelect(){ renderVehGrid(); $('#opForm').classList.add('hidden'); $('#opSelect').classList.remove('hidden'); window.scrollTo(0,0); }
+function showOperador(){ $('#adminBar').classList.add('hidden'); $('#adminView').classList.add('hidden'); renderSelect(); }
+
+async function renderVehGrid(){
+  const grid=$('#vehGrid'); grid.innerHTML='';
+  const kmMap=await kmActualMap();
+  vehiculos.forEach(v=>{
+    const st=mantStatus(v.id, kmMap[v.id]);
+    const cls=st.estado==='vencido'?' danger':st.estado==='proximo'?' warn':'';
+    let mb=''; if(st.estado==='vencido')mb='<span class="badge-mant danger">Mantenimiento requerido</span>';
+    else if(st.estado==='proximo')mb='<span class="badge-mant warn">Próximo a mantenimiento</span>';
+    const card=document.createElement('div'); card.className='veh-card'+cls;
+    card.innerHTML='<div class="plate">'+plateHTML(v.placa)+'</div>'+
+      '<div class="veh-meta"><div class="mk">'+v.marca+' '+v.modelo+'</div>'+
+        '<div class="sub">'+v.tipo+' · '+v.color+' · Año '+(v.anio||'—')+'</div></div>'+
+      '<div class="veh-spec">'+mb+(v.numeroEquipo?'<span class="badge-eq">Equipo '+v.numeroEquipo+'</span>':'')+'</div>'+
+      '<div class="row-actions"><button class="btn sm">Abastecer este vehículo</button></div>';
+    card.querySelector('button').addEventListener('click',()=>selectVehicle(v));
+    grid.appendChild(card);
+  });
+  if(vehiculos.length===0){ grid.innerHTML='<div class="mant-box">No hay vehículos cargados. Un administrador debe agregarlos.</div>'; }
+}
+async function selectVehicle(v){
+  selectedVeh=v;
+  $('#selPlate').innerHTML=plateHTML(v.placa);
+  $('#selMk').textContent=vehDesc(v);
+  $('#selSub').textContent=v.tipo+' · '+v.color+' · Año '+(v.anio||'—')+(v.numeroEquipo?' · Equipo '+v.numeroEquipo:'');
+  resetForm();
+  const last=await lastKmFor(v.id); const hint=$('#kmHint');
+  if(last!=null){ hint.style.color='var(--ink-2)'; hint.textContent='Último abastecimiento: '+fmtKm(last)+' km · Mínimo para volver a abastecer: '+fmtKm(last+200)+' km.'; }
+  $('#opSelect').classList.add('hidden'); $('#opForm').classList.remove('hidden'); window.scrollTo(0,0);
+}
+$('#changeVeh').addEventListener('click',renderSelect);
+$('#cancelForm').addEventListener('click',renderSelect);
+
+/* Foto */
+$('#fPhoto').addEventListener('change',async e=>{
+  const file=e.target.files[0]; if(!file)return;
+  try{ photoData=await compressImage(file,1100,0.55);
+    $('#prevImg').src=photoData; $('#prevWrap').classList.remove('hidden');
+    $('#photoTxt').textContent='Factura adjuntada'; $('#photoZone').classList.add('has');
+  }catch(err){ toast('No se pudo procesar la imagen',true); }
+});
+$('#removePhoto').addEventListener('click',clearPhoto);
+function clearPhoto(){ photoData=null; $('#fPhoto').value='';
+  const w=$('#prevWrap'); if(w)w.classList.add('hidden');
+  const t=$('#photoTxt'); if(t)t.textContent='Toma una foto a la factura del combustible';
+  const z=$('#photoZone'); if(z)z.classList.remove('has'); }
+function compressImage(file,maxSide,quality){
+  return new Promise((res,rej)=>{ const img=new Image(); const url=URL.createObjectURL(file);
+    img.onload=()=>{ let {width:w,height:h}=img;
+      if(Math.max(w,h)>maxSide){const r=maxSide/Math.max(w,h);w=Math.round(w*r);h=Math.round(h*r);}
+      const c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',quality)); };
+    img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('img'));}; img.src=url; });
+}
+$('#fKm').addEventListener('blur',checkKm);
+async function checkKm(){ const hint=$('#kmHint'); const km=parseFloat($('#fKm').value);
+  if(!selectedVeh)return; const last=await lastKmFor(selectedVeh.id);
+  if(isNaN(km)){ if(last!=null){ hint.style.color='var(--ink-2)'; hint.textContent='Último: '+fmtKm(last)+' km · Mínimo: '+fmtKm(last+200)+' km.'; } return; }
+  if(last!=null && km<last){ hint.style.color='var(--red)'; hint.textContent='El kilometraje es menor que el último registrado ('+fmtKm(last)+' km).'; }
+  else if(last!=null && km<last+200){ hint.style.color='var(--red)'; hint.textContent='Aún faltan '+fmtKm((last+200)-km)+' km. Mínimo para abastecer: '+fmtKm(last+200)+' km.'; }
+  else { hint.style.color='var(--ink-2)'; hint.textContent=(last!=null?('Último: '+fmtKm(last)+' km. '):'')+'Kilometraje válido para abastecer.'; } }
+function resetForm(){ $('#fGas').value='';$('#fKm').value='';$('#fLps').value='';$('#fLts').value='';
+  $('#kmHint').textContent='';$('#formErr').textContent='';clearPhoto(); }
+
+/* Guardar (sube foto a Storage y registra en la tabla) */
+$('#saveBtn').addEventListener('click',saveRecord);
+async function saveRecord(){
+  const err=$('#formErr'); err.textContent='';
+  const gas=$('#fGas').value, km=parseFloat($('#fKm').value), lps=parseFloat($('#fLps').value), lts=parseFloat($('#fLts').value);
+  if(!gas){err.textContent='Selecciona la gasolinera.';return;}
+  if(isNaN(km)||km<0){err.textContent='Escribe un kilometraje válido.';return;}
+  if(isNaN(lps)||lps<=0){err.textContent='Escribe la cantidad en Lempiras.';return;}
+  if(isNaN(lts)||lts<=0){err.textContent='Escribe la cantidad en litros.';return;}
+  const lastKm=await lastKmFor(selectedVeh.id);
+  if(lastKm!=null && km<lastKm){ err.textContent='El kilometraje no puede ser menor que el último registrado ('+fmtKm(lastKm)+' km).'; return; }
+  if(lastKm!=null && km<lastKm+200){ err.textContent='Este vehículo aún no puede abastecerse. Debe alcanzar al menos '+fmtKm(lastKm+200)+' km (último: '+fmtKm(lastKm)+' km).'; return; }
+  if(!photoData){ if(!confirm('No adjuntaste foto de la factura. ¿Guardar de todos modos?'))return; }
+
+  $('#saveBtn').disabled=true; $('#saveBtn').textContent='Guardando…';
+  try{
+    const id=crypto.randomUUID(); let fotoURL=null;
+    if(photoData){
+      const blob=dataURLtoBlob(photoData); const path=id+'.jpg';
+      const up=await sb.storage.from('facturas').upload(path, blob, {contentType:'image/jpeg', upsert:true});
+      if(up.error) throw up.error;
+      const { data:pub }=sb.storage.from('facturas').getPublicUrl(path); fotoURL=pub.publicUrl;
+    }
+    const now=new Date();
+    const row={ id, fecha:now.toISOString(),
+      vehiculo_id:selectedVeh.id, vehiculo_desc:vehDesc(selectedVeh), vehiculo_placa:selectedVeh.placa,
+      marca:selectedVeh.marca, tipo:selectedVeh.tipo, color:selectedVeh.color, modelo:selectedVeh.modelo,
+      anio:selectedVeh.anio, motor:selectedVeh.motor, chasis:selectedVeh.chasis, numero_equipo:selectedVeh.numeroEquipo,
+      gasolinera:gas, kilometraje:km, lempiras:lps, litros:lts, foto_url:fotoURL,
+      usuario:currentUser.nombre, uid:currentUser.uid };
+    const { error }=await sb.from('abastecimientos').insert(row); if(error) throw error;
+    lastSavedRec=Object.assign({}, recFromRow(row), {fotoLocal:photoData});
+    openShare(lastSavedRec);
+  }catch(e){ toast('No se pudo guardar: '+(e.message||''),true); }
+  finally{ $('#saveBtn').disabled=false; $('#saveBtn').textContent='Guardar y compartir'; }
+}
+
+/* Compartir a WhatsApp */
+function mensajeWhats(rec){
+  const c=vehChars(rec); const L=[];
+  L.push(fechaLarga(new Date(rec.fecha))); L.push('');
+  L.push('Abastecimiento de Combustible:'); L.push('');
+  L.push('Vehículo: '+c.marca+' '+c.modelo); L.push('Color: '+c.color); L.push('Placa: '+c.placa);
+  if(c.numeroEquipo) L.push('N° de equipo: '+c.numeroEquipo);
+  L.push('Km: '+fmtKm(rec.kilometraje));
+  L.push('Cantidad de lempiras: '+fmtNum(rec.lempiras));
+  L.push('Cantidad de litros: '+fmtNum(rec.litros)); L.push('');
+  L.push('Gasolinera '+rec.gasolinera);
+  return L.join('\n');
+}
+function openShare(rec){
+  const msg=mensajeWhats(rec); $('#msgPrev').textContent=msg;
+  $('#sharePhotoNote').textContent = (rec.fotoLocal||rec.fotoURL) ? 'La opción "Compartir mensaje y foto" adjunta la factura (si tu dispositivo lo permite).' : 'Este abastecimiento no tiene foto adjunta.';
+  $('#shareModal').classList.add('show');
+}
+$('#shareWhats').addEventListener('click',()=>{ window.open('https://wa.me/?text='+encodeURIComponent(mensajeWhats(lastSavedRec)),'_blank'); });
+$('#shareNative').addEventListener('click',async()=>{
+  const rec=lastSavedRec; const msg=mensajeWhats(rec);
+  try{
+    if(navigator.share){
+      let file=null;
+      if(rec.fotoLocal){ file=new File([dataURLtoBlob(rec.fotoLocal)],'factura.jpg',{type:'image/jpeg'}); }
+      else if(rec.fotoURL){ const b=await (await fetch(rec.fotoURL)).blob(); file=new File([b],'factura.jpg',{type:b.type||'image/jpeg'}); }
+      if(file && navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({text:msg,files:[file]}); return; }
+      await navigator.share({text:msg});
+    } else { await navigator.clipboard.writeText(msg); toast('Mensaje copiado (compartir no disponible)'); }
+  }catch(e){}
+});
+$('#copyMsg').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(mensajeWhats(lastSavedRec)); toast('Mensaje copiado'); }catch(e){ toast('No se pudo copiar',true); } });
+function closeShare(){ $('#shareModal').classList.remove('show'); toast('Abastecimiento guardado'); renderSelect(); }
+$('#doneShare').addEventListener('click',closeShare);
+$('#closeShare').addEventListener('click',closeShare);
+
+/* ---------- ADMIN ---------- */
+function showAdmin(){ $('#adminBar').classList.remove('hidden'); $('#refDate').value=toDateStr(new Date()); switchAdmin('rep'); startScheduler(); }
+$('#adminBar').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;switchAdmin(b.dataset.v);});
+function switchAdmin(v){
+  [...$('#adminBar').children].forEach(x=>x.classList.toggle('active',x.dataset.v===v));
+  if(v==='abast'){ $('#adminView').classList.add('hidden'); renderSelect(); }
+  else{ $('#opSelect').classList.add('hidden'); $('#opForm').classList.add('hidden'); $('#adminView').classList.remove('hidden');
+    $('#admReportes').classList.toggle('hidden',v!=='rep'); $('#admVehiculos').classList.toggle('hidden',v!=='veh');
+    if(v==='rep')refreshAdmin(); else renderAdmVehGrid(); }
+}
+$('#periodSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;period=b.dataset.p;
+  [...$('#periodSeg').children].forEach(x=>x.classList.toggle('active',x===b));refreshAdmin();});
+$('#refDate').addEventListener('change',refreshAdmin);
+$('#downloadBtn').addEventListener('click',downloadExcel);
+
+function rangeFor(period,refStr){
+  const ref=refStr?new Date(refStr+'T12:00:00'):new Date(); let start,end,label,fname;
+  if(period==='dia'){ start=new Date(ref);start.setHours(0,0,0,0); end=new Date(ref);end.setHours(23,59,59,999);
+    label='Diario · '+fechaLabel(start.toISOString()); fname='reporte_diario_'+toDateStr(start);
+  }else if(period==='semana'){ const s=new Date(ref);s.setHours(0,0,0,0); const day=(s.getDay()+6)%7; s.setDate(s.getDate()-day);
+    end=new Date(s);end.setDate(s.getDate()+6);end.setHours(23,59,59,999); start=s;
+    label='Semanal · '+fechaLabel(start.toISOString())+' a '+fechaLabel(end.toISOString());
+    fname='reporte_semanal_'+toDateStr(start)+'_a_'+toDateStr(end);
+  }else{ start=new Date(ref.getFullYear(),ref.getMonth(),1,0,0,0,0); end=new Date(ref.getFullYear(),ref.getMonth()+1,0,23,59,59,999);
+    const m=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+    label='Mensual · '+m[ref.getMonth()]+' '+ref.getFullYear(); fname='reporte_mensual_'+ref.getFullYear()+'-'+pad(ref.getMonth()+1); }
+  return {start,end,label,fname};
+}
+async function filteredRecords(){ const {start,end}=rangeFor(period,$('#refDate').value); const all=await loadAll();
+  return all.filter(r=>{const d=new Date(r.fecha);return d>=start&&d<=end;}); }
+async function refreshAdmin(){
+  const recs=await filteredRecords(); const body=$('#admBody'); body.innerHTML=''; let tLps=0,tLts=0;
+  recs.forEach(r=>{ tLps+=Number(r.lempiras||0); tLts+=Number(r.litros||0); const c=vehChars(r);
+    const tr=document.createElement('tr');
+    tr.innerHTML='<td>'+fechaLabel(r.fecha)+'</td><td>'+horaLabel(r.fecha)+'</td>'+
+      '<td>'+(c.numeroEquipo||'—')+'</td><td>'+c.marca+'</td><td>'+c.modelo+'</td><td>'+c.tipo+'</td>'+
+      '<td>'+c.color+'</td><td>'+(c.anio||'—')+'</td><td>'+c.placa+'</td><td>'+(c.motor||'—')+'</td><td>'+(c.chasis||'—')+'</td>'+
+      '<td>'+r.gasolinera+'</td><td class="num">'+fmtKm(r.kilometraje)+'</td>'+
+      '<td class="money">'+fmtLps(r.lempiras)+'</td><td class="num">'+fmtNum(r.litros)+'</td><td>'+r.usuario+'</td><td></td>';
+    const cell=tr.lastElementChild;
+    if(r.fotoURL){const b=document.createElement('button');b.className='see';b.textContent='Ver';b.addEventListener('click',()=>openPhoto(r.fotoURL));cell.appendChild(b);}
+    else cell.textContent='—';
+    body.appendChild(tr); });
+  $('#stCount').textContent=recs.length; $('#stLps').textContent=fmtLps(tLps); $('#stLts').textContent=fmtNum(tLts);
+  $('#admEmpty').classList.toggle('hidden',recs.length>0);
+}
+function openPhoto(src){$('#modalImg').src=src;$('#photoModal').classList.add('show');}
+$('#closeModal').addEventListener('click',()=>$('#photoModal').classList.remove('show'));
+$('#photoModal').addEventListener('click',e=>{if(e.target.id==='photoModal')$('#photoModal').classList.remove('show');});
+
+/* Vehículos (admin) */
+async function renderAdmVehGrid(){
+  const grid=$('#admVehGrid'); grid.innerHTML='';
+  if(vehiculos.length===0){
+    const box=document.createElement('div'); box.className='mant-box';
+    box.innerHTML='No hay vehículos en la base. <button class="mini" id="seedBtn" style="margin-left:8px">Cargar 3 vehículos iniciales</button>';
+    grid.appendChild(box); $('#seedBtn').addEventListener('click',seedVehiculos); return;
+  }
+  const kmMap=await kmActualMap();
+  vehiculos.forEach(v=>{
+    const st=mantStatus(v.id, kmMap[v.id]);
+    const cls=st.estado==='vencido'?' danger':st.estado==='proximo'?' warn':'';
+    const badge=st.estado==='vencido'?'<span class="badge-mant danger">Mantenimiento requerido</span>'
+      :st.estado==='proximo'?'<span class="badge-mant warn">Próximo a mantenimiento</span>'
+      :'<span class="badge-mant ok">Al día</span>';
+    const card=document.createElement('div'); card.className='veh-card'+cls;
+    card.innerHTML='<div class="plate">'+plateHTML(v.placa)+'</div>'+
+      '<div class="veh-meta"><div class="mk">'+v.marca+' '+v.modelo+'</div>'+
+        '<div class="sub">'+v.tipo+' · '+v.color+' · Año '+(v.anio||'—')+'</div></div>'+
+      '<div class="veh-spec">'+badge+(v.numeroEquipo?'<span class="badge-eq">Equipo '+v.numeroEquipo+'</span>':'')+'</div>'+
+      '<div class="mant-box">Km actual: <b>'+fmtKm(st.cur)+'</b> · Recorrido desde último mant.: <b>'+fmtKm(st.kmMant)+' km</b><br>'+
+        'Alerta a los '+fmtKm(Math.max(0,st.limite-1000))+' km · Límite de mantenimiento: '+fmtKm(st.limite)+' km'+
+        '<div class="mant-ctrls">'+
+          '<span>Límite (km):</span><input type="number" min="1000" step="500" value="'+st.limite+'" data-lim="'+v.id+'">'+
+          '<button class="mini" data-savelim="'+v.id+'">Guardar</button>'+
+          '<button class="mini" data-done="'+v.id+'">Mant. realizado</button>'+
+          '<button class="mini wa" data-coord="'+v.id+'">Coordinar</button>'+
+        '</div></div>'+
+      '<div class="row-actions"><button class="del" data-del="'+v.id+'">Eliminar vehículo</button></div>';
+    grid.appendChild(card);
+  });
+  grid.querySelectorAll('[data-savelim]').forEach(b=>b.addEventListener('click',async()=>{
+    const id=b.getAttribute('data-savelim'); const inp=grid.querySelector('[data-lim="'+id+'"]');
+    const val=parseInt(inp.value,10); if(isNaN(val)||val<1000){toast('El límite debe ser al menos 1000 km',true);return;}
+    await saveMant(id,{limite:val}); await renderAdmVehGrid(); toast('Límite de mantenimiento actualizado'); }));
+  grid.querySelectorAll('[data-done]').forEach(b=>b.addEventListener('click',async()=>{
+    const id=b.getAttribute('data-done'); const m=await kmActualMap(); const cur=(m[id]!=null?m[id]:mantOf(id).kmBase);
+    if(!confirm('¿Registrar mantenimiento realizado a los '+fmtKm(cur)+' km? Esto reinicia el contador.'))return;
+    await saveMant(id,{kmBase:cur}); await renderAdmVehGrid(); toast('Mantenimiento registrado'); }));
+  grid.querySelectorAll('[data-coord]').forEach(b=>b.addEventListener('click',()=>openMant(b.getAttribute('data-coord'))));
+  grid.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>deleteVeh(b.getAttribute('data-del'))));
+}
+async function seedVehiculos(){
+  const rows=DEFAULT_VEHICULOS.map(v=>({ marca:v.marca, tipo:v.tipo, color:v.color, modelo:v.modelo, motor:v.motor, chasis:v.chasis,
+    anio:v.anio, placa:v.placa, numero_equipo:v.numeroEquipo, limite_mantenimiento:5000, km_base_mantenimiento:0 }));
+  const { error }=await sb.from('vehiculos').insert(rows);
+  if(error){ toast('No se pudieron cargar',true); return; }
+  await loadVehiculos(); renderAdmVehGrid(); toast('Vehículos iniciales cargados');
+}
+$('#openAddVeh').addEventListener('click',()=>{ ['nvMarca','nvModelo','nvTipo','nvColor','nvAnio','nvPlaca','nvEquipo','nvMotor','nvChasis'].forEach(id=>$('#'+id).value='');
+  $('#nvErr').textContent=''; $('#vehModal').classList.add('show'); });
+$('#closeVehModal').addEventListener('click',()=>$('#vehModal').classList.remove('show'));
+$('#cancelVeh').addEventListener('click',()=>$('#vehModal').classList.remove('show'));
+$('#saveVeh').addEventListener('click',async()=>{
+  const marca=$('#nvMarca').value.trim(), modelo=$('#nvModelo').value.trim(), placa=$('#nvPlaca').value.trim();
+  if(!marca||!modelo||!placa){ $('#nvErr').textContent='Marca, modelo y placa son obligatorios.'; return; }
+  const nuevo={ marca:marca.toUpperCase(), modelo:modelo.toUpperCase(), tipo:$('#nvTipo').value.trim()||'—',
+    color:$('#nvColor').value.trim()||'—', anio:$('#nvAnio').value.trim(), placa:placa,
+    numero_equipo:$('#nvEquipo').value.trim(), motor:$('#nvMotor').value.trim(), chasis:$('#nvChasis').value.trim(),
+    limite_mantenimiento:5000, km_base_mantenimiento:0 };
+  const { error }=await sb.from('vehiculos').insert(nuevo);
+  if(error){ $('#nvErr').textContent='No se pudo guardar el vehículo.'; return; }
+  await loadVehiculos(); $('#vehModal').classList.remove('show'); renderAdmVehGrid(); toast('Vehículo agregado');
+});
+async function deleteVeh(id){
+  if(!confirm('¿Eliminar este vehículo? Los abastecimientos ya registrados se conservan.'))return;
+  const { error }=await sb.from('vehiculos').delete().eq('id',id);
+  if(error){ toast('No se pudo eliminar',true); return; }
+  await loadVehiculos(); renderAdmVehGrid(); toast('Vehículo eliminado');
+}
+
+/* Coordinar mantenimiento */
+let mantTarget=null, mantTargetSt=null;
+async function openMant(id){
+  const v=vehById(id); if(!v)return; mantTarget=v;
+  const kmMap=await kmActualMap(); mantTargetSt=mantStatus(id,kmMap[id]);
+  $('#mantInfo').innerHTML='<b>'+v.marca+' '+v.modelo+'</b> · Placa '+v.placa+(v.numeroEquipo?' · Equipo '+v.numeroEquipo:'')+
+    '<br>Km actual: <b>'+fmtKm(mantTargetSt.cur)+'</b> · Desde último mant.: <b>'+fmtKm(mantTargetSt.kmMant)+' km</b> · Límite '+fmtKm(mantTargetSt.limite)+' km';
+  $('#mantModal').classList.add('show');
+}
+function msgMant(v,tipo,st){
+  return ['Coordinación de mantenimiento '+tipo+':','',
+    'Vehículo: '+v.marca+' '+v.modelo,'Placa: '+v.placa,(v.numeroEquipo?'N° de equipo: '+v.numeroEquipo:''),
+    'Kilometraje actual: '+fmtKm(st.cur)+' km','Km desde último mantenimiento: '+fmtKm(st.kmMant)+' km',
+    'Límite establecido: '+fmtKm(st.limite)+' km','','Favor coordinar el mantenimiento '+tipo+' de esta unidad.'].filter(Boolean).join('\n');
+}
+$('#mantPrev').addEventListener('click',()=>{ if(mantTarget) window.open('https://wa.me/?text='+encodeURIComponent(msgMant(mantTarget,'preventivo',mantTargetSt)),'_blank'); });
+$('#mantCorr').addEventListener('click',()=>{ if(mantTarget) window.open('https://wa.me/?text='+encodeURIComponent(msgMant(mantTarget,'correctivo',mantTargetSt)),'_blank'); });
+$('#closeMant').addEventListener('click',()=>$('#mantModal').classList.remove('show'));
+$('#mantClose2').addEventListener('click',()=>$('#mantModal').classList.remove('show'));
+
+/* Reporte diario PDF (manual y respaldo 20:30 en cliente) */
+async function recordsOfDay(dateObj){
+  const s=new Date(dateObj); s.setHours(0,0,0,0); const e=new Date(dateObj); e.setHours(23,59,59,999);
+  const all=await loadAll(); return all.filter(r=>{const d=new Date(r.fecha);return d>=s&&d<=e;}).sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+}
+async function buildDailyPDF(dateObj){
+  if(!(window.jspdf&&window.jspdf.jsPDF)) throw new Error('jsPDF no disponible');
+  const recs=await recordsOfDay(dateObj); const { jsPDF }=window.jspdf; const doc=new jsPDF();
+  doc.setFontSize(15); doc.setTextColor(11,46,99); doc.text('Vehículos abastecidos', 14, 16);
+  doc.setFontSize(10); doc.setTextColor(90); doc.text(fechaLarga(dateObj), 14, 22);
+  doc.text('Generado: '+new Date().toLocaleString('es-HN'), 14, 27);
+  const totLps=recs.reduce((s,r)=>s+Number(r.lempiras||0),0), totLts=recs.reduce((s,r)=>s+Number(r.litros||0),0);
+  if(recs.length===0){ doc.setFontSize(11); doc.setTextColor(120); doc.text('No hubo abastecimientos este día.', 14, 40); }
+  else{ const body=recs.map(r=>{ const c=vehChars(r);
+      return [horaLabel(r.fecha), c.numeroEquipo||'—', c.marca+' '+c.modelo, c.placa, r.gasolinera, fmtKm(r.kilometraje), fmtNum(r.lempiras), fmtNum(r.litros), r.usuario]; });
+    doc.autoTable({ startY:32, head:[['Hora','Equipo','Vehículo','Placa','Gasolinera','Km','Lempiras','Litros','Registró']],
+      body, styles:{fontSize:8,cellPadding:2}, headStyles:{fillColor:[11,46,99]},
+      foot:[['','','','','','TOTAL',fmtNum(totLps),fmtNum(totLts),'']], footStyles:{fillColor:[240,242,245],textColor:20,fontStyle:'bold'} }); }
+  return {doc,count:recs.length,totLps,totLts};
+}
+function dailyFilename(d){ return 'abastecimientos_'+toDateStr(d)+'.pdf'; }
+function dailyText(d,b){ return 'Listado de vehículos abastecidos — '+fechaLarga(d)+'\n'+b.count+' abastecimientos · Total '+fmtLps(b.totLps)+' · '+fmtNum(b.totLts)+' litros.'; }
+async function sharePDFdoc(doc,filename,text){
+  try{ const blob=doc.output('blob'); const file=new File([blob],filename,{type:'application/pdf'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){ await navigator.share({files:[file],text}); return; }
+  }catch(e){}
+  doc.save(filename); window.open('https://wa.me/?text='+encodeURIComponent(text),'_blank');
+}
+let dailyBuilt=null, dailyDate=null;
+async function openDailyPrompt(dateObj){
+  try{ dailyDate=dateObj; dailyBuilt=await buildDailyPDF(dateObj);
+    $('#dailyInfo').innerHTML='Reporte del <b>'+fechaLabel(dateObj.toISOString())+'</b>: <b>'+dailyBuilt.count+'</b> abastecimientos · Total <b>'+fmtLps(dailyBuilt.totLps)+'</b> · <b>'+fmtNum(dailyBuilt.totLts)+'</b> litros.';
+    $('#dailyModal').classList.add('show');
+  }catch(e){ toast('No se pudo generar el PDF',true); }
+}
+$('#dailyShare').addEventListener('click',async()=>{ if(dailyBuilt) await sharePDFdoc(dailyBuilt.doc,dailyFilename(dailyDate),dailyText(dailyDate,dailyBuilt)); });
+$('#dailyDownload').addEventListener('click',()=>{ if(dailyBuilt) dailyBuilt.doc.save(dailyFilename(dailyDate)); });
+$('#dailyClose2').addEventListener('click',()=>$('#dailyModal').classList.remove('show'));
+$('#closeDaily').addEventListener('click',()=>$('#dailyModal').classList.remove('show'));
+$('#dailyPdfBtn').addEventListener('click',()=>openDailyPrompt(new Date()));
+
+let dailyTimer=null;
+function startScheduler(){ if(dailyTimer)clearInterval(dailyTimer); dailyTimer=setInterval(checkDaily,60000); checkDaily(); }
+function stopScheduler(){ if(dailyTimer)clearInterval(dailyTimer); dailyTimer=null; }
+async function checkDaily(){
+  if(!currentUser||currentUser.rol!=='admin')return;
+  const now=new Date();
+  if(now.getHours()>20 || (now.getHours()===20&&now.getMinutes()>=30)){
+    let sent=false; const key='pdf_sent_'+toDateStr(now);
+    try{ sent=localStorage.getItem(key)==='1'; }catch(e){}
+    if(!sent){ try{ localStorage.setItem(key,'1'); }catch(e){} openDailyPrompt(now); }
+  }
+}
+
+/* EXCEL */
+async function downloadExcel(){
+  const recs=await filteredRecords(); const {label,fname}=rangeFor(period,$('#refDate').value);
+  if(recs.length===0){ toast('No hay datos para ese período',true); return; }
+  const rows=recs.map(r=>{ const c=vehChars(r); return {
+    'Fecha':fechaLabel(r.fecha),'Hora':horaLabel(r.fecha),'N° de equipo':c.numeroEquipo,
+    'Marca':c.marca,'Modelo':c.modelo,'Tipo':c.tipo,'Color':c.color,'Año':c.anio,'Placa':c.placa,
+    'Motor':c.motor,'Chasis':c.chasis,'Gasolinera':r.gasolinera,
+    'Kilometraje (km)':Number(r.kilometraje||0),'Lempiras (L)':Number(r.lempiras||0),'Litros':Number(r.litros||0),
+    'Factura':r.fotoURL?'Sí':'No','Registró':r.usuario }; });
+  const totLps=recs.reduce((s,r)=>s+Number(r.lempiras||0),0), totLts=recs.reduce((s,r)=>s+Number(r.litros||0),0);
+  rows.push({}); rows.push({'Gasolinera':'TOTALES','Lempiras (L)':totLps,'Litros':totLts});
+  const ws=XLSX.utils.json_to_sheet(rows,{origin:'A3'});
+  XLSX.utils.sheet_add_aoa(ws,[['Reporte de abastecimiento — '+label],['Generado: '+new Date().toLocaleString('es-HN')]],{origin:'A1'});
+  ws['!cols']=[{wch:11},{wch:7},{wch:13},{wch:12},{wch:12},{wch:9},{wch:11},{wch:7},{wch:11},{wch:16},{wch:20},{wch:16},{wch:15},{wch:14},{wch:10},{wch:9},{wch:18}];
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Abastecimiento'); XLSX.writeFile(wb,fname+'.xlsx');
+  toast('Reporte descargado');
+}
+
+</script>
+</body>
+</html>
