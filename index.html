@@ -64,6 +64,51 @@
   .login-hint b{color:var(--ink)}
   .err{color:var(--red);font-size:13px;margin-top:4px;min-height:18px}
 
+  /* FOOTER LOGIN */
+  .login-footer{margin-top:18px;text-align:center;font-size:12px;color:#8791A0;
+    padding-top:14px;border-top:1px solid var(--line)}
+  .login-footer .flag-mini{display:inline-flex;gap:2px;margin-right:6px;vertical-align:middle}
+  .login-footer .flag-mini span{width:5px;height:11px;border-radius:1px;display:inline-block}
+  .login-footer .flag-mini .b{background:#0073CF} .login-footer .flag-mini .w{background:#fff;border:1px solid #E2E6EC}
+
+  /* EFECTO BANDERA HONDUREÑA - FIESTAS PATRIAS 15 SEPT */
+  #patriaFX{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    background:rgba(6,26,58,.55);backdrop-filter:blur(2px);
+    opacity:0;transition:opacity .5s ease}
+  #patriaFX.show{opacity:1}
+  #patriaFX.done{opacity:0;pointer-events:none}
+  .hn-flag{width:min(340px,78vw);height:min(226px,52vw);position:relative;
+    border-radius:6px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.5);
+    animation:flagWave 2.6s ease-in-out infinite;transform-origin:left center}
+  .hn-flag .stripe{position:absolute;left:0;width:100%;height:33.333%}
+  .hn-flag .s-top{top:0;background:#0073CF}
+  .hn-flag .s-mid{top:33.333%;background:#fff}
+  .hn-flag .s-bot{top:66.666%;background:#0073CF}
+  .hn-flag .stars{position:absolute;top:33.333%;left:0;width:100%;height:33.333%;
+    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
+    place-items:center;color:#0073CF;font-size:min(22px,4.6vw);line-height:1}
+  .hn-flag .stars .center{grid-column:2;grid-row:2}
+  .hn-flag::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(105deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,0) 30%,rgba(0,0,0,.12) 100%);
+    animation:flagShine 2.6s ease-in-out infinite}
+  @keyframes flagWave{
+    0%,100%{transform:rotate(-1deg) skewY(0.6deg)}
+    25%{transform:rotate(0.8deg) skewY(-1deg)}
+    50%{transform:rotate(-0.6deg) skewY(0.8deg)}
+    75%{transform:rotate(1deg) skewY(-0.6deg)}}
+  @keyframes flagShine{0%,100%{opacity:.5}50%{opacity:.9}}
+  .patria-msg{margin-top:26px;text-align:center;color:#fff;
+    animation:patriaUp .8s ease both .3s}
+  .patria-msg h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;
+    font-size:clamp(26px,6vw,44px);margin:0;letter-spacing:.03em;
+    text-shadow:0 3px 16px rgba(0,0,0,.6)}
+  .patria-msg p{margin:6px 0 0;font-size:clamp(13px,3vw,17px);color:#CFE3FF;
+    text-shadow:0 2px 8px rgba(0,0,0,.5)}
+  @keyframes patriaUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  @media (prefers-reduced-motion:reduce){
+    .hn-flag,.hn-flag::after,.patria-msg{animation:none}}
+
   /* CHROME */
   header.top{background:var(--graphite);color:#fff;padding:12px 18px;display:flex;align-items:center;
     justify-content:space-between;gap:12px;position:sticky;top:0;z-index:20;border-bottom:3px solid var(--gold)}
@@ -226,7 +271,29 @@
       <div class="login-hint" id="loginHint">
         Inicia sesi&oacute;n con el correo y contrase&ntilde;a que el administrador cre&oacute; en Supabase.
       </div>
+      <div class="login-footer">
+        <span class="flag-mini"><span class="b"></span><span class="w"></span><span class="b"></span></span>
+        Todos los derechos reservados &copy; Eduarvarela 2026
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- EFECTO BANDERA HONDUREÑA - FIESTAS PATRIAS -->
+<div id="patriaFX" aria-hidden="true">
+  <div class="hn-flag">
+    <div class="stripe s-top"></div>
+    <div class="stripe s-mid"></div>
+    <div class="stripe s-bot"></div>
+    <div class="stars">
+      <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+      <span></span><span class="center">&#9733;</span><span></span>
+      <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+    </div>
+  </div>
+  <div class="patria-msg">
+    <h2>&iexcl;Viva Honduras!</h2>
+    <p>15 de Septiembre &middot; Fiestas Patrias &middot; Independencia</p>
   </div>
 </div>
 
@@ -429,6 +496,35 @@
 <div class="toast" id="toast"><span class="dot"></span><span id="toastMsg"></span></div>
 
 <script>
+/* =====================================================================
+   EFECTO BANDERA HONDUREÑA — FIESTAS PATRIAS (15 de septiembre)
+   Se muestra al iniciar durante el mes patrio (1–30 sept).
+   ===================================================================== */
+(function patriaHN(){
+  function run(){
+    var fx = document.getElementById('patriaFX');
+    if(!fx) return;
+    var hoy = new Date();
+    var esMesPatrio = (hoy.getMonth() === 8); // 8 = septiembre (0-indexado)
+    // Mostrar solo una vez por día para no repetir en cada recarga
+    var clave = 'patriaFX_' + hoy.getFullYear() + '-' + (hoy.getMonth()+1) + '-' + hoy.getDate();
+    var yaMostrado = false;
+    try { yaMostrado = sessionStorage.getItem(clave) === '1'; } catch(e){}
+    if(!esMesPatrio || yaMostrado) return;
+    try { sessionStorage.setItem(clave, '1'); } catch(e){}
+    // Mostrar la animación
+    requestAnimationFrame(function(){ fx.classList.add('show'); });
+    // Ocultar después de 4.2 segundos
+    setTimeout(function(){
+      fx.classList.remove('show'); fx.classList.add('done');
+      setTimeout(function(){ if(fx && fx.parentNode) fx.style.display='none'; }, 600);
+    }, 4200);
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', run);
+  } else { run(); }
+})();
+
 /* =====================================================================
    CONFIGURACIÓN DE SUPABASE  — pega aquí los datos de tu proyecto
    ===================================================================== */
