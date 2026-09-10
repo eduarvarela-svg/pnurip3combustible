@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Control de Abastecimiento de vehiculos</title>
+<title>Control de Abastecimiento de vehiculos URIP III</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -269,7 +269,7 @@
           <select id="fGas">
             <option value="">Selecciona la gasolinera…</option>
             <option>UNO Siguatepeque</option>
-            <option>La Esperanza</option>
+            <option> UNO La Esperanza</option>
             <option>Shell Comayagua</option>
             <option>Puma Tegucigalpa</option>
           </select></div>
@@ -302,7 +302,7 @@
     <div id="adminView" class="hidden">
       <!-- Reportes -->
       <div id="admReportes">
-        <div class="section-h"><h3>Reportes de abastecimiento</h3><p>Filtra por período y descarga el reporte en Excel.</p></div>
+        <div class="section-h"><h3>Reportes de abastecimiento de URIP III</h3><p>Filtra por período y descarga el reporte en Excel.</p></div>
         <div class="filters">
           <div><div class="seg" id="periodSeg">
             <button data-p="dia" class="active">Diario</button>
@@ -469,7 +469,7 @@ let toastTimer;
 function toast(msg,isErr){const t=$('#toast');$('#toastMsg').textContent=msg;t.classList.toggle('err',!!isErr);
   t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2600);}
 
-/* Estado */
+/* Estado*/
 let currentUser=null, selectedVeh=null, photoData=null, period='dia';
 let vehiculos=[], lastSavedRec=null;
 
