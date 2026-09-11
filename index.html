@@ -71,43 +71,40 @@
   .login-footer .flag-mini span{width:5px;height:11px;border-radius:1px;display:inline-block}
   .login-footer .flag-mini .b{background:#0073CF} .login-footer .flag-mini .w{background:#fff;border:1px solid #E2E6EC}
 
-  /* EFECTO BANDERA HONDUREÑA - FIESTAS PATRIAS 15 SEPT */
-  #patriaFX{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;
+  /* EFECTO VEHÍCULO MITSUBISHI L200 2025 — REALISTA */
+  #truckFX{position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden;
     display:flex;flex-direction:column;align-items:center;justify-content:center;
-    background:rgba(6,26,58,.55);backdrop-filter:blur(2px);
-    opacity:0;transition:opacity .5s ease}
-  #patriaFX.show{opacity:1}
-  #patriaFX.done{opacity:0;pointer-events:none}
-  .hn-flag{width:min(340px,78vw);height:min(226px,52vw);position:relative;
-    border-radius:6px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.5);
-    animation:flagWave 2.6s ease-in-out infinite;transform-origin:left center}
-  .hn-flag .stripe{position:absolute;left:0;width:100%;height:33.333%}
-  .hn-flag .s-top{top:0;background:#0073CF}
-  .hn-flag .s-mid{top:33.333%;background:#fff}
-  .hn-flag .s-bot{top:66.666%;background:#0073CF}
-  .hn-flag .stars{position:absolute;top:33.333%;left:0;width:100%;height:33.333%;
-    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
-    place-items:center;color:#0073CF;font-size:min(22px,4.6vw);line-height:1}
-  .hn-flag .stars .center{grid-column:2;grid-row:2}
-  .hn-flag::after{content:"";position:absolute;inset:0;
-    background:linear-gradient(105deg,rgba(255,255,255,.35) 0%,rgba(255,255,255,0) 30%,rgba(0,0,0,.12) 100%);
-    animation:flagShine 2.6s ease-in-out infinite}
-  @keyframes flagWave{
-    0%,100%{transform:rotate(-1deg) skewY(0.6deg)}
-    25%{transform:rotate(0.8deg) skewY(-1deg)}
-    50%{transform:rotate(-0.6deg) skewY(0.8deg)}
-    75%{transform:rotate(1deg) skewY(-0.6deg)}}
-  @keyframes flagShine{0%,100%{opacity:.5}50%{opacity:.9}}
-  .patria-msg{margin-top:26px;text-align:center;color:#fff;
-    animation:patriaUp .8s ease both .3s}
-  .patria-msg h2{font-family:'Barlow Condensed',sans-serif;font-weight:700;
-    font-size:clamp(26px,6vw,44px);margin:0;letter-spacing:.03em;
-    text-shadow:0 3px 16px rgba(0,0,0,.6)}
-  .patria-msg p{margin:6px 0 0;font-size:clamp(13px,3vw,17px);color:#CFE3FF;
-    text-shadow:0 2px 8px rgba(0,0,0,.5)}
-  @keyframes patriaUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+    background:radial-gradient(ellipse 60% 55% at 50% 44%,rgba(20,40,72,.82),rgba(3,9,20,.96));
+    backdrop-filter:blur(3px);opacity:0;transition:opacity .6s ease}
+  #truckFX.show{opacity:1}
+  #truckFX.done{opacity:0;pointer-events:none}
+  .tk-stage{position:relative;width:min(380px,72vw);
+    animation:tkIn 1.1s cubic-bezier(.2,.8,.25,1) both}
+  @keyframes tkIn{0%{opacity:0;transform:translateY(24px) scale(.92)}
+    100%{opacity:1;transform:translateY(0) scale(1)}}
+  .disc{position:absolute;left:50%;top:64%;transform:translate(-50%,-50%);
+    width:112%;height:56px;border-radius:50%;
+    background:radial-gradient(ellipse at center,rgba(90,160,255,.28),rgba(90,160,255,0) 70%);
+    animation:discPulse 3s ease-in-out infinite}
+  .disc::after{content:"";position:absolute;inset:0;border-radius:50%;
+    border:2px solid rgba(120,190,255,.35);animation:ring 3s linear infinite}
+  @keyframes discPulse{0%,100%{opacity:.7}50%{opacity:1}}
+  @keyframes ring{0%{transform:scale(.9);opacity:.6}100%{transform:scale(1.15);opacity:0}}
+  .car-wrap{position:relative;animation:sheen 4s ease-in-out infinite}
+  @keyframes sheen{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+  .car-svg{width:100%;height:auto;display:block;
+    filter:drop-shadow(0 16px 20px rgba(0,0,0,.6))}
+  .shine{animation:shineMove 3.2s ease-in-out infinite}
+  @keyframes shineMove{0%{opacity:0}35%{opacity:.9}55%{opacity:0}100%{opacity:0}}
+  .tk-msg{margin-top:26px;text-align:center;color:#fff;animation:tkMsgUp .9s ease both .5s}
+  .tk-msg h2{font-family:'Barlow Condensed',sans-serif;font-weight:800;
+    font-size:clamp(20px,4.4vw,32px);margin:0;letter-spacing:.08em;
+    color:#eaf3ff;text-shadow:0 2px 16px rgba(90,160,255,.5)}
+  .tk-msg p{margin:5px 0 0;font-size:clamp(10px,2.4vw,13px);color:#9cc0f0;
+    letter-spacing:.28em;text-transform:uppercase}
+  @keyframes tkMsgUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
   @media (prefers-reduced-motion:reduce){
-    .hn-flag,.hn-flag::after,.patria-msg{animation:none}}
+    .car-wrap,.shine,.disc,.disc::after,.tk-msg,.tk-stage{animation:none}}
 
   /* CHROME */
   header.top{background:var(--graphite);color:#fff;padding:12px 18px;display:flex;align-items:center;
@@ -269,31 +266,85 @@
       <div class="err" id="loginErr"></div>
       <button class="btn" id="loginBtn">Entrar</button>
       <div class="login-hint" id="loginHint">
-        Inicia sesi&oacute;n con el correo y contrase&ntilde;a que el administrador cre&oacute; en Supabase.
+        INICIE SESION CON EL USUARIO QUE LE FUE ASIGNADO (SEA RESPONSABLE CON EL USO DEL MISMO)
       </div>
       <div class="login-footer">
         <span class="flag-mini"><span class="b"></span><span class="w"></span><span class="b"></span></span>
-        Todos los derechos reservados &copy; Eduarvarela 2026
+        Todos los derechos reservados &copy; E.N.V.B @2026
       </div>
     </div>
   </div>
 </div>
 
-<!-- EFECTO BANDERA HONDUREÑA - FIESTAS PATRIAS -->
-<div id="patriaFX" aria-hidden="true">
-  <div class="hn-flag">
-    <div class="stripe s-top"></div>
-    <div class="stripe s-mid"></div>
-    <div class="stripe s-bot"></div>
-    <div class="stars">
-      <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
-      <span></span><span class="center">&#9733;</span><span></span>
-      <span>&#9733;</span><span>&#9733;</span><span>&#9733;</span>
+<!-- EFECTO VEHÍCULO MITSUBISHI L200 2025 — REALISTA -->
+<div id="truckFX" aria-hidden="true">
+  <div class="tk-stage">
+    <div class="disc"></div>
+    <div class="car-wrap">
+      <svg class="car-svg" viewBox="0 0 520 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="paint" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#5b6472"/><stop offset="0.35" stop-color="#3c4450"/>
+            <stop offset="0.7" stop-color="#282e38"/><stop offset="1" stop-color="#1a1e26"/>
+          </linearGradient>
+          <linearGradient id="win" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#aebfd0"/><stop offset="0.5" stop-color="#4c5666"/>
+            <stop offset="1" stop-color="#2b323d"/>
+          </linearGradient>
+          <linearGradient id="tire" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#2a2e35"/><stop offset="1" stop-color="#0e1116"/>
+          </linearGradient>
+          <radialGradient id="rim" cx="0.4" cy="0.4" r="0.65">
+            <stop offset="0" stop-color="#d7dde5"/><stop offset="0.5" stop-color="#8a94a2"/><stop offset="1" stop-color="#3f4650"/>
+          </radialGradient>
+          <radialGradient id="hl" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#fff7e0"/><stop offset="0.6" stop-color="#ffd98a"/><stop offset="1" stop-color="rgba(255,200,90,0)"/>
+          </radialGradient>
+        </defs>
+        <ellipse cx="260" cy="214" rx="205" ry="16" fill="rgba(0,0,0,.5)"/>
+        <path d="M40 132 L40 188 L214 188 L214 108 L96 108 Q62 110 40 132 Z" fill="url(#paint)"/>
+        <rect x="52" y="128" width="150" height="44" rx="3" fill="#20252d"/>
+        <path d="M206 188 L206 96 Q208 74 236 72 L338 70 Q366 70 386 100 L430 128 L476 140 Q498 146 498 172 L498 188 Z" fill="url(#paint)"/>
+        <path d="M212 96 Q214 76 238 74 L336 72 Q360 74 376 96 L212 96 Z" fill="#4a525f"/>
+        <path d="M224 94 L268 94 L268 130 L224 130 Z" fill="url(#win)"/>
+        <path d="M280 94 L332 94 Q350 94 362 110 L376 130 L280 130 Z" fill="url(#win)"/>
+        <line x1="274" y1="94" x2="274" y2="130" stroke="#20252d" stroke-width="5"/>
+        <rect x="238" y="150" width="20" height="4" rx="2" fill="#12151b"/>
+        <rect x="300" y="150" width="20" height="4" rx="2" fill="#12151b"/>
+        <path d="M476 140 L498 172 L498 188 L444 188 L444 148 Z" fill="#22272f"/>
+        <rect x="448" y="150" width="44" height="7" rx="2" fill="#3a414d"/>
+        <rect x="448" y="160" width="44" height="6" rx="2" fill="#2c333d"/>
+        <ellipse class="shine" cx="486" cy="150" rx="18" ry="12" fill="url(#hl)"/>
+        <path d="M470 144 L494 146 L494 158 L470 160 Z" fill="#ffe9a8"/>
+        <rect x="40" y="182" width="458" height="10" rx="3" fill="#15181e"/>
+        <rect x="214" y="188" width="120" height="8" rx="3" fill="#0f1217"/>
+        <path d="M92 190 A44 44 0 0 1 178 190 Z" fill="#181b21"/>
+        <path d="M372 190 A44 44 0 0 1 458 190 Z" fill="#181b21"/>
+        <path class="shine" d="M60 130 L200 118 L200 128 L60 142 Z" fill="rgba(255,255,255,.18)"/>
+        <g>
+          <circle cx="135" cy="190" r="42" fill="url(#tire)"/>
+          <circle cx="135" cy="190" r="41" fill="none" stroke="#000" stroke-width="2"/>
+          <circle cx="135" cy="190" r="24" fill="url(#rim)"/>
+          <g fill="#2f3640">
+            <circle cx="135" cy="171" r="3.5"/><circle cx="152" cy="184" r="3.5"/>
+            <circle cx="146" cy="204" r="3.5"/><circle cx="124" cy="204" r="3.5"/><circle cx="118" cy="184" r="3.5"/>
+          </g>
+          <circle cx="135" cy="190" r="6" fill="#20252d"/>
+        </g>
+        <g>
+          <circle cx="415" cy="190" r="42" fill="url(#tire)"/>
+          <circle cx="415" cy="190" r="41" fill="none" stroke="#000" stroke-width="2"/>
+          <circle cx="415" cy="190" r="24" fill="url(#rim)"/>
+          <g fill="#2f3640">
+            <circle cx="415" cy="171" r="3.5"/><circle cx="432" cy="184" r="3.5"/>
+            <circle cx="426" cy="204" r="3.5"/><circle cx="404" cy="204" r="3.5"/><circle cx="398" cy="184" r="3.5"/>
+          </g>
+          <circle cx="415" cy="190" r="6" fill="#20252d"/>
+        </g>
+      </svg>
     </div>
   </div>
-  <div class="patria-msg">
-    <h2>&iexcl;Viva Honduras!</h2>
-    <p>15 de Septiembre &middot; Fiestas Patrias &middot; Independencia</p>
+  <div class="tk-msg">
   </div>
 </div>
 
@@ -497,28 +548,25 @@
 
 <script>
 /* =====================================================================
-   EFECTO BANDERA HONDUREÑA — FIESTAS PATRIAS (15 de septiembre)
-   Se muestra al iniciar durante el mes patrio (1–30 sept).
+   EFECTO VEHÍCULO MITSUBISHI L200 2025 — al iniciar la app.
+   Se muestra una vez por sesión para no repetir en cada recarga.
    ===================================================================== */
-(function patriaHN(){
+(function truckFXInit(){
   function run(){
-    var fx = document.getElementById('patriaFX');
+    var fx = document.getElementById('truckFX');
     if(!fx) return;
-    var hoy = new Date();
-    var esMesPatrio = (hoy.getMonth() === 8); // 8 = septiembre (0-indexado)
-    // Mostrar solo una vez por día para no repetir en cada recarga
-    var clave = 'patriaFX_' + hoy.getFullYear() + '-' + (hoy.getMonth()+1) + '-' + hoy.getDate();
+    // Mostrar solo una vez por sesión del navegador
     var yaMostrado = false;
-    try { yaMostrado = sessionStorage.getItem(clave) === '1'; } catch(e){}
-    if(!esMesPatrio || yaMostrado) return;
-    try { sessionStorage.setItem(clave, '1'); } catch(e){}
+    try { yaMostrado = sessionStorage.getItem('truckFX_shown') === '1'; } catch(e){}
+    if(yaMostrado) return;
+    try { sessionStorage.setItem('truckFX_shown', '1'); } catch(e){}
     // Mostrar la animación
     requestAnimationFrame(function(){ fx.classList.add('show'); });
     // Ocultar después de 4.2 segundos
     setTimeout(function(){
       fx.classList.remove('show'); fx.classList.add('done');
       setTimeout(function(){ if(fx && fx.parentNode) fx.style.display='none'; }, 600);
-    }, 4200);
+    }, 5200);
   }
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', run);
