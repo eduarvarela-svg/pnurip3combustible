@@ -274,7 +274,7 @@
       <div class="err" id="loginErr"></div>
       <button class="btn" id="loginBtn">Entrar</button>
       <div class="login-hint" id="loginHint">
-        INICIE SESION CON SU USUARIO Y CONTRASEÑA QUE SE LE ASIGNO.
+        Ingrese correo y contraseña para iniciar sesion.
       </div>
       <div class="login-footer">
         <span class="flag-mini"><span class="b"></span><span class="w"></span><span class="b"></span></span>
@@ -1026,8 +1026,23 @@ async function openReportPrompt(){
     dailyFname=fname.replace('reporte','KILOMETRAJE_URIP_III')+'.xlsx';
     const per = period==='dia'?'':(period==='semana'?' semanal':' mensual');
     dailyMsg='Buenas, muy respetuosamente envío el reporte'+per+' de kilometraje de la URIP-III La Paz.\n'+fecha+'\nVehículos abastecidos: '+count+' · Total '+fmtLps(totLps)+' · '+fmtNum(totLts)+' litros.';
-    $('#dailyInfo').innerHTML='Reporte <b>'+(period==='dia'?'diario':period==='semana'?'semanal':'mensual')+'</b> · <b>'+count+'</b> abastecimientos · Total <b>'+fmtLps(totLps)+'</b> · <b>'+fmtNum(totLts)+'</b> litros.';
+
+    /* Generar el archivo Excel */
+    const buf=await dailyBuilt.xlsx.writeBuffer();
+    const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const file=new File([blob],dailyFname,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+
+    /* En CELULAR: abrir directo el menú de compartir con el archivo adjunto (ahí eliges WhatsApp) */
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      try{ await navigator.share({files:[file],text:dailyMsg}); return; }
+      catch(e){ if(e && e.name==='AbortError') return; } // el usuario canceló el menú
+    }
+
+    /* En COMPUTADORA (sin compartir archivos): descargar Excel y abrir WhatsApp Web con el mensaje */
+    descargarBlob(blob,dailyFname);
+    $('#dailyInfo').innerHTML='Reporte <b>'+(period==='dia'?'diario':period==='semana'?'semanal':'mensual')+'</b> · <b>'+count+'</b> abastecimientos · Total <b>'+fmtLps(totLps)+'</b> · <b>'+fmtNum(totLts)+'</b> litros.<br><br>El Excel se descargó. Se abrirá WhatsApp; adjunta el archivo descargado en el chat.';
     $('#dailyModal').classList.add('show');
+    window.open('https://wa.me/?text='+encodeURIComponent(dailyMsg),'_blank');
   }catch(e){ toast('No se pudo generar el Excel',true); }
 }
 $('#dailyShare').addEventListener('click',async()=>{ if(dailyBuilt) await shareXLSX(dailyBuilt,dailyFname,dailyMsg); });
@@ -1116,13 +1131,14 @@ async function buildOfficialXLSX(recs, subtitle, mode, dateStr){
   }
 
   /* Firma con sello */
+  /* Firma con sello — centrada en la hoja (17 columnas: centro ≈ col 9) */
   const selloRow=lastData+3;
   try{ const selloId=wb.addImage({base64:IMG_SELLO,extension:'png'});
-    ws.addImage(selloId,{tl:{col:4,row:selloRow-1},ext:{width:150,height:69}}); }catch(e){}
+    ws.addImage(selloId,{tl:{col:6.95,row:selloRow-1},ext:{width:150,height:69}}); }catch(e){}
   const lineRow=selloRow+3;
-  ws.mergeCells(lineRow,4,lineRow,9); const lc=ws.getCell(lineRow,4);
+  ws.mergeCells(lineRow,5,lineRow,13); const lc=ws.getCell(lineRow,5);
   lc.value=ROSTER_JEFE; lc.font={bold:true,size:9}; lc.alignment={horizontal:'center'};
-  ws.mergeCells(lineRow+1,4,lineRow+1,9); const cc=ws.getCell(lineRow+1,4);
+  ws.mergeCells(lineRow+1,5,lineRow+1,13); const cc=ws.getCell(lineRow+1,5);
   cc.value=ROSTER_CARGO; cc.font={size:9}; cc.alignment={horizontal:'center'};
 
   return wb;
