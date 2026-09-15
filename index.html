@@ -224,6 +224,22 @@
   .badge-mant.warn{background:#FFF4E5;border:1px solid #f6d9ad;color:#a5610a}
   .badge-mant.danger{background:#FDECEC;border:1px solid #f3c2c2;color:#b02a2a}
   .badge-mant.ok{background:#EAF7EF;border:1px solid #bfe6cd;color:#177A43}
+
+  /* LED / baliza rojo-azul de alerta de mantenimiento */
+  @keyframes ledFlashR{0%,49%{opacity:1;box-shadow:0 0 8px 2px rgba(210,63,63,.95),0 0 3px 1px #fff inset}50%,100%{opacity:.22;box-shadow:none}}
+  @keyframes ledFlashB{0%,49%{opacity:.22;box-shadow:none}50%,100%{opacity:1;box-shadow:0 0 8px 2px rgba(27,111,234,.95),0 0 3px 1px #fff inset}}
+  .led-mant{display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border-radius:22px;
+    font-size:12px;font-weight:700;letter-spacing:.01em;line-height:1.2}
+  .led-mant.proximo{background:#0B2E63;color:#fff;border:1px solid #123c7f}
+  .led-mant.vencido{background:#5a0d0d;color:#fff;border:1px solid #7a1515}
+  .led-bar{display:inline-flex;gap:5px;align-items:center;flex:0 0 auto}
+  .led-dot{width:11px;height:11px;border-radius:50%;flex:0 0 auto}
+  .led-dot.red{background:var(--red);animation:ledFlashR .8s steps(1,end) infinite}
+  .led-dot.blue{background:#1B6FEA;animation:ledFlashB .8s steps(1,end) infinite}
+  .led-mant .km-left{font-variant-numeric:tabular-nums}
+  @media (prefers-reduced-motion: reduce){
+    .led-dot.red,.led-dot.blue{animation:none;opacity:1}
+  }
   .mant-box{background:#F6F7F9;border:1px solid var(--line);border-radius:9px;padding:10px 11px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
   .mant-box b{color:var(--ink)}
   .mant-ctrls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
@@ -422,7 +438,7 @@
 
       <!-- Vehículos -->
       <div id="admVehiculos" class="hidden">
-        <div class="section-h"><h3>Vehículos de la flota</h3><p>Agrega nuevos vehículos con todas sus características.</p></div>
+        <div class="section-h"><h3>Vehículos asigando a URIP IIII</h3><p>Agrega nuevos vehículos con todas sus características.</p></div>
         <div style="margin-bottom:16px"><button class="btn sm" id="openAddVeh">+ Agregar vehículo</button></div>
         <div class="veh-grid" id="admVehGrid"></div>
       </div>
@@ -647,6 +663,20 @@ function mantStatus(id,currentKm){ const {limite,kmBase}=mantOf(id);
   const cur=(currentKm!=null?currentKm:kmBase); const kmMant=Math.max(0,cur-kmBase);
   let estado='ok'; if(kmMant>=limite)estado='vencido'; else if(kmMant>=(limite-1000))estado='proximo';
   return {estado,kmMant,limite,kmBase,cur}; }
+/* Baliza LED rojo/azul + km restante para llegar al límite de mantenimiento.
+   Aparece cuando el vehículo entra en los 1000 km próximos ('proximo') o ya está 'vencido'.
+   Se usa igual en todas las vistas y roles (operadores y administradores). */
+function ledMantHTML(st){
+  if(!st || st.estado==='ok') return '';
+  const restante=st.limite-st.kmMant;
+  const txt = restante>0
+    ? ('Faltan '+fmtKm(restante)+' km para mantenimiento')
+    : ('Mantenimiento vencido por '+fmtKm(Math.abs(restante))+' km');
+  return '<span class="led-mant '+(st.estado==='vencido'?'vencido':'proximo')+'" '+
+      'title="'+txt+'">'+
+    '<span class="led-bar" aria-hidden="true"><span class="led-dot red"></span><span class="led-dot blue"></span></span>'+
+    '<span class="km-left">'+txt+'</span></span>';
+}
 function vehChars(r){
   const base=vehById(r.vehiculoId); const pick=(a,b)=>(a!==undefined&&a!==null&&a!=='')?a:(b||'');
   return { marca:pick(r.marca,base.marca), tipo:pick(r.tipo,base.tipo), color:pick(r.color,base.color),
@@ -700,11 +730,13 @@ async function renderVehGrid(){
     const cls=st.estado==='vencido'?' danger':st.estado==='proximo'?' warn':'';
     let mb=''; if(st.estado==='vencido')mb='<span class="badge-mant danger">Mantenimiento requerido</span>';
     else if(st.estado==='proximo')mb='<span class="badge-mant warn">Próximo a mantenimiento</span>';
+    const led=ledMantHTML(st);
     const card=document.createElement('div'); card.className='veh-card'+cls;
     card.innerHTML='<div class="plate">'+plateHTML(v.placa)+'</div>'+
       '<div class="veh-meta"><div class="mk">'+v.marca+' '+v.modelo+'</div>'+
         '<div class="sub">'+v.tipo+' · '+v.color+' · Año '+(v.anio||'—')+'</div></div>'+
       '<div class="veh-spec">'+mb+(v.numeroEquipo?'<span class="badge-eq">Equipo '+v.numeroEquipo+'</span>':'')+'</div>'+
+      (led?'<div class="veh-spec">'+led+'</div>':'')+
       '<div class="row-actions"><button class="btn sm">Abastecer este vehículo</button></div>';
     card.querySelector('button').addEventListener('click',()=>selectVehicle(v));
     grid.appendChild(card);
@@ -900,12 +932,19 @@ async function renderAdmVehGrid(){
     const badge=st.estado==='vencido'?'<span class="badge-mant danger">Mantenimiento requerido</span>'
       :st.estado==='proximo'?'<span class="badge-mant warn">Próximo a mantenimiento</span>'
       :'<span class="badge-mant ok">Al día</span>';
+    const led=ledMantHTML(st);
+    const restante=st.limite-st.kmMant;
+    const restanteTxt = restante>0
+      ? 'Faltan <b>'+fmtKm(restante)+' km</b> para el mantenimiento'
+      : 'Vencido por <b>'+fmtKm(Math.abs(restante))+' km</b>';
     const card=document.createElement('div'); card.className='veh-card'+cls;
     card.innerHTML='<div class="plate">'+plateHTML(v.placa)+'</div>'+
       '<div class="veh-meta"><div class="mk">'+v.marca+' '+v.modelo+'</div>'+
         '<div class="sub">'+v.tipo+' · '+v.color+' · Año '+(v.anio||'—')+'</div></div>'+
       '<div class="veh-spec">'+badge+(v.numeroEquipo?'<span class="badge-eq">Equipo '+v.numeroEquipo+'</span>':'')+'</div>'+
+      (led?'<div class="veh-spec">'+led+'</div>':'')+
       '<div class="mant-box">Km actual: <b>'+fmtKm(st.cur)+'</b> · Recorrido desde último mant.: <b>'+fmtKm(st.kmMant)+' km</b><br>'+
+        restanteTxt+'<br>'+
         'Alerta a los '+fmtKm(Math.max(0,st.limite-1000))+' km · Límite de mantenimiento: '+fmtKm(st.limite)+' km'+
         '<div class="mant-ctrls">'+
           '<span>Límite (km):</span><input type="number" min="1000" step="500" value="'+st.limite+'" data-lim="'+v.id+'">'+
