@@ -8,6 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.4.0/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
@@ -139,11 +141,21 @@
   .veh-card{background:var(--surface);border:1.5px solid var(--line);border-radius:var(--radius);padding:16px;
     box-shadow:var(--shadow);text-align:left;display:flex;flex-direction:column;gap:12px;transition:border-color .15s}
   .veh-card:hover{border-color:#C3C9D0}
-  .plate{background:#fff;border:2px solid #101418;border-radius:7px;overflow:hidden;width:150px;max-width:100%;
-    box-shadow:0 1px 0 rgba(0,0,0,.15)}
-  .plate .hn{background:var(--blue);color:#fff;font-size:8px;font-weight:700;text-align:center;padding:2px 0;letter-spacing:.28em}
-  .plate .no{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:27px;text-align:center;padding:3px 6px 5px;
-    color:#101418;letter-spacing:.06em}
+  .plate{background:#fff;border:2px solid #101418;border-radius:8px;overflow:hidden;width:158px;max-width:100%;
+    box-shadow:0 1px 0 rgba(0,0,0,.15), inset 0 0 0 2px #fff}
+  .plate .hn{position:relative;background:var(--blue);color:#fff;font-size:8.5px;font-weight:700;text-align:center;
+    padding:2px 0 2px 16px;letter-spacing:.26em;display:flex;align-items:center;justify-content:center;gap:4px}
+  .plate .hn .flag{position:absolute;left:4px;top:50%;transform:translateY(-50%);width:11px;height:8px;border-radius:1px;
+    overflow:hidden;box-shadow:0 0 0 .5px rgba(255,255,255,.5)}
+  .plate .hn .flag i{display:block;height:33.33%}
+  .plate .hn .flag i:nth-child(1),.plate .hn .flag i:nth-child(3){background:#0093D0}
+  .plate .hn .flag i:nth-child(2){background:#fff;position:relative}
+  .plate .hn .flag i:nth-child(2)::after{content:"★★★★★";position:absolute;inset:0;font-size:2.4px;color:#0093D0;
+    text-align:center;line-height:2.6px;letter-spacing:0}
+  .plate .no{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:28px;text-align:center;padding:5px 6px 3px;
+    color:#0b1a3a;letter-spacing:.10em;text-shadow:0 1px 0 rgba(0,0,0,.08)}
+  .plate .ca{background:#fff;color:var(--blue);font-size:7.5px;font-weight:700;text-align:center;padding:0 0 3px;
+    letter-spacing:.30em}
   .veh-meta .mk{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:20px;line-height:1}
   .veh-meta .sub{color:var(--ink-2);font-size:13px;margin-top:3px}
   .veh-spec{display:flex;flex-wrap:wrap;gap:6px}
@@ -278,9 +290,8 @@
 <div id="login">
   <div class="login-card">
     <div class="login-top">
-      <div class="gauge"></div>
-      <h1>CONTROL DE<br>ABASTECIMIENTO</h1>
-      <p>Registro de combustible de vehículos URIP III</p>
+      <h1>SISTEMA DE<br>ABASTECIMIENTO<br>URIP III</h1>
+      <p>Accediendo al sistema de abastecimiento URIP III</p>
     </div>
     <div class="login-body">
       <div class="field"><label for="u">Correo</label>
@@ -409,17 +420,21 @@
     <div id="adminView" class="hidden">
       <!-- Reportes -->
       <div id="admReportes">
-        <div class="section-h"><h3>Reportes de abastecimiento de URIP III</h3><p>Filtra por período y descarga el reporte en Excel.</p></div>
+        <div class="section-h"><h3>Reportes de abastecimiento de URIP III</h3><p>Filtra por día, semana, mes o rango de fechas y descarga el reporte en Excel o PDF.</p></div>
         <div class="filters">
           <div><div class="seg" id="periodSeg">
             <button data-p="dia" class="active">Diario</button>
             <button data-p="semana">Semanal</button>
             <button data-p="mes">Mensual</button>
+            <button data-p="rango">Rango de fechas</button>
           </div></div>
-          <div class="fdate"><label for="refDate">Fecha de referencia</label><input id="refDate" type="date"></div>
+          <div class="fdate" id="refDateWrap"><label for="refDate">Fecha de referencia</label><input id="refDate" type="date"></div>
+          <div class="fdate hidden" id="fromWrap"><label for="fromDate">Desde</label><input id="fromDate" type="date"></div>
+          <div class="fdate hidden" id="toWrap"><label for="toDate">Hasta</label><input id="toDate" type="date"></div>
           <div class="grow"></div>
           <button class="btn wa sm" id="dailyPdfBtn" style="width:auto">Reporte del día (Excel) → WhatsApp</button>
           <button class="btn dl-btn sm" id="downloadBtn">Descargar Excel</button>
+          <button class="btn dl-btn sm" id="downloadPdfBtn">Descargar PDF</button>
         </div>
         <div class="stat-row">
           <div class="stat"><div class="k">Abastecimientos</div><div class="v num" id="stCount">0</div></div>
@@ -516,11 +531,13 @@
     <div class="mb">
       <div class="mant-box" id="dailyInfo" style="margin-bottom:14px"></div>
       <div class="share-btns">
-        <button class="btn wa" id="dailyShare">Enviar Excel por WhatsApp</button>
-        <button class="btn ghost" id="dailyDownload">Descargar Excel</button>
+        <button class="btn wa" id="dailySend1">Enviar a 8818-9266</button>
+        <button class="btn wa" id="dailySend2">Enviar a 4447-3577</button>
+        <button class="btn ghost" id="dailyDownloadX">Descargar Excel</button>
+        <button class="btn ghost" id="dailyDownloadP">Descargar PDF</button>
         <button class="btn ghost" id="dailyClose2">Cerrar</button>
       </div>
-      <div class="share-photo-note">En celular, "Enviar Excel por WhatsApp" adjunta el archivo directo. En computadora se descarga el Excel y se abre WhatsApp para adjuntarlo manualmente.</div>
+      <div class="share-photo-note">Al pulsar un número se abre WhatsApp con el saludo listo para ese contacto. <b>Descarga primero el Excel y/o el PDF</b> y adjúntalo en el chat de WhatsApp (los enlaces de WhatsApp no permiten adjuntar el archivo automáticamente).</div>
     </div>
   </div>
 </div>
@@ -542,20 +559,9 @@
    ===================================================================== */
 (function truckFXInit(){
   function run(){
+    // Animación del vehículo de entrada desactivada: acceso directo al login.
     var fx = document.getElementById('truckFX');
-    if(!fx) return;
-    // Mostrar solo una vez por sesión del navegador
-    var yaMostrado = false;
-    try { yaMostrado = sessionStorage.getItem('truckFX_shown') === '1'; } catch(e){}
-    if(yaMostrado) return;
-    try { sessionStorage.setItem('truckFX_shown', '1'); } catch(e){}
-    // Mostrar la animación
-    requestAnimationFrame(function(){ fx.classList.add('show'); });
-    // Ocultar después de 4.2 segundos
-    setTimeout(function(){
-      fx.classList.remove('show'); fx.classList.add('done');
-      setTimeout(function(){ if(fx && fx.parentNode) fx.style.display='none'; }, 600);
-    }, 4500);
+    if(fx){ fx.style.display='none'; }
   }
   if(document.readyState === 'loading'){
     document.addEventListener('DOMContentLoaded', run);
@@ -589,6 +595,11 @@ const ROSTER_URIP = [
 ];
 const ROSTER_JEFE = 'ELENA YASMINA ORDOÑEZ GOMEZ';
 const ROSTER_CARGO = 'JEFE URIP-III LA PAZ';
+/* Números de WhatsApp de destino (código de Honduras 504). */
+const WA_NUMEROS = ['50488189266','50444473577'];
+function saludoNocturno(dateObj){
+  return 'Buenas noche, con todo respeto se envía los kilometrajes de la URIP III La Paz.\nFecha: '+fechaLarga(dateObj)+'.';
+}
 const normPlaca = s => String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
 /* ===================================================================== */
 
@@ -610,7 +621,8 @@ function fechaLarga(d){
   const meses=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
   return dias[d.getDay()]+' '+pad(d.getDate())+' de '+meses[d.getMonth()]+' del '+d.getFullYear();
 }
-function plateHTML(p){return '<div class="hn">HONDURAS</div><div class="no">'+(p||'—')+'</div>';}
+function plateHTML(p){return '<div class="hn"><span class="flag"><i></i><i></i><i></i></span>HONDURAS</div>'+
+  '<div class="no">'+(p||'—')+'</div><div class="ca">CENTROAMÉRICA</div>';}
 function vehDesc(v){return v.marca+' '+v.modelo;}
 function dataURLtoBlob(dataurl){ const [head,b64]=dataurl.split(','); const mime=(head.match(/:(.*?);/)||[])[1]||'image/jpeg';
   const bin=atob(b64); const n=bin.length; const u8=new Uint8Array(n); for(let i=0;i<n;i++)u8[i]=bin.charCodeAt(i); return new Blob([u8],{type:mime}); }
@@ -871,16 +883,26 @@ function switchAdmin(v){
     if(v==='rep')refreshAdmin(); else renderAdmVehGrid(); }
 }
 $('#periodSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;period=b.dataset.p;
-  [...$('#periodSeg').children].forEach(x=>x.classList.toggle('active',x===b));updatePdfBtnLabel();refreshAdmin();});
+  [...$('#periodSeg').children].forEach(x=>x.classList.toggle('active',x===b));
+  const rango=period==='rango';
+  $('#refDateWrap').classList.toggle('hidden',rango);
+  $('#fromWrap').classList.toggle('hidden',!rango);
+  $('#toWrap').classList.toggle('hidden',!rango);
+  if(rango){ const t=toDateStr(new Date()); if(!$('#toDate').value)$('#toDate').value=t; if(!$('#fromDate').value)$('#fromDate').value=t; }
+  updatePdfBtnLabel();refreshAdmin();});
+$('#fromDate').addEventListener('change',refreshAdmin);
+$('#toDate').addEventListener('change',refreshAdmin);
 function updatePdfBtnLabel(){
   const btn=$('#dailyPdfBtn'); if(!btn)return;
   const t = period==='dia' ? 'Reporte del día (Excel) → WhatsApp'
           : period==='semana' ? 'Reporte semanal (Excel) → WhatsApp'
+          : period==='rango' ? 'Reporte del rango (Excel) → WhatsApp'
           : 'Reporte mensual (Excel) → WhatsApp';
   btn.textContent=t;
 }
 $('#refDate').addEventListener('change',refreshAdmin);
 $('#downloadBtn').addEventListener('click',downloadExcel);
+$('#downloadPdfBtn').addEventListener('click',downloadPDF);
 
 function rangeFor(period,refStr){
   const ref=refStr?new Date(refStr+'T12:00:00'):new Date(); let start,end,label,fname;
@@ -890,6 +912,13 @@ function rangeFor(period,refStr){
     end=new Date(s);end.setDate(s.getDate()+6);end.setHours(23,59,59,999); start=s;
     label='Semanal · '+fechaLabel(start.toISOString())+' a '+fechaLabel(end.toISOString());
     fname='reporte_semanal_'+toDateStr(start)+'_a_'+toDateStr(end);
+  }else if(period==='rango'){
+    const fStr=$('#fromDate').value, tStr=$('#toDate').value;
+    const f=fStr?new Date(fStr+'T00:00:00'):new Date(ref); f.setHours(0,0,0,0);
+    const t=tStr?new Date(tStr+'T23:59:59'):new Date(ref); t.setHours(23,59,59,999);
+    start=f<=t?f:t; end=f<=t?t:f;
+    label='Rango · '+fechaLabel(start.toISOString())+' a '+fechaLabel(end.toISOString());
+    fname='reporte_rango_'+toDateStr(start)+'_a_'+toDateStr(end);
   }else{ start=new Date(ref.getFullYear(),ref.getMonth(),1,0,0,0,0); end=new Date(ref.getFullYear(),ref.getMonth()+1,0,23,59,59,999);
     const m=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
     label='Mensual · '+m[ref.getMonth()]+' '+ref.getFullYear(); fname='reporte_mensual_'+ref.getFullYear()+'-'+pad(ref.getMonth()+1); }
@@ -1021,14 +1050,26 @@ async function recordsOfDay(dateObj){
   const all=await loadAll(); return all.filter(r=>{const d=new Date(r.fecha);return d>=s&&d<=e;}).sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
 }
 /* ---- Encabezado institucional reutilizable (se dibuja en cada página) ---- */
-function dayDataFor(v, recs){
+/* Último kilometraje conocido (de TODOS los registros) por vehículo del roster.
+   Sirve para mostrar el último km de los vehículos que NO se abastecieron ese día. */
+async function lastKmRosterMap(){
+  const all=await loadAll(); const map={};
+  all.forEach(r=>{ const v=rosterOf(r); const key=v.no||('P'+normPlaca(vehChars(r).placa));
+    const km=Number(r.kilometraje||0); const d=new Date(r.fecha);
+    if(!map[key] || d>map[key].fecha){ map[key]={km:km, fecha:d}; } });
+  return map;
+}
+function dayDataFor(v, recs, lastKmMap){
   const found=recs.filter(r=>{ const c=vehChars(r);
     return normPlaca(c.placa)===normPlaca(v.placa) || (c.numeroEquipo && String(c.numeroEquipo)===String(v.equipo)); });
-  if(!found.length) return {fecha:'',litros:'',valor:'',kmts:''};
+  if(!found.length){
+    const lk = lastKmMap && lastKmMap[v.no];
+    return {fecha:'',litros:'',valor:'',kmts:(lk?lk.km:''),noAbastecido:true};
+  }
   const litros=found.reduce((s,r)=>s+Number(r.litros||0),0);
   const valor=found.reduce((s,r)=>s+Number(r.lempiras||0),0);
   const km=Math.max.apply(null,found.map(r=>Number(r.kilometraje||0)));
-  return { fecha:fechaLabel(found[0].fecha), litros:litros, valor:valor, kmts:km };
+  return { fecha:fechaLabel(found[0].fecha), litros:litros, valor:valor, kmts:km, noAbastecido:false };
 }
 /* Busca en el roster el vehículo que corresponde a un registro */
 function rosterOf(r){ const c=vehChars(r);
@@ -1036,18 +1077,21 @@ function rosterOf(r){ const c=vehChars(r);
     || { no:'', marca:c.marca||'', tipo:c.tipo||'', color:c.color||'', motor:c.motor||'', chasis:c.chasis||'', placa:c.placa||'', rentado:'', organico:'', equipo:c.numeroEquipo||'', s1:'', s3:'', s4:'' };
 }
 /* Genera el PDF oficial. mode='dia' => 6 vehículos fijos; 'periodo' => una fila por abastecimiento. */
-let dailyBuilt=null, dailyDate=null, dailyFname=null, dailyMsg=null;
+let dailyBuilt=null, dailyDate=null, dailyFname=null, dailyMsg=null, dailyPdfDoc=null, dailyPdfFname=null;
 /* Reporte automático de las 20:30 (siempre diario, del día actual) */
 async function openDailyPrompt(dateObj){
   try{ dailyDate=dateObj;
     const recs=await recordsOfDay(dateObj);
     const count=recs.length, totLps=recs.reduce((s,r)=>s+Number(r.lempiras||0),0), totLts=recs.reduce((s,r)=>s+Number(r.litros||0),0);
-    dailyBuilt=await buildOfficialXLSX(recs,'Reporte del día: '+fechaLarga(dateObj),'dia',fechaLabel(dateObj.toISOString()));
+    const sub='Reporte del día: '+fechaLarga(dateObj), ds=fechaLabel(dateObj.toISOString());
+    dailyBuilt=await buildOfficialXLSX(recs,sub,'dia',ds);
+    dailyPdfDoc=await buildOfficialPDF(recs,sub,'dia',ds);
     dailyFname=toDateStr(dateObj)+'_KILOMETRAJE_URIP_III_LA_PAZ.xlsx';
-    dailyMsg='Buenas, muy respetuosamente envío el reporte de kilometraje de la URIP-III La Paz.\nFecha: '+fechaLarga(dateObj)+'\nVehículos abastecidos: '+count+' · Total '+fmtLps(totLps)+' · '+fmtNum(totLts)+' litros.';
-    $('#dailyInfo').innerHTML='Reporte del <b>'+fechaLabel(dateObj.toISOString())+'</b>: <b>'+count+'</b> abastecimientos · Total <b>'+fmtLps(totLps)+'</b> · <b>'+fmtNum(totLts)+'</b> litros.';
+    dailyPdfFname=toDateStr(dateObj)+'_KILOMETRAJE_URIP_III_LA_PAZ.pdf';
+    dailyMsg=saludoNocturno(dateObj)+'\nVehículos abastecidos: '+count+' · Total '+fmtLps(totLps)+' · '+fmtNum(totLts)+' litros.';
+    $('#dailyInfo').innerHTML='Reporte del <b>'+ds+'</b>: <b>'+count+'</b> abastecimientos · Total <b>'+fmtLps(totLps)+'</b> · <b>'+fmtNum(totLts)+'</b> litros.<br>Se generaron el <b>Excel</b> y el <b>PDF</b> (incluye los vehículos no abastecidos con su último kilometraje).';
     $('#dailyModal').classList.add('show');
-  }catch(e){ toast('No se pudo generar el Excel',true); }
+  }catch(e){ toast('No se pudo generar el reporte',true); }
 }
 /* Reporte manual: respeta el período seleccionado (diario / semanal / mensual) */
 async function openReportPrompt(){
@@ -1062,16 +1106,24 @@ async function openReportPrompt(){
     }
     count=recs.length; totLps=recs.reduce((s,r)=>s+Number(r.lempiras||0),0); totLts=recs.reduce((s,r)=>s+Number(r.litros||0),0);
     dailyBuilt=await buildOfficialXLSX(recs,subtitle,mode,dateStr);
+    dailyPdfDoc=await buildOfficialPDF(recs,subtitle,mode,dateStr);
     dailyFname=fname.replace('reporte','KILOMETRAJE_URIP_III')+'.xlsx';
-    const per = period==='dia'?'':(period==='semana'?' semanal':' mensual');
-    dailyMsg='Buenas, muy respetuosamente envío el reporte'+per+' de kilometraje de la URIP-III La Paz.\n'+fecha+'\nVehículos abastecidos: '+count+' · Total '+fmtLps(totLps)+' · '+fmtNum(totLts)+' litros.';
+    dailyPdfFname=fname.replace('reporte','KILOMETRAJE_URIP_III')+'.pdf';
+    const dObj0 = period==='dia' ? (refStr?new Date(refStr+'T12:00:00'):new Date()) : new Date();
+    dailyMsg=saludoNocturno(dObj0)+'\nPeríodo: '+fecha+'\nVehículos abastecidos: '+count+' · Total '+fmtLps(totLps)+' · '+fmtNum(totLts)+' litros.';
 
-    /* Generar el archivo Excel */
+    /* Generar los archivos Excel y PDF */
     const buf=await dailyBuilt.xlsx.writeBuffer();
     const blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     const file=new File([blob],dailyFname,{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    const pdfBlob=dailyPdfDoc.output('blob');
+    const pdfFile=new File([pdfBlob],dailyPdfFname,{type:'application/pdf'});
 
-    /* En CELULAR: abrir directo el menú de compartir con el archivo adjunto (ahí eliges WhatsApp) */
+    /* En CELULAR: abrir directo el menú de compartir con ambos archivos adjuntos (ahí eliges WhatsApp) */
+    if(navigator.canShare && navigator.canShare({files:[file,pdfFile]})){
+      try{ await navigator.share({files:[file,pdfFile],text:dailyMsg}); return; }
+      catch(e){ if(e && e.name==='AbortError') return; }
+    }
     if(navigator.canShare && navigator.canShare({files:[file]})){
       try{ await navigator.share({files:[file],text:dailyMsg}); return; }
       catch(e){ if(e && e.name==='AbortError') return; } // el usuario canceló el menú
@@ -1079,13 +1131,16 @@ async function openReportPrompt(){
 
     /* En COMPUTADORA (sin compartir archivos): descargar Excel y abrir WhatsApp Web con el mensaje */
     descargarBlob(blob,dailyFname);
-    $('#dailyInfo').innerHTML='Reporte <b>'+(period==='dia'?'diario':period==='semana'?'semanal':'mensual')+'</b> · <b>'+count+'</b> abastecimientos · Total <b>'+fmtLps(totLps)+'</b> · <b>'+fmtNum(totLts)+'</b> litros.<br><br>El Excel se descargó. Se abrirá WhatsApp; adjunta el archivo descargado en el chat.';
+    const perLbl = period==='dia'?'diario':period==='semana'?'semanal':period==='rango'?'del rango':'mensual';
+    $('#dailyInfo').innerHTML='Reporte <b>'+perLbl+'</b> · <b>'+count+'</b> abastecimientos · Total <b>'+fmtLps(totLps)+'</b> · <b>'+fmtNum(totLts)+'</b> litros.<br>El Excel se descargó. Descarga también el PDF si lo necesitas y elige un número para abrir WhatsApp; luego adjunta el archivo en el chat.';
     $('#dailyModal').classList.add('show');
-    window.open('https://wa.me/?text='+encodeURIComponent(dailyMsg),'_blank');
   }catch(e){ toast('No se pudo generar el Excel',true); }
 }
-$('#dailyShare').addEventListener('click',async()=>{ if(dailyBuilt) await shareXLSX(dailyBuilt,dailyFname,dailyMsg); });
-$('#dailyDownload').addEventListener('click',async()=>{ if(dailyBuilt){ const buf=await dailyBuilt.xlsx.writeBuffer(); descargarBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),dailyFname); } });
+function waSend(num){ window.open('https://wa.me/'+num+'?text='+encodeURIComponent(dailyMsg||''),'_blank'); }
+$('#dailySend1').addEventListener('click',()=>waSend(WA_NUMEROS[0]));
+$('#dailySend2').addEventListener('click',()=>waSend(WA_NUMEROS[1]));
+$('#dailyDownloadX').addEventListener('click',async()=>{ if(dailyBuilt){ const buf=await dailyBuilt.xlsx.writeBuffer(); descargarBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),dailyFname); } });
+$('#dailyDownloadP').addEventListener('click',()=>{ if(dailyPdfDoc) dailyPdfDoc.save(dailyPdfFname); });
 $('#dailyClose2').addEventListener('click',()=>$('#dailyModal').classList.remove('show'));
 $('#closeDaily').addEventListener('click',()=>$('#dailyModal').classList.remove('show'));
 $('#dailyPdfBtn').addEventListener('click',openReportPrompt);
@@ -1096,7 +1151,7 @@ function stopScheduler(){ if(dailyTimer)clearInterval(dailyTimer); dailyTimer=nu
 async function checkDaily(){
   if(!currentUser||currentUser.rol!=='admin')return;
   const now=new Date();
-  if(now.getHours()>20 || (now.getHours()===20&&now.getMinutes()>=30)){
+  if(now.getHours()>=20){
     let sent=false; const key='pdf_sent_'+toDateStr(now);
     try{ sent=localStorage.getItem(key)==='1'; }catch(e){}
     if(!sent){ try{ localStorage.setItem(key,'1'); }catch(e){} openDailyPrompt(now); }
@@ -1151,9 +1206,13 @@ async function buildOfficialXLSX(recs, subtitle, mode, dateStr){
     ws.getCell(r,12).numFmt='#,##0.000'; ws.getCell(r,13).numFmt='#,##0.00'; ws.getCell(r,14).numFmt='#,##0';
   }
   if(mode==='dia'){
-    ROSTER_URIP.forEach((v,i)=>{ const d=dayDataFor(v,recs); const r=firstData+i;
+    const lastKmMap=await lastKmRosterMap();
+    ROSTER_URIP.forEach((v,i)=>{ const d=dayDataFor(v,recs,lastKmMap); const r=firstData+i;
       writeRow(r,[v.no,v.marca,v.tipo,v.color,v.motor,v.chasis,v.placa,v.rentado,v.organico,v.equipo,
-        '', (d.litros!==''?Number(d.litros):''), (d.valor!==''?Number(d.valor):''), (d.kmts!==''?Number(d.kmts):''), v.s1,v.s3,v.s4]); });
+        '', (d.litros!==''?Number(d.litros):''), (d.valor!==''?Number(d.valor):''), (d.kmts!==''?Number(d.kmts):''), v.s1,v.s3,v.s4]);
+      if(d.noAbastecido){ const km=ws.getCell(r,14); km.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFFF3CD'}};
+        km.font={size:8,italic:true,color:{argb:'FFA5610A'}};
+        const noc=ws.getCell(r,1); noc.font={size:8,color:{argb:'FFA5610A'}}; } });
     lastData=firstData+ROSTER_URIP.length-1;
     ws.mergeCells(firstData,11,lastData,11); const fc=ws.getCell(firstData,11);
     fc.value=dateStr; fc.alignment={horizontal:'center',vertical:'middle'}; fc.font={size:9};
@@ -1182,6 +1241,83 @@ async function buildOfficialXLSX(recs, subtitle, mode, dateStr){
 
   return wb;
 }
+
+/* ===================== PDF OFICIAL (jsPDF + autoTable) ===================== */
+async function buildOfficialPDF(recs, subtitle, mode, dateStr){
+  const { jsPDF }=window.jspdf;
+  const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
+  const pw=doc.internal.pageSize.getWidth();
+  let y=8;
+  try{ const hw=150, hh=hw/4.307; doc.addImage('data:image/png;base64,'+IMG_HEADER,'PNG',(pw-hw)/2,y,hw,hh); y+=hh+2; }catch(e){ y+=4; }
+  doc.setFont('helvetica','bold'); doc.setTextColor(11,42,94); doc.setFontSize(11);
+  ['DIRECCION GENERAL DE LA POLICIA NACIONAL','DIRECCION DE INTELIGENCIA POLICIAL (DIPOL)','VEHICULOS ASIGNADOS A LA URIP III']
+    .forEach(t=>{ doc.text(t,pw/2,y,{align:'center'}); y+=5; });
+  doc.setFont('helvetica','italic'); doc.setFontSize(8); doc.setTextColor(90,90,90);
+  if(subtitle){ doc.text(subtitle,pw/2,y,{align:'center'}); y+=3; }
+
+  const head=[[
+    {content:'No.',rowSpan:2},{content:'MARCA',rowSpan:2},{content:'TIPO',rowSpan:2},{content:'COLOR',rowSpan:2},
+    {content:'SERIE MOTOR',rowSpan:2},{content:'SERIE CHASIS',rowSpan:2},{content:'PLACA',rowSpan:2},
+    {content:'RENT.',rowSpan:2},{content:'ORG.',rowSpan:2},{content:'N. EQUIPO',rowSpan:2},
+    {content:'VEHICULOS ABASTECIDOS',colSpan:4},{content:'ESTATUS',colSpan:3}
+  ],['FECHA','LITROS','VALOR LPS','KMTS','S-1','S-3','S-4']];
+
+  const body=[]; const noFuelRows=[];
+  if(mode==='dia'){
+    const lastKmMap=await lastKmRosterMap();
+    ROSTER_URIP.forEach((v,i)=>{ const d=dayDataFor(v,recs,lastKmMap);
+      if(d.noAbastecido) noFuelRows.push(i);
+      body.push([String(v.no),v.marca,v.tipo,v.color,v.motor,v.chasis,v.placa,v.rentado,v.organico,v.equipo,
+        (d.noAbastecido?'—':dateStr), (d.litros!==''?fmtNum(d.litros,3):'—'), (d.valor!==''?fmtLps(d.valor):'—'),
+        (d.kmts!==''?fmtKm(d.kmts):'—'), v.s1,v.s3,v.s4]); });
+  } else {
+    const sorted=[...recs].sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+    sorted.forEach((rec,i)=>{ const v=rosterOf(rec);
+      body.push([String(i+1),v.marca,v.tipo,v.color,v.motor,v.chasis,v.placa,v.rentado,v.organico,v.equipo,
+        fechaLabel(rec.fecha), fmtNum(rec.litros,3), fmtLps(rec.lempiras), fmtKm(rec.kilometraje), v.s1,v.s3,v.s4]); });
+    if(!sorted.length) body.push([{content:'No hubo abastecimientos en este período.',colSpan:17,
+      styles:{halign:'center',textColor:[136,136,136],fontStyle:'italic'}}]);
+  }
+
+  doc.autoTable({
+    head, body, startY:y+2, theme:'grid',
+    styles:{fontSize:6.5,cellPadding:1,halign:'center',valign:'middle',lineColor:[120,120,120],lineWidth:0.1,textColor:[20,20,20],overflow:'linebreak'},
+    headStyles:{fillColor:[46,155,214],textColor:[0,0,0],fontStyle:'bold',fontSize:6.5,halign:'center'},
+    columnStyles:{11:{halign:'right'},12:{halign:'right'},13:{halign:'right'}},
+    margin:{left:8,right:8},
+    didParseCell:function(data){
+      if(mode==='dia' && data.section==='body' && noFuelRows.indexOf(data.row.index)>-1){
+        data.cell.styles.fillColor=[255,243,205];
+        if(data.column.index===13) data.cell.styles.textColor=[165,97,10];
+      }
+    }
+  });
+
+  let fy=doc.lastAutoTable.finalY+10;
+  if(mode==='dia' && noFuelRows.length){
+    doc.setFont('helvetica','italic'); doc.setFontSize(7); doc.setTextColor(165,97,10);
+    doc.text('Filas resaltadas: vehículos NO abastecidos este día (KMTS = último kilometraje registrado).',8,fy);
+    fy+=6;
+  }
+  try{ doc.addImage('data:image/png;base64,'+IMG_SELLO,'PNG',pw/2-25,fy,50,23); }catch(e){}
+  fy+=27;
+  doc.setDrawColor(0); doc.line(pw/2-45,fy,pw/2+45,fy); fy+=4;
+  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(0,0,0);
+  doc.text(ROSTER_JEFE,pw/2,fy,{align:'center'}); fy+=4;
+  doc.setFont('helvetica','normal'); doc.text(ROSTER_CARGO,pw/2,fy,{align:'center'});
+  return doc;
+}
+async function downloadPDF(){
+  const {label,fname}=rangeFor(period,$('#refDate').value);
+  let recs, mode, subtitle, dateStr='';
+  if(period==='dia'){ const dObj=$('#refDate').value?new Date($('#refDate').value+'T12:00:00'):new Date();
+    recs=await recordsOfDay(dObj); mode='dia'; subtitle='Reporte del día: '+fechaLarga(dObj); dateStr=fechaLabel(dObj.toISOString()); }
+  else{ recs=await filteredRecords(); mode='periodo'; subtitle=label; }
+  const doc=await buildOfficialPDF(recs,subtitle,mode,dateStr);
+  doc.save(fname.replace('reporte','KILOMETRAJE_URIP_III')+'.pdf');
+  toast('PDF descargado');
+}
+
 /* Descarga directa (botón "Descargar Excel") respetando el período */
 async function downloadExcel(){
   const {label,fname}=rangeFor(period,$('#refDate').value);
