@@ -66,6 +66,50 @@
   .login-hint b{color:var(--ink)}
   .err{color:var(--red);font-size:13px;margin-top:4px;min-height:18px}
 
+  /* MODO DE INICIO (toggler) */
+  .mode-tg{display:flex;gap:4px;background:#F1F3F5;border:1px solid var(--line);border-radius:12px;padding:4px;margin-bottom:18px}
+  .mode-tg button{flex:1;border:none;background:transparent;border-radius:9px;padding:10px 8px;font-size:13px;font-weight:700;
+    color:var(--ink-2);display:flex;align-items:center;justify-content:center;gap:6px;line-height:1.15;transition:background .15s,color .15s}
+  .mode-tg button svg{width:16px;height:16px;flex:none}
+  .mode-tg button.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(10,25,50,.14)}
+  .ord-intro{text-align:center}
+  .ord-intro .ico{width:64px;height:64px;border-radius:18px;margin:2px auto 12px;display:grid;place-items:center;
+    background:linear-gradient(135deg,#E8F1FB,#D5E6F7);color:var(--navy)}
+  .ord-intro .ico svg{width:34px;height:34px}
+  .ord-intro h3{margin:0;font-family:'Barlow Condensed',sans-serif;font-size:23px;color:var(--navy)}
+  .ord-intro p{margin:6px 0 16px;font-size:13.5px;color:var(--ink-2)}
+  .ord-steps{list-style:none;padding:0;margin:0 0 18px;text-align:left;font-size:13px;color:var(--ink-2)}
+  .ord-steps li{display:flex;gap:10px;align-items:flex-start;padding:6px 0}
+  .ord-steps li b{flex:none;width:22px;height:22px;border-radius:50%;background:var(--navy);color:#fff;font-size:12px;display:grid;place-items:center}
+
+  /* PANTALLA ABASTECIMIENTO CON ORDEN */
+  #orderView{min-height:100vh;background:var(--body)}
+  .ord-main{max-width:760px;margin:0 auto;padding:18px 16px 40px}
+  .ord-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px;
+    box-shadow:0 1px 2px rgba(10,25,50,.04),0 4px 14px rgba(10,25,50,.05)}
+  .ord-card h4{margin:0 0 2px;font-family:'Barlow Condensed',sans-serif;font-size:21px;color:var(--navy);display:flex;align-items:center;gap:8px}
+  .ord-card h4 .n{width:24px;height:24px;border-radius:50%;background:var(--navy);color:#fff;font-family:'Inter',sans-serif;font-size:12.5px;display:grid;place-items:center}
+  .ord-card .sub{margin:0 0 14px;font-size:12.5px;color:var(--ink-2)}
+  .scan-zone{border:2px dashed #BFD3EA;border-radius:12px;background:#F6FAFE;padding:20px;text-align:center}
+  .scan-zone img{max-width:100%;max-height:260px;border-radius:10px;display:block;margin:0 auto 12px;box-shadow:0 2px 10px rgba(0,0,0,.12)}
+  .scan-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .ocr-prog{margin:12px auto 0;max-width:380px}
+  .ocr-prog .bar{height:8px;background:#E3EAF3;border-radius:6px;overflow:hidden}
+  .ocr-prog .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--azul),var(--navy));transition:width .25s}
+  .ocr-prog .t{font-size:12.5px;color:var(--ink-2);margin-top:6px}
+  .ocr-note{font-size:12.5px;border-radius:10px;padding:10px 12px;margin-bottom:14px}
+  .ocr-note.ok{background:#EAF7EF;border:1px solid #BfE3CC;color:#17603A}
+  .ocr-note.warn{background:#FFF6E3;border:1px solid #F1DBA6;color:#8A6410}
+  .field input.auto{border-color:#9CCBEA;background:#F3F9FE}
+  .field label .req{color:var(--red)}
+  .grid3o{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 12px}
+  .grid2o{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+  .ocr-raw{margin-top:4px;font-size:12px;color:var(--ink-2)}
+  .ocr-raw summary{cursor:pointer;font-weight:600}
+  .ocr-raw pre{white-space:pre-wrap;background:#F6F7F9;border:1px solid var(--line);border-radius:8px;padding:10px;max-height:200px;overflow:auto;font-size:11.5px}
+  @media (max-width:640px){.grid3o{grid-template-columns:repeat(2,minmax(0,1fr))}.ord-card{padding:15px 13px}}
+  @media (max-width:380px){.grid3o,.grid2o{grid-template-columns:1fr}.mode-tg button{font-size:12px}}
+
   /* FOOTER LOGIN */
   .login-footer{margin-top:18px;text-align:center;font-size:12px;color:#8791A0;
     padding-top:14px;border-top:1px solid var(--line)}
@@ -356,6 +400,30 @@
       <p>Abastecimiento de vehiculos y Motociclestas</p>
     </div>
     <div class="login-body">
+      <div class="mode-tg" id="modeTg" role="tablist">
+        <button data-mode="login" class="active" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Personal URIP III</button>
+        <button data-mode="orden" role="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>Abastecimiento con orden</button>
+      </div>
+
+      <!-- Pantalla: abastecimiento con orden (sin usuario) -->
+      <div id="ordStart" class="hidden">
+        <div class="ord-intro">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg></div>
+          <h3>Abastecimiento con orden</h3>
+          <p>Para vehículos externos a la unidad. No necesita usuario ni contraseña.</p>
+        </div>
+        <ul class="ord-steps">
+          <li><b>1</b>Escanee la boleta de registro del vehículo con la cámara.</li>
+          <li><b>2</b>Revise los datos que se transcribieron de la boleta.</li>
+          <li><b>3</b>Complete kilometraje, litros, precio y la foto de la factura.</li>
+        </ul>
+        <button class="btn gold" id="ordStartBtn" type="button">Abastecer con orden</button>
+        <input id="ordCam" type="file" accept="image/*" capture="environment" class="hidden">
+        <button class="btn ghost" id="ordManualBtn" type="button" style="margin-top:10px">Escribir los datos sin escanear</button>
+        <div class="err" id="ordStartErr"></div>
+      </div>
+
+      <div id="loginPane">
       <div class="field"><label for="u">Correo</label>
         <input id="u" type="email" autocomplete="username" placeholder="correo@ejemplo.com"></div>
       <div class="field"><label for="p">Contrase&ntilde;a</label>
@@ -365,6 +433,7 @@
       <div class="login-hint" id="loginHint">
         Ingrese correo y contraseña para iniciar sesion.
       </div>
+      </div><!-- /loginPane -->
       <div class="login-footer">
         <span class="flag-mini"><span class="b"></span><span class="w"></span><span class="b"></span></span>
         Todos los derechos reservados &copy; Eduar Varela @2026. Terminos de Uso
@@ -410,6 +479,75 @@
   </div>
 </div>
 
+<!-- PANTALLA: ABASTECIMIENTO CON ORDEN (vehículos externos, sin inicio de sesión) -->
+<div id="orderView" class="hidden">
+  <header class="top">
+    <div class="brand"><div class="mark"></div><h2>Abastecer con orden</h2></div>
+    <div class="who"><span class="role">Externo</span><button class="logout" id="ordExit">Salir</button></div>
+  </header>
+  <div class="ord-main">
+    <div class="ord-card">
+      <h4><span class="n">1</span>Boleta de registro del vehículo</h4>
+      <p class="sub">Tome la foto con buena luz y con la boleta completa dentro de la imagen. Puede estar de lado; se endereza sola.</p>
+      <div class="scan-zone">
+        <img id="ordBoletaImg" class="hidden" alt="Boleta de registro">
+        <div id="ordNoImg" style="font-size:13.5px;color:var(--ink-2);margin-bottom:12px">Aún no se ha escaneado la boleta.</div>
+        <div class="scan-actions"><button class="btn sm" id="ordRescan" type="button">Escanear boleta</button></div>
+        <div class="ocr-prog hidden" id="ordProg"><div class="bar"><i id="ordProgBar"></i></div><div class="t" id="ordProgTxt">Leyendo la boleta…</div></div>
+      </div>
+    </div>
+
+    <div class="ord-card">
+      <h4><span class="n">2</span>Datos del vehículo</h4>
+      <p class="sub">Los campos en azul se llenaron desde la boleta. Revíselos y corríjalos si es necesario.</p>
+      <div class="ocr-note hidden" id="ordNote"></div>
+      <div class="grid3o">
+        <div class="field"><label for="oPlaca">Placa <span class="req">*</span></label><input id="oPlaca" placeholder="Ej. PDB-1234 o S/P" style="text-transform:uppercase"></div>
+        <div class="field"><label for="oMarca">Marca <span class="req">*</span></label><input id="oMarca" placeholder="Ej. TOYOTA" style="text-transform:uppercase"></div>
+        <div class="field"><label for="oModelo">Modelo</label><input id="oModelo" placeholder="Ej. HILUX" style="text-transform:uppercase"></div>
+        <div class="field"><label for="oTipo">Tipo</label><input id="oTipo" placeholder="Ej. PICK UP" style="text-transform:uppercase"></div>
+        <div class="field"><label for="oColor">Color</label><input id="oColor" placeholder="Ej. GRIS" style="text-transform:uppercase"></div>
+        <div class="field"><label for="oAnio">Año</label><input id="oAnio" inputmode="numeric" placeholder="Ej. 2017"></div>
+      </div>
+      <div class="grid2o">
+        <div class="field"><label for="oMotor">Motor</label><input id="oMotor" placeholder="N° de motor" style="text-transform:uppercase"></div>
+        <div class="field"><label for="oChasis">Chasis</label><input id="oChasis" placeholder="N° de chasis" style="text-transform:uppercase"></div>
+        <div class="field"><label for="oEquipo">N° de equipo</label><input id="oEquipo" inputmode="numeric" placeholder="Ej. 10002720"></div>
+        <div class="field"><label for="oAsignado">Asignado a</label><input id="oAsignado" placeholder="Ej. DIPOL" style="text-transform:uppercase"></div>
+      </div>
+      <div class="field"><label for="oPropiedad">Propiedad de</label><input id="oPropiedad" placeholder="Ej. LA POLICIA NACIONAL" style="text-transform:uppercase"></div>
+      <div class="field"><label for="oCond">Nombre de quien conduce <span class="req">*</span></label><input id="oCond" placeholder="Nombre completo"></div>
+      <details class="ocr-raw hidden" id="ordRawWrap"><summary>Ver texto completo leído de la boleta</summary><pre id="ordRaw"></pre></details>
+    </div>
+
+    <div class="ord-card">
+      <h4><span class="n">3</span>Abastecimiento</h4>
+      <p class="sub">Complete los datos del combustible y tome la foto de la factura.</p>
+      <div class="field"><label for="oGas">Gasolinera <span class="req">*</span></label><select id="oGas"></select></div>
+      <div class="grid2o">
+        <div class="field"><label for="oKm">Kilometraje <span class="req">*</span></label>
+          <div class="with-suffix"><input id="oKm" type="number" inputmode="numeric" min="0" placeholder="0"><span class="sfx">km</span></div></div>
+        <div class="field"><label for="oLps">Lempiras <span class="req">*</span></label>
+          <div class="with-suffix"><input id="oLps" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"><span class="sfx">L</span></div></div>
+      </div>
+      <div class="field"><label for="oLts">Litros <span class="req">*</span></label>
+        <div class="with-suffix"><input id="oLts" type="number" inputmode="decimal" min="0" step="0.01" placeholder="0.00"><span class="sfx">lts</span></div></div>
+      <div class="field"><label>Foto de la factura</label>
+        <div class="photo-zone" id="oPhotoZone">
+          <p id="oPhotoTxt">Toma una foto a la factura del combustible</p>
+          <label class="cap-btn" for="oPhoto">Abrir cámara</label>
+          <input id="oPhoto" type="file" accept="image/*" capture="environment" class="hidden">
+          <div class="preview-wrap hidden" id="oPrevWrap"><img id="oPrevImg" alt="Factura"><button class="link-red" id="oRemovePhoto" type="button">Quitar foto</button></div>
+        </div></div>
+      <div class="err" id="ordErr"></div>
+      <div class="save-row">
+        <button class="btn ghost sm" id="ordCancel" type="button" style="flex:0 0 auto">Cancelar</button>
+        <button class="btn green" id="ordSave" type="button">Guardar abastecimiento</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- APP -->
 <div id="app" class="hidden">
   <header class="top">
@@ -427,6 +565,7 @@
       <button data-v="abast" class="active">Abastecer</button>
       <button data-v="rep">Reportes</button>
       <button data-v="veh">Vehículos</button>
+      <button data-v="orden">Con orden</button>
       <button data-v="graf">Estadísticas de consumo</button>
     </div>
 
@@ -579,6 +718,32 @@
             <th>Gasolinera</th><th>Kilometraje</th><th>Lempiras</th><th>Litros</th><th>Registró</th><th>Factura</th>
           </tr></thead><tbody id="admBody"></tbody></table></div>
           <div class="empty hidden" id="admEmpty"><div class="big">Sin abastecimientos en este período</div><div>Cambia la fecha de referencia o el período.</div></div>
+        </div>
+      </div>
+
+      <!-- Con orden (externos) -->
+      <div id="admOrden" class="hidden">
+        <div class="section-h"><h3>Abastecimientos con orden</h3><p>Vehículos externos registrados con la boleta, sin usuario.</p></div>
+        <div class="filters">
+          <div><div class="seg" id="ordPeriodSeg">
+            <button data-op="dia">Hoy</button><button data-op="semana">Semana</button><button data-op="mes" class="active">Mes</button><button data-op="todo">Todo</button>
+          </div></div>
+          <div class="fdate"><label for="ordBuscar">Buscar</label><input id="ordBuscar" type="search" placeholder="Placa, equipo, conductor…"></div>
+          <div class="grow"></div>
+          <button class="btn dl-btn sm" id="ordExcelBtn">Descargar Excel</button>
+        </div>
+        <div class="stat-row">
+          <div class="stat"><div class="k">Abastecimientos</div><div class="v num" id="oStCount">0</div></div>
+          <div class="stat"><div class="k">Total en Lempiras</div><div class="v amber num" id="oStLps">L 0.00</div></div>
+          <div class="stat"><div class="k">Total en litros</div><div class="v num" id="oStLts">0.00</div></div>
+        </div>
+        <div class="table-wrap">
+          <div class="table-scroll"><table><thead><tr>
+            <th>Fecha</th><th>Hora</th><th>Placa</th><th>Marca</th><th>Modelo</th><th>Tipo</th><th>Color</th><th>Año</th>
+            <th>N° equipo</th><th>Motor</th><th>Chasis</th><th>Asignado a</th><th>Conductor</th>
+            <th>Gasolinera</th><th>Kilometraje</th><th>Lempiras</th><th>Litros</th><th>Boleta</th><th>Factura</th>
+          </tr></thead><tbody id="ordBody"></tbody></table></div>
+          <div class="empty hidden" id="ordEmpty"><div class="big">Sin abastecimientos con orden en este período</div><div>Cambie el período o la búsqueda.</div></div>
         </div>
       </div>
 
@@ -842,7 +1007,7 @@ $('#logoutBtn').addEventListener('click',()=>{ if(sb) sb.auth.signOut(); });
 if(CONFIG_LISTA){
   sb.auth.onAuthStateChange((event, session)=>{
     if(session && session.user){ afterLogin(session.user); }
-    else { currentUser=null; stopScheduler(); $('#adminBar').classList.add('hidden'); $('#userBar').classList.add('hidden'); $('#statsSec').classList.add('hidden'); $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); $('#p').value=''; }
+    else { currentUser=null; stopScheduler(); $('#adminBar').classList.add('hidden'); $('#userBar').classList.add('hidden'); $('#statsSec').classList.add('hidden'); $('#app').classList.add('hidden'); if(!ordMode) $('#login').classList.remove('hidden'); $('#p').value=''; }
   });
 } else {
   const h=$('#loginHint'); if(h) h.innerHTML='⚠ Antes de usar la app, pega la URL y la llave anon de tu proyecto Supabase en el archivo (ver la guía de instalación).';
@@ -854,6 +1019,7 @@ async function afterLogin(user){
   if(error||!data){ $('#loginErr').textContent='Tu usuario no tiene perfil/rol asignado.'; await sb.auth.signOut(); return; }
   currentUser={ uid:user.id, nombre:data.nombre||user.email, rol:(data.rol==='admin'?'admin':'usuario') };
   await loadVehiculos();
+  if(ordMode) closeOrderView();
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
   $('#uName').textContent=currentUser.nombre;
   $('#uRole').textContent=currentUser.rol==='admin'?'Administrador':'Usuario';
@@ -976,7 +1142,9 @@ async function saveRecord(){
 function mensajeWhats(rec){
   const c=vehChars(rec); const L=[];
   L.push(fechaLarga(new Date(rec.fecha))); L.push('');
-  L.push('Abastecimiento de Combustible:'); L.push('');
+  L.push(rec.externo?'Abastecimiento de Combustible con orden:':'Abastecimiento de Combustible:'); L.push('');
+  if(rec.conductor) L.push('Conductor: '+rec.conductor);
+  if(rec.asignado) L.push('Asignado a: '+rec.asignado);
   L.push('Vehículo: '+c.marca+' '+c.modelo); L.push('Color: '+c.color); L.push('Placa: '+c.placa);
   if(c.numeroEquipo) L.push('N° de equipo: '+c.numeroEquipo);
   L.push('Km: '+fmtKm(rec.kilometraje));
@@ -1004,7 +1172,8 @@ $('#shareNative').addEventListener('click',async()=>{
   }catch(e){}
 });
 $('#copyMsg').addEventListener('click',async()=>{ try{ await navigator.clipboard.writeText(mensajeWhats(lastSavedRec)); toast('Mensaje copiado'); }catch(e){ toast('No se pudo copiar',true); } });
-function closeShare(){ $('#shareModal').classList.remove('show'); toast('Abastecimiento guardado'); renderSelect(); }
+function closeShare(){ $('#shareModal').classList.remove('show'); toast('Abastecimiento guardado');
+  if(ordMode){ closeOrderView(); return; } renderSelect(); }
 $('#doneShare').addEventListener('click',closeShare);
 $('#closeShare').addEventListener('click',closeShare);
 
@@ -1016,8 +1185,8 @@ function switchAdmin(v){
   if(v==='abast'){ $('#adminView').classList.add('hidden'); renderSelect(); }
   else if(v==='graf'){ $('#adminView').classList.add('hidden'); showStats(); }
   else{ $('#statsSec').classList.add('hidden'); $('#opSelect').classList.add('hidden'); $('#opForm').classList.add('hidden'); $('#adminView').classList.remove('hidden');
-    $('#admReportes').classList.toggle('hidden',v!=='rep'); $('#admVehiculos').classList.toggle('hidden',v!=='veh');
-    if(v==='rep')refreshAdmin(); else renderAdmVehGrid(); }
+    $('#admReportes').classList.toggle('hidden',v!=='rep'); $('#admVehiculos').classList.toggle('hidden',v!=='veh'); $('#admOrden').classList.toggle('hidden',v!=='orden');
+    if(v==='rep')refreshAdmin(); else if(v==='orden')refreshOrdenes(); else renderAdmVehGrid(); }
 }
 $('#periodSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;period=b.dataset.p;
   [...$('#periodSeg').children].forEach(x=>x.classList.toggle('active',x===b));
@@ -1079,6 +1248,344 @@ async function refreshAdmin(){
   $('#stCount').textContent=recs.length; $('#stLps').textContent=fmtLps(tLps); $('#stLts').textContent=fmtNum(tLts);
   $('#admEmpty').classList.toggle('hidden',recs.length>0);
 }
+/* =====================================================================
+   ABASTECIMIENTO CON ORDEN — vehículos externos, sin usuario/contraseña.
+   Escanea la "Boleta de registro de vehículo" (texto impreso) con OCR,
+   transcribe los datos y los guarda en la tabla abastecimientos_orden.
+   ===================================================================== */
+let ordMode=false, ordFoto=null, ordBoleta=null, ordTexto='', ordBusy=false;
+const ORD_FIELDS=['oPlaca','oMarca','oModelo','oTipo','oColor','oAnio','oMotor','oChasis','oEquipo','oAsignado','oPropiedad','oCond'];
+const ORD_MAPA={placa:'oPlaca',marca:'oMarca',modelo:'oModelo',tipo:'oTipo',color:'oColor',anio:'oAnio',motor:'oMotor',chasis:'oChasis',equipo:'oEquipo',asignado:'oAsignado',propiedad:'oPropiedad'};
+
+/* Toggler de la pantalla de inicio */
+$('#modeTg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b)return; setStartMode(b.dataset.mode); });
+function setStartMode(m){
+  [...$('#modeTg').children].forEach(x=>x.classList.toggle('active',x.dataset.mode===m));
+  $('#loginPane').classList.toggle('hidden',m!=='login'); $('#ordStart').classList.toggle('hidden',m!=='orden');
+}
+$('#ordStartBtn').addEventListener('click',()=>{ $('#ordStartErr').textContent=''; $('#ordCam').value=''; $('#ordCam').click(); });
+$('#ordCam').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f)return; if(!ordMode) openOrderView(); procesarBoleta(f); });
+$('#ordManualBtn').addEventListener('click',()=>{ openOrderView(); setTimeout(()=>$('#oPlaca').focus(),150); });
+$('#ordRescan').addEventListener('click',()=>{ if(ordBusy)return; $('#ordCam').value=''; $('#ordCam').click(); });
+
+function openOrderView(){
+  if(!CONFIG_LISTA){ $('#ordStartErr').textContent='Falta configurar Supabase.'; return; }
+  ordMode=true; resetOrderForm();
+  $('#oGas').innerHTML=$('#fGas').innerHTML;
+  $('#login').classList.add('hidden'); $('#orderView').classList.remove('hidden'); window.scrollTo(0,0);
+}
+function closeOrderView(){
+  ordMode=false; resetOrderForm();
+  $('#orderView').classList.add('hidden'); $('#login').classList.remove('hidden'); setStartMode('orden'); window.scrollTo(0,0);
+}
+$('#ordExit').addEventListener('click',()=>{ if(hayDatosOrden() && !confirm('¿Salir sin guardar el abastecimiento?'))return; closeOrderView(); });
+$('#ordCancel').addEventListener('click',()=>{ if(hayDatosOrden() && !confirm('¿Cancelar y borrar los datos escritos?'))return; closeOrderView(); });
+function hayDatosOrden(){ return ORD_FIELDS.some(id=>$('#'+id).value.trim()) || $('#oKm').value || $('#oLps').value || $('#oLts').value || ordFoto; }
+function resetOrderForm(){
+  ORD_FIELDS.concat(['oKm','oLps','oLts']).forEach(id=>{ const el=$('#'+id); el.value=''; el.classList.remove('auto'); });
+  $('#oGas').value=''; $('#ordErr').textContent=''; $('#ordNote').classList.add('hidden');
+  $('#ordRawWrap').classList.add('hidden'); $('#ordRaw').textContent=''; ordTexto='';
+  $('#ordBoletaImg').classList.add('hidden'); $('#ordNoImg').classList.remove('hidden'); $('#ordRescan').textContent='Escanear boleta';
+  $('#ordProg').classList.add('hidden'); ordBoleta=null; clearOrdPhoto();
+}
+ORD_FIELDS.forEach(id=>$('#'+id).addEventListener('input',e=>e.target.classList.remove('auto')));
+
+/* Foto de la factura */
+$('#oPhoto').addEventListener('change',async e=>{
+  const file=e.target.files[0]; if(!file)return;
+  try{ ordFoto=await compressImage(file,1100,0.55);
+    $('#oPrevImg').src=ordFoto; $('#oPrevWrap').classList.remove('hidden');
+    $('#oPhotoTxt').textContent='Factura adjuntada'; $('#oPhotoZone').classList.add('has');
+  }catch(err){ toast('No se pudo procesar la imagen',true); }
+});
+$('#oRemovePhoto').addEventListener('click',clearOrdPhoto);
+function clearOrdPhoto(){ ordFoto=null; $('#oPhoto').value=''; $('#oPrevWrap').classList.add('hidden');
+  $('#oPhotoTxt').textContent='Toma una foto a la factura del combustible'; $('#oPhotoZone').classList.remove('has'); }
+
+/* ==== LECTOR DE BOLETA DE REGISTRO DE VEHÍCULO (por posición de palabras) ==== */
+const BOL_MARCAS=['TOYOTA','NISSAN','MITSUBISHI','ISUZU','HONDA','YAMAHA','SUZUKI','FORD','CHEVROLET','HYUNDAI','KIA','MAZDA','JEEP','DODGE','RAM','VOLKSWAGEN','MERCEDES','HINO','BAJAJ','KAWASAKI','JAC','GREAT WALL','HERO','TVS','DAYUN','GENESIS','FREIGHTLINER','INTERNATIONAL'];
+const BOL_TIPOS=['PICK UP','MOTOCICLETA','TURISMO','CAMIONETA','CAMION','BUS','PANEL','MICROBUS','CUATRIMOTO','RASTRA','AMBULANCIA','SEDAN'];
+const BOL_COLORES=['BLANCO','NEGRO','GRIS','PLATEADO','PLATA','ROJO','AZUL','VERDE','BEIGE','AMARILLO','CAFE','CORINTO','DORADO','ANARANJADO','CELESTE','MORADO','VINO','BLANCO Y AZUL','AZUL Y BLANCO'];
+const BOL_LABELS={placa:['PLACA'],marca:['MARCA'],tipo:['TIPO'],color:['COLOR'],anio:['ANO','ANIO'],motor:['MOTOR'],
+  modelo:['MODELO'],chasis:['CHASIS','CHASSIS','CHASIZ','VIN','SERIE'],equipo:['EQUIPO'],asignado:['ASIGNADO'],propiedad:['PROPIEDAD']};
+function bolNorm(s){ return String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase(); }
+function bolLev(a,b){ const m=a.length,n=b.length; if(Math.abs(m-n)>2)return 9; const d=[]; for(let i=0;i<=m;i++){d[i]=[i];}
+  for(let j=1;j<=n;j++)d[0][j]=j; for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1)); return d[m][n]; }
+function bolLabelOf(tok){ const t=bolNorm(tok).replace(/[^A-Z]/g,''); if(t.length<3)return null;
+  for(const k in BOL_LABELS) for(const L of BOL_LABELS[k]){ if(t===L) return k; if(L.length>=5 && t.length>=4 && bolLev(t,L)<=1) return k; }
+  if(t==='ANO'||t==='AO'||/^A.O$/.test(bolNorm(tok).replace(/[^A-Z?Ñ]/g,''))) return 'anio';
+  return null; }
+function bolFuzzyList(v,list){ const t=bolNorm(v).replace(/[^A-Z ]/g,' ').replace(/\s+/g,' ').trim(); if(!t)return '';
+  for(const it of list){ if(t.includes(it)) return it; }
+  const tt=t.replace(/ /g,''); let best='',bd=9; for(const it of list){ const d=bolLev(tt,it.replace(/ /g,'')); if(d<bd){bd=d;best=it;} }
+  return bd<=Math.max(1,Math.floor(best.length/4))?best:''; }
+function bolLimpiar(campo,v){
+  let s=bolNorm(v).replace(/[|_«»"'`~]/g,' ').replace(/\s+/g,' ').trim(); if(!s) return '';
+  const alnum=x=>x.replace(/[^A-Z0-9]/g,'');
+  switch(campo){
+    case 'placa': { if(/^S\s*[\/7I1L|]\s*P\b/.test(s)||/SIN PLACA/.test(s)) return 'S/P';
+      const m=s.replace(/(?<=[A-Z]{3}\s?-?\s?\d{0,3})O/g,'0').match(/\b([A-Z]{3})\s?-?\s?(\d{4})\b/); if(m) return m[1]+'-'+m[2];
+      const mm=s.match(/\bM\s?-?\s?(\d{5,6})\b/); if(mm) return 'M '+mm[1]; return alnum(s).slice(0,10); }
+    case 'anio': { const m=s.replace(/O/g,'0').replace(/[IL]/g,'1').match(/(19[5-9]\d|20[0-4]\d)/); return m?m[1]:''; }
+    case 'equipo': { const d=s.replace(/O/g,'0').replace(/[IL|]/g,'1').replace(/[^0-9]/g,''); return d.length>=4?d:''; }
+    case 'chasis': { let c=alnum(s).replace(/O/g,'0').replace(/Q/g,'0').replace(/I/g,'1'); return c.length>=6?c.slice(0,20):''; }
+    case 'motor': { const c=alnum(s); return c.length>=4?c.slice(0,20):''; }
+    case 'marca': return bolFuzzyList(s,BOL_MARCAS)||(alnum(s).length>=3?s.replace(/[^A-Z0-9 \-]/g,'').trim().slice(0,20):'');
+    case 'tipo': { const a0=alnum(s); if(/^P[I1L!|][CGK]/.test(a0)||/[CK]UP$|CUB$/.test(a0)) return 'PICK UP'; if(/^M[O0]T/.test(a0)) return 'MOTOCICLETA';
+      const t=bolFuzzyList(s.replace(/PICKUP/,'PICK UP'),BOL_TIPOS); return t||(s.replace(/[^A-Z ]/g,'').trim().length>=3?s.replace(/[^A-Z ]/g,'').trim().slice(0,20):''); }
+    case 'color': return bolFuzzyList(s,BOL_COLORES)||(s.replace(/[^A-Z ]/g,'').trim().length>=3?s.replace(/[^A-Z ]/g,'').trim().slice(0,20):'');
+    case 'modelo': { const t=s.replace(/[^A-Z0-9 \-]/g,'').trim(); return t.length>=2?t.slice(0,25):''; }
+    case 'asignado': return s.replace(/^A\s+/,'').replace(/[^A-Z0-9 \-]/g,'').trim().slice(0,40);
+    case 'propiedad': return s.replace(/^DE\s+/,'').replace(/[^A-Z0-9 \-]/g,'').trim().slice(0,50);
+  } return s; }
+/* Formato válido => se prefiere al combinar varias lecturas */
+function bolValido(campo,v){ if(!v) return 0;
+  const R={placa:/^(S\/P|[A-Z]{3}-\d{4}|M \d{5,6})$/,anio:/^\d{4}$/,equipo:/^\d{5,10}$/,chasis:/^[A-HJ-NPR-Z0-9]{17}$/,motor:/^[A-Z0-9]{6,17}$/};
+  if(R[campo]) return R[campo].test(v)?2:1;
+  if(campo==='marca') return BOL_MARCAS.includes(v)?2:1; if(campo==='tipo') return BOL_TIPOS.includes(v)?2:1; if(campo==='color') return BOL_COLORES.includes(v)?2:1;
+  return 1; }
+
+function bolParsearPalabras(words){
+  const W=words.filter(w=>w&&w.text&&w.text.trim()).map(w=>{ const b=w.bbox; const lb=(w.line&&w.line.bbox)||b;
+    return {t:w.text.trim(), n:bolNorm(w.text.trim()), x0:b.x0,x1:b.x1,y0:b.y0,y1:b.y1, cx:(b.x0+b.x1)/2, cy:(b.y0+b.y1)/2, h:b.y1-b.y0, c:w.confidence||0,
+      line:lb.x0+','+lb.y0+','+lb.x1+','+lb.y1, ly0:lb.y0, ly1:lb.y1 }; });
+  W.forEach(w=>{ w.lab=bolLabelOf(w.t); });
+  const horiz=W.filter(w=>(w.x1-w.x0)>=(w.y1-w.y0)*0.8||w.t.length<3); W.length=0; W.push(...horiz);
+  /* "N° EQUIPO": la etiqueta es EQUIPO; quitar el "N°" que va antes */
+  const labs=W.filter(w=>w.lab);
+  const mismaFila=(a,b)=>Math.min(a.y1,b.y1)-Math.max(a.y0,b.y0) > -0.6*Math.min(a.h,b.h);
+  /* separación de columnas: x de las etiquetas que tienen otra etiqueta a su izquierda en la misma fila */
+  const derechas=labs.filter(l=>labs.some(o=>o!==l&&mismaFila(o,l)&&o.x1<l.x0));
+  const splitX=derechas.length?derechas.map(l=>l.x0).sort((a,b)=>a-b)[Math.floor(derechas.length/2)]:null;
+  const res={};
+  for(const L of labs){
+    if(res[L.lab] && res[L.lab].v) continue;
+    const esDer=splitX!=null && L.x0>=splitX-L.h;
+    const colIni=esDer?splitX-2*L.h:-1e9;
+    const colFin=(!esDer&&splitX!=null)?splitX-L.h*0.5:1e9;
+    /* 1) valor a la derecha en la misma línea */
+    const sig=labs.filter(o=>o!==L&&o.line===L.line&&o.x0>L.x1).sort((a,b)=>a.x0-b.x0)[0];
+    let val=W.filter(w=>w.line===L.line&&w.x0>=L.x1-2&&!w.lab&&(!sig||w.x1<=sig.x0)&&w.cx<colFin).sort((a,b)=>a.x0-b.x0);
+    if(L.lab==='asignado'||L.lab==='propiedad') val=W.filter(w=>w.line===L.line&&w.x0>L.x1-2).sort((a,b)=>a.x0-b.x0);
+    val=val.filter(w=>/[A-Z0-9]/.test(w.n)&&!(w.c<25&&w.n.replace(/[^A-Z0-9]/g,'').length<3));
+    /* 2) si no hay, valor debajo, dentro de la misma columna */
+    if(!val.length && L.lab!=='asignado' && L.lab!=='propiedad'){
+      const abajo=W.filter(w=>w.cy>L.y1 && w.y0<L.y1+3.2*L.h && w.cx>=colIni && w.cx<colFin && w.x1>L.x0-3*L.h && !w.lab
+        && /[A-Z0-9]/.test(w.n) && !(w.c<25&&w.n.replace(/[^A-Z0-9]/g,'').length<3));
+      if(abajo.length){ const top=Math.min(...abajo.map(w=>w.cy)); const lh=L.h*0.8;
+        const labAbajo=labs.find(o=>o.cy>L.y1&&o.cy<top+lh&&o.cx>=colIni&&o.cx<colFin); /* hay otra etiqueta antes => no hay valor */
+        if(!labAbajo) val=abajo.filter(w=>Math.abs(w.cy-top)<lh).sort((a,b)=>a.x0-b.x0); }
+    }
+    const texto=val.map(w=>w.t).join(' ');
+    const conf=val.length?val.reduce((a,w)=>a+w.c,0)/val.length:0;
+    const v=bolLimpiar(L.lab,texto);
+    if(v) res[L.lab]={v,conf};
+  }
+  return res;
+}
+/* Combina varias lecturas: gana el valor con formato válido y más confianza */
+function bolCombinar(lista){
+  const out={};
+  for(const r of lista) for(const k in r){ const a=out[k], b=r[k];
+    if(a && a.v!==b.v){ const sa0=a.v.replace(/ /g,''), sb0=b.v.replace(/ /g,'');   /* una lectura cortada: quedarse con la completa */
+      if(sb0.startsWith(sa0)&&bolValido(k,b.v)>=bolValido(k,a.v)){ out[k]=b; continue; }
+      if(sa0.startsWith(sb0)&&bolValido(k,a.v)>=bolValido(k,b.v)) continue; }
+    const sb=bolValido(k,b.v)*1000+b.conf, sa=a?bolValido(k,a.v)*1000+a.conf:-1; if(sb>sa) out[k]=b; }
+  const o={}; for(const k in out) o[k]=out[k].v; return o;
+}
+function bolPuntaje(words){ return (words||[]).filter(w=>bolLabelOf(w.text) && (w.bbox.x1-w.bbox.x0)>(w.bbox.y1-w.bbox.y0)*1.2).length; }
+
+/* Mejora la foto para leer texto: gris + corrección de iluminación (quita sombras/viñeta) + contraste */
+function bolPrep(px,w,h){
+  const n=w*h, g=new Float32Array(n);
+  for(let i=0;i<n;i++){ g[i]=0.299*px[i*4]+0.587*px[i*4+1]+0.114*px[i*4+2]; }
+  const r=Math.max(15,Math.round(Math.min(w,h)/24)), W1=w+1;
+  const I=new Float64Array(W1*(h+1));
+  for(let y=0;y<h;y++){ let s=0; for(let x=0;x<w;x++){ s+=g[y*w+x]; I[(y+1)*W1+x+1]=I[y*W1+x+1]+s; } }
+  const out=new Float32Array(n);
+  for(let y=0;y<h;y++){ const y0=Math.max(0,y-r),y1=Math.min(h,y+r+1);
+    for(let x=0;x<w;x++){ const x0=Math.max(0,x-r),x1=Math.min(w,x+r+1);
+      const m=(I[y1*W1+x1]-I[y0*W1+x1]-I[y1*W1+x0]+I[y0*W1+x0])/((x1-x0)*(y1-y0)); out[y*w+x]=g[y*w+x]/(m+1)*200; } }
+  const hist=new Uint32Array(512); for(let i=0;i<n;i++){ hist[Math.min(511,out[i]|0)]++; }
+  let c=0,p1=0,p99=511; for(let i=0;i<512;i++){ c+=hist[i]; if(c<n*0.02)p1=i; if(c<n*0.995)p99=i; }
+  const sc=255/Math.max(1,p99-p1);
+  for(let i=0;i<n;i++){ let v=(out[i]-p1)*sc; v=v<0?0:v>255?255:v; px[i*4]=px[i*4+1]=px[i*4+2]=v; px[i*4+3]=255; }
+}
+
+/* ---------- OCR (Tesseract.js, se carga solo cuando se necesita) ---------- */
+let tessLoading=null, tessWorker=null, tessLog=null;
+function cargarTesseract(){
+  if(window.Tesseract) return Promise.resolve();
+  if(tessLoading) return tessLoading;
+  tessLoading=new Promise((res,rej)=>{ const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+    s.onload=()=>res(); s.onerror=()=>{ tessLoading=null; rej(new Error('No se pudo cargar el lector de texto')); };
+    document.head.appendChild(s); });
+  return tessLoading;
+}
+async function obtenerWorker(){
+  await cargarTesseract();
+  if(!tessWorker) tessWorker=await Tesseract.createWorker('spa',1,{ logger:m=>{ if(tessLog) tessLog(m); } });
+  return tessWorker;
+}
+function cargarImagen(file){ return new Promise((res,rej)=>{ const img=new Image(); const url=URL.createObjectURL(file);
+  img.onload=()=>res({img,url}); img.onerror=()=>{URL.revokeObjectURL(url);rej(new Error('No se pudo abrir la foto'));}; img.src=url; }); }
+/* Gira la imagen (0/90/180/270 en sentido horario) y la escala a un ancho dado */
+function girarImagen(img,rot,ancho,mejorar){
+  const sw=img.naturalWidth, sh=img.naturalHeight, lado=rot%180!==0;
+  const rw=lado?sh:sw, rh=lado?sw:sh; const sc=Math.min(ancho/rw, 3);
+  const c=document.createElement('canvas'); c.width=Math.round(rw*sc); c.height=Math.round(rh*sc);
+  const ctx=c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height);
+  ctx.translate(c.width/2,c.height/2); ctx.rotate(rot*Math.PI/180); ctx.drawImage(img,-sw*sc/2,-sh*sc/2,sw*sc,sh*sc);
+  if(mejorar){ const d=ctx.getImageData(0,0,c.width,c.height); bolPrep(d.data,c.width,c.height); ctx.setTransform(1,0,0,1,0,0); ctx.putImageData(d,0,0); }
+  return c;
+}
+function ordProgress(pct,txt){ $('#ordProg').classList.remove('hidden'); $('#ordProgBar').style.width=Math.round(pct)+'%'; $('#ordProgTxt').textContent=txt; }
+
+async function procesarBoleta(file){
+  ordBusy=true; $('#ordRescan').disabled=true; let url=null;
+  try{
+    const r=await cargarImagen(file); const img=r.img; url=r.url;
+    $('#ordBoletaImg').src=url; $('#ordBoletaImg').classList.remove('hidden'); $('#ordNoImg').classList.add('hidden');
+    ordProgress(3,'Preparando el lector de texto… (la primera vez tarda un poco más)');
+    tessLog=m=>{ if(m.status&&m.status.indexOf('loading')===0) ordProgress(3+(m.progress||0)*12,'Descargando el lector de texto…'); };
+    const w=await obtenerWorker();
+    /* 1) Detectar orientación de la foto */
+    let mejor=null; const rots=[0,270,90,180];
+    for(let i=0;i<rots.length;i++){
+      ordProgress(16+i*8,'Buscando la orientación de la boleta…'); tessLog=null;
+      await w.setParameters({tessedit_pageseg_mode:'3'});
+      const { data }=await w.recognize(girarImagen(img,rots[i],1000,true));
+      const p=bolPuntaje(data.words); const sc=p*10+(data.confidence||0)/10;
+      if(!mejor||sc>mejor.sc) mejor={rot:rots[i],sc,p};
+      if(p>=4) break;
+    }
+    /* Guardar la foto de la boleta ya derecha */
+    const derecha=girarImagen(img,mejor.rot,1400,false); ordBoleta=derecha.toDataURL('image/jpeg',0.7);
+    $('#ordBoletaImg').src=ordBoleta;
+    /* 2) Leer dos veces con distintos modos y combinar */
+    const lecturas=[]; const textos=[];
+    const modos=[['3',1600,'Leyendo la boleta (1 de 2)…',48],['6',2000,'Leyendo la boleta (2 de 2)…',72],['11',1600,'Revisando datos que faltan…',90]];
+    for(const [psm,ancho,txt,base] of modos){
+      if(psm==='11'){ const ya=bolCombinar(lecturas); if(Object.keys(ya).length>=11) break; }   // 3ª lectura solo si falta algo
+      tessLog=m=>{ if(m.status==='recognizing text') ordProgress(base+m.progress*(psm==='11'?9:24),txt+' '+Math.round(m.progress*100)+'%'); };
+      await w.setParameters({tessedit_pageseg_mode:psm});
+      const { data }=await w.recognize(girarImagen(img,mejor.rot,ancho,true));
+      lecturas.push(bolParsearPalabras(data.words||[])); textos.push((data.text||'').trim());
+    }
+    tessLog=null;
+    const datos=bolCombinar(lecturas);
+    /* Respaldo: buscar marca/tipo/color conocidos en todo el texto */
+    const todo=bolNorm(textos.join('\n'));
+    if(!datos.marca){ const m=BOL_MARCAS.find(x=>new RegExp('\\b'+x+'\\b').test(todo)); if(m) datos.marca=m; }
+    if(!datos.tipo){ const t=BOL_TIPOS.find(x=>new RegExp('\\b'+x+'\\b').test(todo)); if(t) datos.tipo=t; }
+    if(!datos.color){ const c=BOL_COLORES.find(x=>new RegExp('\\b'+x+'\\b').test(todo)); if(c) datos.color=c; }
+    if(!datos.placa && /PLACA\s*[:.]?\s*S\s*[\/7I1]\s*P/.test(todo)) datos.placa='S/P';
+    /* Frases del pie de la boleta: tomar la línea completa si es más larga */
+    [['propiedad',/PROPIEDAD\s+DE\s+([A-Z0-9 ]{3,50})/],['asignado',/ASIGNADO\s+A\s+([A-Z0-9 \-]{2,40})/]].forEach(([k,re])=>{
+      todo.split('\n').forEach(l=>{ const m=l.match(re); if(!m)return; const val=bolLimpiar(k,m[1]); if(val && (!datos[k] || (val.length>datos[k].length && val.startsWith(datos[k])))) datos[k]=val; }); });
+    ordTexto=textos[0]||textos[1]||'';
+    $('#ordRaw').textContent=ordTexto||'(no se detectó texto)'; $('#ordRawWrap').classList.remove('hidden');
+    const n=aplicarDatosBoleta(datos);
+    const note=$('#ordNote'); note.classList.remove('hidden');
+    if(n>=6){ note.className='ocr-note ok'; note.textContent='Se leyeron '+n+' de 11 datos de la boleta. Revíselos antes de guardar (sobre todo motor y chasis).'; }
+    else { note.className='ocr-note warn'; note.textContent=n?('Solo se pudieron leer '+n+' de 11 datos. Complete los que faltan o vuelva a escanear con mejor luz.')
+      :'No se pudieron leer los datos. Vuelva a escanear con mejor luz o escríbalos a mano.'; }
+    ordProgress(100,'Lectura terminada'); setTimeout(()=>$('#ordProg').classList.add('hidden'),1200);
+  }catch(e){
+    tessLog=null; $('#ordProg').classList.add('hidden');
+    const note=$('#ordNote'); note.className='ocr-note warn'; note.classList.remove('hidden');
+    note.textContent='No se pudo leer la boleta ('+(e.message||'error')+'). Revise su conexión a internet o escriba los datos a mano.';
+  }finally{ ordBusy=false; $('#ordRescan').disabled=false; $('#ordRescan').textContent='Volver a escanear'; if(url&&ordBoleta) URL.revokeObjectURL(url); }
+}
+function aplicarDatosBoleta(d){
+  let n=0;
+  for(const k in ORD_MAPA){ const el=$('#'+ORD_MAPA[k]); if(d[k]){ el.value=d[k]; el.classList.add('auto'); n++; } else el.classList.remove('auto'); }
+  return n;
+}
+
+/* ---------- Guardar en la tabla abastecimientos_orden ---------- */
+$('#ordSave').addEventListener('click',guardarOrden);
+async function guardarOrden(){
+  const err=$('#ordErr'); err.textContent='';
+  const v=id=>$('#'+id).value.trim(); const up=id=>v(id).toUpperCase();
+  const placa=up('oPlaca'), marca=up('oMarca'), cond=v('oCond');
+  const gas=$('#oGas').value, km=parseFloat($('#oKm').value), lps=parseFloat($('#oLps').value), lts=parseFloat($('#oLts').value);
+  if(!placa){err.textContent='Escriba la placa (o S/P si no tiene).';$('#oPlaca').focus();return;}
+  if(!marca){err.textContent='Escriba la marca del vehículo.';$('#oMarca').focus();return;}
+  if(!cond){err.textContent='Escriba el nombre de quien conduce.';$('#oCond').focus();return;}
+  if(!gas){err.textContent='Seleccione la gasolinera.';return;}
+  if(isNaN(km)||km<0){err.textContent='Escriba un kilometraje válido.';return;}
+  if(isNaN(lps)||lps<=0){err.textContent='Escriba la cantidad en Lempiras.';return;}
+  if(isNaN(lts)||lts<=0){err.textContent='Escriba la cantidad en litros.';return;}
+  if(!ordBoleta){ if(!confirm('No escaneó la boleta. ¿Guardar de todos modos?'))return; }
+  if(!ordFoto){ if(!confirm('No adjuntó foto de la factura. ¿Guardar de todos modos?'))return; }
+
+  const btn=$('#ordSave'); btn.disabled=true; btn.textContent='Guardando…';
+  try{
+    const id=crypto.randomUUID(); let facturaURL=null, boletaURL=null;
+    const subir=async(data,path)=>{ const r=await sb.storage.from('ordenes').upload(path,dataURLtoBlob(data),{contentType:'image/jpeg',upsert:false});
+      if(r.error) throw r.error; return sb.storage.from('ordenes').getPublicUrl(path).data.publicUrl; };
+    if(ordBoleta) boletaURL=await subir(ordBoleta,'boletas/'+id+'.jpg');
+    if(ordFoto) facturaURL=await subir(ordFoto,'facturas/'+id+'.jpg');
+    const row={ id, fecha:new Date().toISOString(),
+      placa, marca, modelo:up('oModelo')||null, tipo:up('oTipo')||null, color:up('oColor')||null, anio:v('oAnio')||null,
+      motor:up('oMotor')||null, chasis:up('oChasis')||null, numero_equipo:v('oEquipo')||null,
+      asignado_a:up('oAsignado')||null, propiedad:up('oPropiedad')||null, conductor:cond,
+      texto_boleta:ordTexto||null, boleta_url:boletaURL,
+      gasolinera:gas, kilometraje:km, lempiras:lps, litros:lts, factura_url:facturaURL };
+    const { error }=await sb.from('abastecimientos_orden').insert(row); if(error) throw error;
+    lastSavedRec={ id, fecha:row.fecha, externo:true, vehiculoPlaca:placa, marca, modelo:row.modelo||'', tipo:row.tipo||'', color:row.color||'',
+      numeroEquipo:row.numero_equipo||'', kilometraje:km, lempiras:lps, litros:lts, gasolinera:gas,
+      conductor:cond, asignado:row.asignado_a||'', fotoLocal:ordFoto, fotoURL:facturaURL };
+    openShare(lastSavedRec);
+  }catch(e){
+    const m=(e&&e.message)||'';
+    toast('No se pudo guardar: '+(/row-level|policy|permission|relation|column|bucket|not found/i.test(m)?'falta configurar Supabase (ejecute el SQL de abastecimientos con orden).':m),true);
+  }finally{ btn.disabled=false; btn.textContent='Guardar abastecimiento'; }
+}
+
+/* ---------- ADMIN: lista de abastecimientos con orden ---------- */
+let ordPeriodo='mes', ordFiltrados=[];
+$('#ordPeriodSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;ordPeriodo=b.dataset.op;
+  [...$('#ordPeriodSeg').children].forEach(x=>x.classList.toggle('active',x===b)); refreshOrdenes();});
+let ordBuscarT=null; $('#ordBuscar').addEventListener('input',()=>{ clearTimeout(ordBuscarT); ordBuscarT=setTimeout(refreshOrdenes,250); });
+async function refreshOrdenes(){
+  const { data, error }=await sb.from('abastecimientos_orden').select('*').order('fecha',{ascending:false});
+  if(error){ toast('No se pudo leer abastecimientos con orden'+(/relation|exist/i.test(error.message||'')?' (falta crear la tabla en Supabase)':''),true); return; }
+  const now=new Date(); const s=new Date(now); s.setHours(0,0,0,0);
+  if(ordPeriodo==='semana') s.setDate(s.getDate()-((s.getDay()+6)%7)); else if(ordPeriodo==='mes') s.setDate(1); else if(ordPeriodo==='todo') s.setTime(0);
+  const q=bolNorm($('#ordBuscar').value.trim());
+  ordFiltrados=(data||[]).filter(r=>new Date(r.fecha)>=s).filter(r=>!q||bolNorm([r.placa,r.numero_equipo,r.conductor,r.marca,r.modelo,r.asignado_a,r.chasis,r.motor].join(' ')).includes(q));
+  let tL=0,tP=0; const esc=x=>String(x==null?'':x).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  $('#ordBody').innerHTML=ordFiltrados.map((r,i)=>{ tL+=Number(r.litros||0); tP+=Number(r.lempiras||0);
+    return '<tr><td>'+fechaLabel(r.fecha)+'</td><td>'+horaLabel(r.fecha)+'</td><td><b>'+esc(r.placa)+'</b></td><td>'+esc(r.marca)+'</td><td>'+esc(r.modelo)+'</td><td>'+esc(r.tipo)+'</td><td>'+esc(r.color)+'</td><td>'+esc(r.anio)+'</td>'+
+      '<td>'+esc(r.numero_equipo)+'</td><td>'+esc(r.motor)+'</td><td>'+esc(r.chasis)+'</td><td>'+esc(r.asignado_a)+'</td><td>'+esc(r.conductor)+'</td>'+
+      '<td>'+esc(r.gasolinera)+'</td><td class="num">'+fmtKm(r.kilometraje)+'</td><td class="money">'+fmtLps(r.lempiras)+'</td><td class="num">'+fmtNum(r.litros)+'</td>'+
+      '<td>'+(r.boleta_url?'<button class="btn ghost sm" data-foto="'+esc(r.boleta_url)+'">Ver</button>':'—')+'</td>'+
+      '<td>'+(r.factura_url?'<button class="btn ghost sm" data-foto="'+esc(r.factura_url)+'">Ver</button>':'—')+'</td></tr>'; }).join('');
+  $('#ordEmpty').classList.toggle('hidden',ordFiltrados.length>0);
+  $('#oStCount').textContent=ordFiltrados.length; $('#oStLps').textContent=fmtLps(tP); $('#oStLts').textContent=fmtNum(tL);
+}
+$('#ordBody').addEventListener('click',e=>{ const b=e.target.closest('[data-foto]'); if(b) openPhoto(b.dataset.foto); });
+$('#ordExcelBtn').addEventListener('click',async()=>{
+  if(!ordFiltrados.length){ toast('No hay datos para descargar',true); return; }
+  try{
+    const wb=new ExcelJS.Workbook(); const ws=wb.addWorksheet('Con orden');
+    const cols=[['Fecha',12],['Hora',8],['Placa',11],['Marca',12],['Modelo',12],['Tipo',12],['Color',10],['Año',7],['N° equipo',12],['Motor',16],['Chasis',22],
+      ['Asignado a',14],['Conductor',26],['Gasolinera',20],['Kilometraje',12],['Lempiras',12],['Litros',10],['Foto boleta',40],['Foto factura',40]];
+    ws.columns=cols.map(([h,w])=>({header:h,width:w}));
+    const hr=ws.getRow(1); hr.font={bold:true,color:{argb:'FFFFFFFF'}}; hr.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0B2E63'}}; hr.alignment={vertical:'middle'};
+    ordFiltrados.forEach(r=>{ const row=ws.addRow([fechaLabel(r.fecha),horaLabel(r.fecha),r.placa,r.marca,r.modelo,r.tipo,r.color,r.anio,r.numero_equipo,r.motor,r.chasis,
+      r.asignado_a,r.conductor,r.gasolinera,Number(r.kilometraje||0),Number(r.lempiras||0),Number(r.litros||0),r.boleta_url||'',r.factura_url||'']);
+      row.getCell(16).numFmt='"L" #,##0.00'; row.getCell(17).numFmt='#,##0.00'; row.getCell(15).numFmt='#,##0';
+      [18,19].forEach(c=>{ const u=row.getCell(c).value; if(u) row.getCell(c).value={text:'Ver foto',hyperlink:u}; }); });
+    ws.views=[{state:'frozen',ySplit:1}];
+    const buf=await wb.xlsx.writeBuffer();
+    descargarBlob(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),'abastecimientos_con_orden_'+toDateStr(new Date())+'.xlsx');
+  }catch(e){ toast('No se pudo generar el Excel',true); }
+});
+
 /* ===================== ESTADÍSTICAS DE CONSUMO (usuarios y administradores) ===================== */
 let statsPeriod='mes', consumoModo='l', lastStatsRecs=[]; const charts={};
 const ST={ navy:'#0B2E63', azul:'#0093D0', amber:'#C9A227', ink:'#141A22', ink2:'#5A6474', grid:'#EEF1F5', line:'#D8DEE7' };
