@@ -200,16 +200,64 @@
   .toast .dot{width:9px;height:9px;border-radius:50%;background:var(--green);flex:none}
   .toast.err .dot{background:var(--red)}
 
-  /* GRAFICOS */
-  .stats-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+  /* ESTADISTICAS DE CONSUMO */
+  #statsSec{--st-grid:#EEF1F5;--st-soft:#F6F8FB}
+  .st-head{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+  .st-head .section-h{margin:0}
+  .st-range{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:12.5px;font-weight:600;color:var(--navy);
+    background:#E8F1FB;border-radius:20px;padding:4px 10px}
+  .st-range::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--azul)}
+  .st-seg{max-width:100%;overflow-x:auto;scrollbar-width:none}
+  .st-seg::-webkit-scrollbar{display:none}
+  .st-seg button{white-space:nowrap}
+  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+  .kpi{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px 13px;
+    box-shadow:0 1px 2px rgba(10,25,50,.04),0 4px 14px rgba(10,25,50,.05);overflow:hidden;min-width:0}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--kc,var(--navy))}
+  .kpi .k{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:600;color:var(--ink-2);text-transform:uppercase;letter-spacing:.04em}
+  .kpi .k svg{width:16px;height:16px;flex:none;color:var(--kc,var(--navy))}
+  .kpi .v{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:30px;line-height:1.05;margin-top:6px;color:var(--ink);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+  .kpi .s{font-size:12px;color:var(--ink-2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .charts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-  .chart-card{background:#fff;border:1.5px solid #e3e7ee;border-radius:14px;box-shadow:0 2px 10px rgba(10,25,50,.06);padding:14px 16px;min-width:0}
+  .chart-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px 14px;min-width:0;
+    box-shadow:0 1px 2px rgba(10,25,50,.04),0 4px 14px rgba(10,25,50,.05);display:flex;flex-direction:column}
   .chart-card.wide{grid-column:1 / -1}
-  .chart-card h4{margin:0;font-size:17px;font-weight:700;color:#0B2E63}
-  .chart-card p{margin:2px 0 10px;font-size:12.5px;color:#5A6474}
-  .chart-box{position:relative;height:260px}
-  .charts-empty{background:#fff;border:1.5px dashed #cfd6e2;border-radius:14px;padding:28px;text-align:center;color:#5A6474}
-  @media (max-width:760px){.charts-grid{grid-template-columns:1fr}.chart-box{height:230px}}
+  .cc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .cc-head h4{margin:0;font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:20px;line-height:1.1;color:var(--navy)}
+  .cc-head p{margin:3px 0 0;font-size:12.5px;color:var(--ink-2)}
+  .cc-toggle{display:inline-flex;background:#F1F3F5;border:1px solid var(--line);border-radius:9px;padding:2px}
+  .cc-toggle button{border:none;background:transparent;padding:6px 12px;border-radius:7px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+  .cc-toggle button.active{background:#fff;color:var(--navy);box-shadow:0 1px 2px rgba(0,0,0,.1)}
+  .chart-box{position:relative;height:280px;width:100%}
+  .chart-box.hbar{height:auto;min-height:160px}
+  .cc-foot{margin-top:10px;padding-top:10px;border-top:1px solid var(--st-grid);font-size:12px;color:var(--ink-2);display:flex;gap:16px;flex-wrap:wrap}
+  .cc-foot b{color:var(--ink);font-variant-numeric:tabular-nums}
+  .st-table{width:100%;border-collapse:collapse;font-size:13px}
+  .st-table th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-2);font-weight:600;
+    padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--st-soft)}
+  .st-table td{padding:9px 10px;border-bottom:1px solid var(--st-grid);white-space:nowrap}
+  .st-table td.n,.st-table th.n{text-align:right;font-variant-numeric:tabular-nums}
+  .st-table tr:last-child td{border-bottom:none}
+  .st-table .pl{font-weight:700;color:var(--navy)}
+  .st-table .mm{color:var(--ink-2);font-size:12px}
+  .bar-mini{display:inline-block;height:6px;border-radius:3px;background:var(--azul);vertical-align:middle;margin-right:8px;opacity:.85}
+  .charts-empty{background:var(--surface);border:1.5px dashed #cfd6e2;border-radius:14px;padding:36px 20px;text-align:center;color:var(--ink-2)}
+  .charts-empty b{display:block;font-family:'Barlow Condensed',sans-serif;font-size:20px;color:var(--navy);margin-bottom:4px}
+  .subnav{max-width:100%;flex-wrap:wrap}
+  .subnav button{white-space:nowrap}
+  @media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media (max-width:760px){
+    .charts-grid{grid-template-columns:1fr}
+    .chart-card{padding:14px 12px 12px}
+    .chart-box{height:240px}
+    .kpi{padding:12px 12px 11px}
+    .kpi .v{font-size:25px}
+    .st-head{align-items:stretch}
+    .st-seg{width:100%;display:flex}
+    .st-seg button{flex:1;padding:8px 6px}
+  }
+  @media (max-width:380px){.kpi .v{font-size:22px}.kpi .k{font-size:11px}}
 
   /* ADMIN */
   .subnav{display:inline-flex;background:#F1F3F5;border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;margin-bottom:16px}
@@ -379,37 +427,74 @@
       <button data-v="abast" class="active">Abastecer</button>
       <button data-v="rep">Reportes</button>
       <button data-v="veh">Vehículos</button>
-      <button data-v="graf">Gráficos</button>
+      <button data-v="graf">Estadísticas de consumo</button>
     </div>
 
     <!-- Barra de navegación del usuario normal -->
     <div class="subnav hidden" id="userBar">
       <button data-u="abast" class="active">Abastecer</button>
-      <button data-u="graf">Gráficos</button>
+      <button data-u="graf">Estadísticas de consumo</button>
     </div>
 
     <!-- ESTADISTICAS DE CONSUMO (usuarios y administradores) -->
     <div id="statsSec" class="hidden">
-      <div class="stats-head">
-        <div class="section-h" style="margin:0"><h3>Estadísticas de abastecimiento</h3><p>Consumo, vehículos más abastecidos y gasolineras más usadas.</p></div>
-        <div class="seg" id="statsSeg">
+      <div class="st-head">
+        <div class="section-h"><h3>Estadísticas de consumo</h3>
+          <p>Consumo de combustible, vehículos y gasolineras de URIP III.</p>
+          <span class="st-range" id="stRange">—</span></div>
+        <div class="seg st-seg" id="statsSeg">
           <button data-sp="dia">Hoy</button>
           <button data-sp="semana">Semana</button>
           <button data-sp="mes" class="active">Mes</button>
+          <button data-sp="anio">Año</button>
           <button data-sp="todo">Todo</button>
         </div>
       </div>
-      <div class="stat-row">
-        <div class="stat"><div class="k">Abastecimientos</div><div class="v num" id="gsCount">0</div></div>
-        <div class="stat"><div class="k">Total en Lempiras</div><div class="v amber num" id="gsLps">L 0.00</div></div>
-        <div class="stat"><div class="k">Total en litros</div><div class="v num" id="gsLts">0.00</div></div>
+
+      <div class="kpis">
+        <div class="kpi" style="--kc:var(--navy)"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v17"/><path d="M3 22h12M15 10h2a2 2 0 0 1 2 2v5a1.5 1.5 0 0 0 3 0V8l-3-3"/><path d="M6 8h6"/></svg>Abastecimientos</div>
+          <div class="v" id="gsCount">0</div><div class="s" id="gsCountS">&nbsp;</div></div>
+        <div class="kpi" style="--kc:var(--amber)"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></svg>Total gastado</div>
+          <div class="v" id="gsLps">L 0.00</div><div class="s" id="gsLpsS">&nbsp;</div></div>
+        <div class="kpi" style="--kc:var(--azul)"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7 6.3 9.5a7 7 0 1 0 11.4 0z"/></svg>Litros</div>
+          <div class="v" id="gsLts">0.00</div><div class="s" id="gsLtsS">&nbsp;</div></div>
+        <div class="kpi" style="--kc:var(--green)"><div class="k"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Precio promedio</div>
+          <div class="v" id="gsPrecio">—</div><div class="s">por litro</div></div>
       </div>
-      <div class="charts-empty hidden" id="chartsEmpty">No hay abastecimientos en este período para graficar.</div>
+
+      <div class="charts-empty hidden" id="chartsEmpty"><b>Sin abastecimientos en este período</b>Elija otro período para ver las estadísticas.</div>
+
       <div class="charts-grid" id="chartsWrap">
-        <div class="chart-card wide"><h4>Consumo de combustible</h4><p id="chConsumoSub">Litros y Lempiras por día</p><div class="chart-box"><canvas id="chConsumo"></canvas></div></div>
-        <div class="chart-card"><h4>Vehículos más abastecidos</h4><p>Número de abastecimientos por vehículo</p><div class="chart-box"><canvas id="chVehAbast"></canvas></div></div>
-        <div class="chart-card"><h4>Vehículos que más combustible consumen</h4><p>Total de litros · toque una barra para ver Lempiras y km/L</p><div class="chart-box"><canvas id="chVehCons"></canvas></div></div>
-        <div class="chart-card wide"><h4>Gasolineras con más abastecimientos</h4><p>Cantidad de abastecimientos por gasolinera</p><div class="chart-box"><canvas id="chGas"></canvas></div></div>
+        <div class="chart-card wide">
+          <div class="cc-head">
+            <div><h4>Consumo de combustible</h4><p id="chConsumoSub">Por día</p></div>
+            <div class="cc-toggle" id="consumoTg"><button data-m="l" class="active">Litros</button><button data-m="p">Lempiras</button></div>
+          </div>
+          <div class="chart-box"><canvas id="chConsumo" role="img" aria-label="Consumo de combustible en el tiempo"></canvas></div>
+          <div class="cc-foot" id="consumoFoot"></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="cc-head"><div><h4>Vehículos más abastecidos</h4><p>Número de abastecimientos por vehículo</p></div></div>
+          <div class="chart-box hbar" id="boxVehAbast"><canvas id="chVehAbast" role="img" aria-label="Vehículos más abastecidos"></canvas></div>
+        </div>
+
+        <div class="chart-card">
+          <div class="cc-head"><div><h4>Vehículos que más consumen</h4><p>Litros consumidos por vehículo</p></div></div>
+          <div class="chart-box hbar" id="boxVehCons"><canvas id="chVehCons" role="img" aria-label="Vehículos que más combustible consumen"></canvas></div>
+        </div>
+
+        <div class="chart-card wide">
+          <div class="cc-head"><div><h4>Gasolineras más utilizadas</h4><p>Abastecimientos y porcentaje del total por gasolinera</p></div></div>
+          <div class="chart-box hbar" id="boxGas"><canvas id="chGas" role="img" aria-label="Gasolineras más utilizadas"></canvas></div>
+        </div>
+
+        <div class="chart-card wide">
+          <div class="cc-head"><div><h4>Detalle por vehículo</h4><p>Resumen del período · el rendimiento se calcula con el kilometraje registrado</p></div></div>
+          <div class="table-scroll"><table class="st-table">
+            <thead><tr><th>Vehículo</th><th class="n">Abast.</th><th class="n">Litros</th><th class="n">Lempiras</th><th class="n">Recorrido</th><th class="n">Rendimiento</th></tr></thead>
+            <tbody id="stTbody"></tbody></table></div>
+        </div>
       </div>
     </div>
 
@@ -994,88 +1079,188 @@ async function refreshAdmin(){
   $('#stCount').textContent=recs.length; $('#stLps').textContent=fmtLps(tLps); $('#stLts').textContent=fmtNum(tLts);
   $('#admEmpty').classList.toggle('hidden',recs.length>0);
 }
-/* ===================== GRÁFICOS (usuarios y administradores) ===================== */
-let statsPeriod='mes'; const charts={};
-const CH_COLORS=['#0B2E63','#0093D0','#C9A227','#1F9D57','#D23F3F','#7A5AF8','#E8880C','#5A6474','#17A2B8','#A8871B'];
+/* ===================== ESTADÍSTICAS DE CONSUMO (usuarios y administradores) ===================== */
+let statsPeriod='mes', consumoModo='l', lastStatsRecs=[]; const charts={};
+const ST={ navy:'#0B2E63', azul:'#0093D0', amber:'#C9A227', ink:'#141A22', ink2:'#5A6474', grid:'#EEF1F5', line:'#D8DEE7' };
+const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const MESES_C=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+const isSmall=()=>window.innerWidth<600;
+
 function showStats(){ $('#opSelect').classList.add('hidden'); $('#opForm').classList.add('hidden');
   $('#statsSec').classList.remove('hidden'); renderStats(); window.scrollTo(0,0); }
 $('#statsSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;statsPeriod=b.dataset.sp;
   [...$('#statsSeg').children].forEach(x=>x.classList.toggle('active',x===b)); renderStats();});
+$('#consumoTg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;consumoModo=b.dataset.m;
+  [...$('#consumoTg').children].forEach(x=>x.classList.toggle('active',x===b)); drawConsumo(lastStatsRecs);});
+let stResizeT=null, stLastW=window.innerWidth;
+window.addEventListener('resize',()=>{ if(Math.abs(window.innerWidth-stLastW)<40)return; clearTimeout(stResizeT);
+  stResizeT=setTimeout(()=>{ stLastW=window.innerWidth; if(!$('#statsSec').classList.contains('hidden')&&lastStatsRecs.length) renderCharts(lastStatsRecs); },250); });
+
 function statsStart(){ const now=new Date(); const s=new Date(now); s.setHours(0,0,0,0);
   if(statsPeriod==='semana') s.setDate(s.getDate()-((s.getDay()+6)%7));
   else if(statsPeriod==='mes') s.setDate(1);
+  else if(statsPeriod==='anio'){ s.setMonth(0); s.setDate(1); }
   else if(statsPeriod==='todo') return new Date(0);
   return s; }
+function rangeText(s,recs){ const n=new Date();
+  if(statsPeriod==='dia') return 'Hoy · '+pad(n.getDate())+' de '+MESES[n.getMonth()]+' '+n.getFullYear();
+  if(statsPeriod==='semana') return 'Semana del '+pad(s.getDate())+' '+MESES_C[s.getMonth()]+' al '+pad(n.getDate())+' '+MESES_C[n.getMonth()];
+  if(statsPeriod==='mes') return MESES[n.getMonth()].replace(/^./,c=>c.toUpperCase())+' '+n.getFullYear();
+  if(statsPeriod==='anio') return 'Año '+n.getFullYear();
+  if(!recs.length) return 'Todo el historial';
+  const f=new Date(Math.min(...recs.map(r=>+new Date(r.fecha))));
+  return 'Desde '+pad(f.getDate())+' '+MESES_C[f.getMonth()]+' '+f.getFullYear(); }
+
 async function renderStats(){
   if(!currentUser)return;
   const s=statsStart(); const recs=(await loadAll()).filter(r=>new Date(r.fecha)>=s);
+  lastStatsRecs=recs;
+  const tL=recs.reduce((a,r)=>a+Number(r.litros||0),0), tP=recs.reduce((a,r)=>a+Number(r.lempiras||0),0);
+  const nVeh=new Set(recs.map(r=>normPlaca(vehChars(r).placa)||r.vehiculoId)).size;
+  $('#stRange').textContent=rangeText(s,recs);
   $('#gsCount').textContent=recs.length;
-  $('#gsLps').textContent=fmtLps(recs.reduce((a,r)=>a+Number(r.lempiras||0),0));
-  $('#gsLts').textContent=fmtNum(recs.reduce((a,r)=>a+Number(r.litros||0),0));
+  $('#gsCountS').textContent=nVeh?(nVeh+(nVeh===1?' vehículo':' vehículos')):' ';
+  $('#gsLps').textContent=fmtLps(tP);
+  $('#gsLpsS').textContent=recs.length?('Promedio '+fmtLps(tP/recs.length)+' c/u'):' ';
+  $('#gsLts').textContent=fmtNum(tL);
+  $('#gsLtsS').textContent=recs.length?('Promedio '+fmtNum(tL/recs.length)+' L c/u'):' ';
+  $('#gsPrecio').textContent=tL>0?fmtLps(tP/tL):'—';
   renderCharts(recs);
 }
+
+/* Estilo común de Chart.js */
+function stBase(){ const sm=isSmall();
+  return { responsive:true, maintainAspectRatio:false, animation:{duration:450},
+    layout:{padding:{top:4,right:sm?4:8}},
+    plugins:{ legend:{display:false},
+      tooltip:{ backgroundColor:'#fff', titleColor:ST.ink, bodyColor:ST.ink2, footerColor:ST.ink2, borderColor:ST.line, borderWidth:1,
+        padding:{x:12,y:10}, cornerRadius:10, displayColors:false, caretSize:6,
+        titleFont:{family:ST_FAM,weight:'700',size:13}, bodyFont:{family:ST_FAM,size:12.5}, footerFont:{family:ST_FAM,size:12,weight:'500'},
+        bodySpacing:4, footerMarginTop:6 } } }; }
+const ST_FAM="'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif";
+function stFont(sz,w){ return {family:ST_FAM,size:sz,weight:w||'500'}; }
+/* Etiqueta de valor al final de cada barra */
+const valueLabels={ id:'valueLabels', afterDatasetsDraw(ch,args,opts){ if(!opts||!opts.fmt)return;
+  const {ctx}=ch; const horiz=ch.options.indexAxis==='y'; const meta=ch.getDatasetMeta(0);
+  ctx.save(); ctx.font='600 '+(isSmall()?11:12)+'px Inter, system-ui, sans-serif'; ctx.fillStyle=ST.ink;
+  meta.data.forEach((bar,i)=>{ const v=ch.data.datasets[0].data[i]; if(v==null)return; const t=opts.fmt(v,i);
+    if(horiz){ ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(t,bar.x+6,bar.y); }
+    else { if(opts.skip&&opts.skip(i))return; ctx.textAlign='center'; ctx.textBaseline='bottom'; ctx.fillText(t,bar.x,bar.y-4); } });
+  ctx.restore(); } };
 function drawChart(id,cfg){ if(typeof Chart==='undefined')return; if(charts[id])charts[id].destroy();
   charts[id]=new Chart(document.getElementById(id),cfg); }
-function renderCharts(recs){
-  const empty=!recs.length;
-  $('#chartsEmpty').classList.toggle('hidden',!empty); $('#chartsWrap').classList.toggle('hidden',empty);
-  if(empty) return;
-  if(typeof Chart==='undefined'){ toast('No se pudo cargar la librería de gráficos (revise la conexión)',true); return; }
-  Chart.defaults.color='#5A6474';
-  const sorted=[...recs].sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+function hbarHeight(n){ return Math.max(150, n*(isSmall()?34:38)+36); }
+function shortNum(v){ return v>=1000?(v/1000).toLocaleString('es-HN',{maximumFractionDigits:1})+'k':Math.round(v).toLocaleString('es-HN'); }
 
-  /* 1) Consumo en el tiempo */
-  const modo= statsPeriod==='dia'?'hora':(statsPeriod==='todo'?'mes':'dia');
-  $('#chConsumoSub').textContent='Litros y Lempiras por '+(modo==='hora'?'hora':modo==='mes'?'mes':'día');
-  const t={};
-  sorted.forEach(r=>{ const d=new Date(r.fecha);
-    const k= modo==='hora'?pad(d.getHours())+':00' : modo==='mes'?pad(d.getMonth()+1)+'/'+d.getFullYear() : pad(d.getDate())+'/'+pad(d.getMonth()+1);
-    if(!t[k])t[k]={l:0,p:0}; t[k].l+=Number(r.litros||0); t[k].p+=Number(r.lempiras||0); });
-  const tk=Object.keys(t);
-  drawChart('chConsumo',{type:'bar',data:{labels:tk,datasets:[
-      {type:'bar',label:'Litros',data:tk.map(k=>+t[k].l.toFixed(2)),backgroundColor:'rgba(0,147,208,.75)',borderRadius:6,yAxisID:'y'},
-      {type:'line',label:'Lempiras',data:tk.map(k=>+t[k].p.toFixed(2)),borderColor:'#C9A227',backgroundColor:'#C9A227',tension:.3,pointRadius:4,yAxisID:'y1'}]},
-    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
-      scales:{y:{beginAtZero:true,title:{display:true,text:'Litros'}},
-              y1:{beginAtZero:true,position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'Lempiras'}}}}});
-
-  /* Agrupar por vehículo */
+function groupVehiculos(sorted){
   const vm={};
   sorted.forEach(r=>{ const c=vehChars(r); const key=normPlaca(c.placa)||r.vehiculoId;
-    if(!vm[key])vm[key]={label:(c.placa||'—')+' · '+(c.marca||'')+' '+(c.modelo||''),n:0,l:0,p:0,kms:[],lPost:0};
+    if(!vm[key])vm[key]={placa:c.placa||'—',desc:((c.marca||'')+' '+(c.modelo||'')).trim(),tipo:c.tipo||'',n:0,l:0,p:0,kms:[],lPost:0};
     const g=vm[key]; if(g.n>0) g.lPost+=Number(r.litros||0);
     g.n++; g.l+=Number(r.litros||0); g.p+=Number(r.lempiras||0);
     const km=Number(r.kilometraje); if(km>0) g.kms.push(km); });
   const vs=Object.values(vm);
-  vs.forEach(g=>{ const rec=g.kms.length>1?Math.max(...g.kms)-Math.min(...g.kms):0; g.rend=(g.lPost>0&&rec>0)?rec/g.lPost:null; });
+  vs.forEach(g=>{ g.rec=g.kms.length>1?Math.max(...g.kms)-Math.min(...g.kms):0; g.rend=(g.lPost>0&&g.rec>0)?g.rec/g.lPost:null; });
+  return vs;
+}
+/* Máximo 10 barras; el resto se agrupa en "Otros" */
+function topN(arr,key,n){ if(arr.length<=n) return arr; const top=arr.slice(0,n-1), rest=arr.slice(n-1);
+  const o={placa:'Otros ('+rest.length+')',desc:'Varios vehículos',n:0,l:0,p:0,rend:null,other:true};
+  rest.forEach(g=>{o.n+=g.n;o.l+=g.l;o.p+=g.p;}); return top.concat([o]); }
 
-  /* 2) Vehículos más abastecidos */
-  const byN=[...vs].sort((a,b)=>b.n-a.n);
-  drawChart('chVehAbast',{type:'bar',data:{labels:byN.map(g=>g.label),datasets:[{label:'Abastecimientos',data:byN.map(g=>g.n),
-      backgroundColor:byN.map((g,i)=>CH_COLORS[i%CH_COLORS.length]),borderRadius:6}]},
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-      scales:{x:{beginAtZero:true,ticks:{precision:0}}}}});
+function drawConsumo(recs){
+  if(!recs.length||typeof Chart==='undefined')return;
+  const sorted=[...recs].sort((a,b)=>new Date(a.fecha)-new Date(b.fecha)); const sm=isSmall();
+  const modo= statsPeriod==='dia'?'hora':((statsPeriod==='anio'||statsPeriod==='todo')?'mes':'dia');
+  const t={}; const order=[];
+  const addKey=(k)=>{ if(!t[k]){t[k]={l:0,p:0,n:0};order.push(k);} };
+  if(modo==='dia'){ const s=statsStart(), e=new Date(); const d=new Date(s);
+    if(statsPeriod==='todo') d.setTime(+new Date(sorted[0].fecha)); d.setHours(0,0,0,0);
+    while(d<=e){ addKey(pad(d.getDate())+' '+MESES_C[d.getMonth()]); d.setDate(d.getDate()+1); } }
+  sorted.forEach(r=>{ const d=new Date(r.fecha);
+    const k= modo==='hora'?pad(d.getHours())+':00' : modo==='mes'?MESES_C[d.getMonth()]+' '+String(d.getFullYear()).slice(2) : pad(d.getDate())+' '+MESES_C[d.getMonth()];
+    addKey(k); t[k].l+=Number(r.litros||0); t[k].p+=Number(r.lempiras||0); t[k].n++; });
+  const isL=consumoModo==='l'; const vals=order.map(k=>+(isL?t[k].l:t[k].p).toFixed(2));
+  const max=Math.max(...vals); const conDatos=vals.filter(v=>v>0);
+  $('#chConsumoSub').textContent=(isL?'Litros':'Lempiras')+' por '+(modo==='hora'?'hora':modo==='mes'?'mes':'día');
+  const prom=conDatos.length?conDatos.reduce((a,b)=>a+b,0)/conDatos.length:0; const iMax=vals.indexOf(max);
+  $('#consumoFoot').innerHTML='Máximo: <b>'+(isL?fmtNum(max)+' L':fmtLps(max))+'</b> ('+order[iMax]+')'+
+    '<span>Promedio por '+(modo==='hora'?'hora':modo==='mes'?'mes':'día')+' con consumo: <b>'+(isL?fmtNum(prom)+' L':fmtLps(prom))+'</b></span>';
+  const color=isL?ST.azul:ST.amber;
+  const muchos=order.length>14;
+  const opts=stBase();
+  opts.plugins.tooltip.callbacks={
+    title:it=>order[it[0].dataIndex],
+    label:it=>{const g=t[order[it.dataIndex]]; return [fmtNum(g.l)+' litros',fmtLps(g.p)];},
+    footer:it=>{const g=t[order[it[0].dataIndex]]; return g.n+(g.n===1?' abastecimiento':' abastecimientos');} };
+  opts.plugins.valueLabels={ fmt:v=>v>0?(isL?shortNum(v):'L '+shortNum(v)):'', skip:()=>muchos||sm&&order.length>7 };
+  opts.scales={
+    x:{grid:{display:false},border:{color:ST.line},ticks:{color:ST.ink2,font:stFont(sm?10.5:11.5),maxRotation:0,autoSkip:true,autoSkipPadding:10}},
+    y:{beginAtZero:true,grace:'12%',grid:{color:ST.grid},border:{display:false},
+       ticks:{color:ST.ink2,font:stFont(sm?10.5:11.5),maxTicksLimit:sm?4:6,callback:v=>isL?shortNum(v):'L '+shortNum(v)}} };
+  drawChart('chConsumo',{type:'bar',plugins:[valueLabels],
+    data:{labels:order,datasets:[{label:isL?'Litros':'Lempiras',data:vals,backgroundColor:color,hoverBackgroundColor:isL?ST.navy:'#A8871B',
+      borderRadius:{topLeft:5,topRight:5},borderSkipped:'bottom',maxBarThickness:46,categoryPercentage:.78,barPercentage:.9}]},
+    options:opts});
+}
 
-  /* 3) Vehículos que más consumen */
-  const byL=[...vs].sort((a,b)=>b.l-a.l);
-  drawChart('chVehCons',{type:'bar',data:{labels:byL.map(g=>g.label),datasets:[{label:'Litros',data:byL.map(g=>+g.l.toFixed(2)),
-      backgroundColor:byL.map((g,i)=>i===0?'#D23F3F':'rgba(11,46,99,.85)'),borderRadius:6}]},
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
-      tooltip:{callbacks:{label:ctx=>' '+fmtNum(ctx.raw)+' litros',
-        afterLabel:ctx=>{const g=byL[ctx.dataIndex];return ['Gasto: '+fmtLps(g.p),'Abastecimientos: '+g.n,
-          'Rendimiento: '+(g.rend?fmtNum(g.rend)+' km/L':'sin datos suficientes')];}}}},
-      scales:{x:{beginAtZero:true,title:{display:true,text:'Litros'}}}}});
+function hbar(id,boxId,items,valFn,color,fmtVal,tipFn,highlightFirst){
+  const sm=isSmall(); $(boxId).style.height=hbarHeight(items.length)+'px';
+  const vals=items.map(valFn);
+  const opts=stBase(); opts.indexAxis='y';
+  const maxTxt=Math.max(...vals.map((v,i)=>String(fmtVal(v,i)).length));
+  opts.layout.padding.right=Math.max(sm?30:40, maxTxt*(sm?6.6:7.2)+12);
+  opts.plugins.tooltip.callbacks={ title:it=>tipFn(items[it[0].dataIndex]).title, label:it=>tipFn(items[it.dataIndex]).lines };
+  opts.plugins.valueLabels={fmt:v=>fmtVal(v)};
+  opts.scales={
+    x:{beginAtZero:true,grace:'4%',grid:{color:ST.grid},border:{display:false},ticks:{display:false}},
+    y:{grid:{display:false},border:{color:ST.line},ticks:{color:ST.ink,font:stFont(sm?11:12,'600'),autoSkip:false}} };
+  drawChart(id,{type:'bar',plugins:[valueLabels],
+    data:{labels:items.map(g=>g.label),datasets:[{data:vals,
+      backgroundColor:items.map((g,i)=>g.other?'#B8C2D1':(highlightFirst&&i===0?ST.amber:color)),
+      hoverBackgroundColor:items.map(g=>g.other?'#9AA6B8':ST.navy),
+      borderRadius:{topRight:5,bottomRight:5},borderSkipped:'left',barThickness:sm?18:20}]},
+    options:opts});
+}
 
-  /* 4) Gasolineras */
+function renderCharts(recs){
+  const empty=!recs.length;
+  $('#chartsEmpty').classList.toggle('hidden',!empty); $('#chartsWrap').classList.toggle('hidden',empty);
+  if(empty){ Object.keys(charts).forEach(k=>{charts[k].destroy();delete charts[k];}); return; }
+  if(typeof Chart==='undefined'){ toast('No se pudo cargar la librería de gráficos (revise la conexión)',true); return; }
+  Chart.defaults.font.family="'Inter',system-ui,sans-serif";
+  const sorted=[...recs].sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
+  const total=recs.length;
+
+  drawConsumo(recs);
+
+  const vs=groupVehiculos(sorted); vs.forEach(g=>g.label=g.placa);
+  const vehTip=g=>({title:g.placa+(g.desc?' · '+g.desc:''),
+    lines:[g.n+(g.n===1?' abastecimiento':' abastecimientos'),fmtNum(g.l)+' litros · '+fmtLps(g.p)]
+      .concat(g.other?[]:['Rendimiento: '+(g.rend?fmtNum(g.rend)+' km/L':'sin datos suficientes')])});
+
+  const byN=topN([...vs].sort((a,b)=>b.n-a.n||b.l-a.l),'n',10); byN.forEach(g=>g.label=g.placa);
+  hbar('chVehAbast','#boxVehAbast',byN,g=>g.n,ST.navy,v=>String(v),vehTip,false);
+
+  const byL=topN([...vs].sort((a,b)=>b.l-a.l),'l',10); byL.forEach(g=>g.label=g.placa);
+  hbar('chVehCons','#boxVehCons',byL,g=>+g.l.toFixed(2),ST.azul,v=>fmtNum(v,1)+' L',vehTip,true);
+
   const gm={};
-  sorted.forEach(r=>{ const k=String(r.gasolinera||'—').trim()||'—'; if(!gm[k])gm[k]={n:0,p:0,l:0};
+  sorted.forEach(r=>{ const k=String(r.gasolinera||'—').trim()||'—'; if(!gm[k])gm[k]={label:k,n:0,p:0,l:0};
     gm[k].n++; gm[k].p+=Number(r.lempiras||0); gm[k].l+=Number(r.litros||0); });
-  const gk=Object.keys(gm).sort((a,b)=>gm[b].n-gm[a].n);
-  drawChart('chGas',{type:'bar',data:{labels:gk,datasets:[{label:'Abastecimientos',data:gk.map(k=>gm[k].n),
-      backgroundColor:gk.map((k,i)=>CH_COLORS[(i+1)%CH_COLORS.length]),borderRadius:6}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
-      tooltip:{callbacks:{afterLabel:ctx=>{const g=gm[gk[ctx.dataIndex]];return ['Total: '+fmtLps(g.p),'Litros: '+fmtNum(g.l)];}}}},
-      scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+  const gs=Object.values(gm).sort((a,b)=>b.n-a.n);
+  hbar('chGas','#boxGas',gs,g=>g.n,ST.navy,(v)=>v+' · '+Math.round(v/total*100)+'%',
+    g=>({title:g.label,lines:[g.n+(g.n===1?' abastecimiento':' abastecimientos')+' ('+Math.round(g.n/total*100)+'%)',fmtNum(g.l)+' litros','Total: '+fmtLps(g.p)]}),false);
+
+  /* Tabla detalle */
+  const maxL=Math.max(...vs.map(g=>g.l))||1;
+  $('#stTbody').innerHTML=[...vs].sort((a,b)=>b.l-a.l).map(g=>
+    '<tr><td><span class="pl">'+g.placa+'</span> <span class="mm">'+(g.desc||'')+'</span></td>'+
+    '<td class="n">'+g.n+'</td>'+
+    '<td class="n"><span class="bar-mini" style="width:'+Math.max(4,Math.round(g.l/maxL*60))+'px"></span>'+fmtNum(g.l)+'</td>'+
+    '<td class="n">'+fmtLps(g.p)+'</td>'+
+    '<td class="n">'+(g.rec>0?Math.round(g.rec).toLocaleString('es-HN')+' km':'—')+'</td>'+
+    '<td class="n">'+(g.rend?'<b>'+fmtNum(g.rend)+'</b> km/L':'—')+'</td></tr>').join('');
 }
 
 function openPhoto(src){$('#modalImg').src=src;$('#photoModal').classList.add('show');}
