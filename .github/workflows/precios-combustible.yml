@@ -1,0 +1,39 @@
+# Actualiza precios.json con los precios de los combustibles en Honduras.
+# Corre todos los días a las 6:15 a. m. (hora de Honduras) y también se puede
+# ejecutar a mano desde GitHub: pestaña "Actions" → "Precios del combustible" → "Run workflow".
+name: Precios del combustible
+
+on:
+  schedule:
+    - cron: "15 12 * * *"   # 12:15 UTC = 6:15 a. m. en Honduras
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: precios-combustible
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Buscar precios de esta semana
+        run: node scripts/actualizar-precios.mjs
+      - name: Guardar cambios
+        run: |
+          if git diff --quiet -- precios.json; then
+            echo "Sin cambios en precios.json"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add precios.json
+          git commit -m "Precios del combustible $(date -u +%Y-%m-%d)"
+          git push

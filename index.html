@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Seguridad: solo permite cargar código y datos de los servicios que usa la app -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co; connect-src 'self' data: blob: https://*.supabase.co wss://*.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Control de Abastecimiento de vehiculos URIP III</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -597,6 +600,109 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
   }
+
+  /* =====================================================================
+     BIENVENIDA · ALERTAS DE MANTENIMIENTO · ODÓMETRO · REPORTE MANTENIMIENTO
+     ===================================================================== */
+  .welcome{display:flex;align-items:center;gap:14px;margin:0 0 16px;padding:16px 18px;border-radius:16px;color:#fff;
+    background:linear-gradient(135deg,#0A2450 0%,#0B2E63 55%,#12489A 100%);box-shadow:0 14px 30px -16px rgba(11,46,99,.7);
+    position:relative;overflow:hidden;animation:fxFade .5s ease both}
+  .welcome::after{content:"";position:absolute;right:-40px;top:-60px;width:200px;height:200px;border-radius:50%;
+    background:radial-gradient(circle,rgba(201,162,39,.35),transparent 70%)}
+  .wl-ico{flex:none;width:46px;height:46px;border-radius:13px;display:grid;place-items:center;
+    background:rgba(255,255,255,.1);border:1px solid rgba(201,162,39,.55);color:#E6C65A}
+  .wl-ico svg{width:24px;height:24px}
+  .welcome h3{margin:0;font-family:'Barlow Condensed',sans-serif;font-size:24px;letter-spacing:.02em;line-height:1.1}
+  .welcome p{margin:3px 0 0;font-size:13px;color:#A9BEDC}
+
+  .mant-alerts{display:grid;gap:10px;margin:0 0 18px}
+  .ma-item{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 14px;border-radius:14px;
+    background:#FFF7E8;border:1.5px solid #F2C877;box-shadow:0 10px 24px -16px rgba(165,97,10,.6)}
+  .ma-item.vencido{background:#FDEEEE;border-color:#EFA3A3;box-shadow:0 10px 24px -16px rgba(176,42,42,.6)}
+  .ma-txt{flex:1 1 220px;min-width:0}
+  .ma-txt b{display:block;font-size:14px;color:var(--ink)}
+  .ma-txt span{font-size:12.5px;color:var(--ink-2)}
+  .ma-item .mini{white-space:nowrap}
+  .mini.gold{background:linear-gradient(135deg,#E4BE3A,var(--gold-dk));color:#2f2505;border-color:#C9A227}
+  .mini.gold:hover{filter:brightness(1.06);background:linear-gradient(135deg,#E4BE3A,var(--gold-dk))}
+
+  /* Odómetro */
+  .odo{margin:14px 0;padding:16px;border-radius:16px;color:#fff;position:relative;overflow:hidden;
+    background:linear-gradient(160deg,#07183A 0%,#0B2E63 60%,#0E3F7E 100%);border:1.5px solid #1C4E92;
+    box-shadow:0 14px 30px -16px rgba(11,46,99,.7);transition:border-color .3s,box-shadow .3s}
+  .odo.st-warn{border-color:#E8A317;box-shadow:0 0 0 3px rgba(232,163,23,.25),0 14px 30px -16px rgba(165,97,10,.7)}
+  .odo.st-danger{border-color:#E04848;box-shadow:0 0 0 3px rgba(224,72,72,.28),0 14px 30px -16px rgba(120,20,20,.8);
+    background:linear-gradient(160deg,#2A0A0A 0%,#5a0d0d 60%,#7a1515 100%)}
+  .odo-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .odo-lbl{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#9FB6D8}
+  .odo-read{display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap}
+  .odo-digits{display:inline-flex;gap:3px;padding:6px;border-radius:10px;background:#02091A;border:1px solid #274a7c;
+    box-shadow:inset 0 2px 8px rgba(0,0,0,.7)}
+  .odo-digits span{display:inline-block;min-width:24px;padding:4px 0;text-align:center;border-radius:5px;
+    font:700 26px/1 'Barlow Condensed',ui-monospace,monospace;color:#F4F7FB;
+    background:linear-gradient(180deg,#1b2638 0%,#0c1320 50%,#1b2638 100%);box-shadow:inset 0 -1px 0 rgba(255,255,255,.06)}
+  .odo-digits span.last{color:#0B2E63;background:linear-gradient(180deg,#F4F7FB,#D7DEE9)}
+  .odo-unit{font-size:13px;font-weight:700;color:#9FB6D8;padding-bottom:6px}
+  .odo-src{font-size:11.5px;color:#9FB6D8;margin-top:6px}
+  .odo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .odo-cell{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:11px;padding:9px 11px}
+  .odo-cell small{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#9FB6D8}
+  .odo-cell b{font:700 22px/1.15 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:.02em}
+  .odo.st-ok .odo-count{color:#6EE7A2} .odo.st-warn .odo-count{color:#FFC94D} .odo.st-danger .odo-count{color:#FF8A8A}
+  .odo-bar{position:relative;height:9px;border-radius:9px;background:rgba(255,255,255,.12);margin-top:14px;overflow:hidden}
+  .odo-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:9px;background:linear-gradient(90deg,#0093D0,#2BB4EC);transition:width .6s var(--ease)}
+  .odo.st-warn .odo-bar i{background:linear-gradient(90deg,#E8A317,#FFC94D)}
+  .odo.st-danger .odo-bar i{background:linear-gradient(90deg,#E04848,#FF8A8A)}
+  .odo-bar em{position:absolute;top:-2px;bottom:-2px;width:2px;background:#fff;opacity:.55}
+  .odo-msg{margin-top:10px;font-size:13px;color:#C9D6EA}
+  .odo-msg b{color:#fff}
+  .odo.st-warn .odo-msg{color:#FFE2A3} .odo.st-danger .odo-msg{color:#FFD0D0}
+  .odo-actions{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
+  .odo-actions .btn{width:auto}
+  .odo.st-warn,.odo.st-danger{animation:odoPulse 2.4s ease-in-out infinite}
+  @keyframes odoPulse{50%{box-shadow:0 0 0 6px rgba(232,163,23,.10),0 14px 30px -16px rgba(0,0,0,.6)}}
+  @media (max-width:420px){.odo-digits span{min-width:20px;font-size:22px}.odo-cell b{font-size:19px}}
+  @media (prefers-reduced-motion:reduce){.odo.st-warn,.odo.st-danger{animation:none}}
+
+  /* Botón WhatsApp con icono */
+  .btn .wa-ico{width:18px;height:18px;vertical-align:-4px;margin-right:8px}
+
+  /* Modal reporte de mantenimiento */
+  .mr-veh{display:flex;gap:12px;align-items:center;padding:12px;border-radius:12px;margin-bottom:14px;
+    background:linear-gradient(135deg,#0A2450,#12489A);color:#fff}
+  .mr-veh .mk{font-weight:700;font-size:15px}
+  .mr-veh .sub{font-size:12.5px;color:#A9BEDC}
+  .mr-next{margin:-4px 0 14px;padding:10px 12px;border-radius:10px;background:#EEF6FC;border:1px solid #C9E2F3;font-size:13px;color:var(--ink-2)}
+  .mr-next b{color:var(--navy)}
+  .mr-lbl{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin:4px 0 6px}
+  #mrPrev{max-height:260px;overflow:auto}
+  .mr-open{display:block;text-align:center;text-decoration:none}
+
+  /* Precios del combustible (login) */
+  #login{flex-direction:column;gap:16px}
+  .fuel{position:relative;z-index:1;width:100%;max-width:410px;border-radius:20px;padding:16px 16px 12px;color:#fff;
+    background:rgba(6,22,52,.72);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    box-shadow:0 20px 50px rgba(0,0,0,.35);animation:cardIn .8s var(--ease) both .15s}
+  .fuel-h{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+  .fuel-h h2{margin:0;font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:.04em;text-transform:uppercase}
+  .fuel-h p{margin:2px 0 0;font-size:12px;color:#A9BEDC}
+  .fuel-seg{display:inline-flex;background:rgba(255,255,255,.08);border-radius:9px;padding:3px;flex:none}
+  .fuel-seg button{border:0;background:none;color:#A9BEDC;font-size:11.5px;font-weight:700;padding:5px 8px;border-radius:7px}
+  .fuel-seg button.active{background:#C9A227;color:#1d1603}
+  .fuel-list{list-style:none;margin:12px 0 0;padding:0;display:grid;gap:6px}
+  .fuel-list li{display:grid;grid-template-columns:12px 1fr auto auto;align-items:center;gap:10px;padding:9px 11px;border-radius:11px;
+    background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.07)}
+  .fuel-dot{width:10px;height:10px;border-radius:50%}
+  .fuel-name{font-size:13.5px;font-weight:600}
+  .fuel-name small{display:block;font-size:11px;font-weight:500;color:#8FA6C8}
+  .fuel-price{font:700 19px/1 'Barlow Condensed',sans-serif;font-variant-numeric:tabular-nums;letter-spacing:.02em;text-align:right}
+  .fuel-var{font-size:11px;font-weight:700;padding:3px 7px;border-radius:20px;white-space:nowrap;min-width:62px;text-align:center}
+  .fuel-var.up{background:rgba(224,72,72,.18);color:#FF9C9C}
+  .fuel-var.down{background:rgba(31,157,87,.2);color:#7BE3A6}
+  .fuel-var.eq{background:rgba(255,255,255,.1);color:#C9D6EA}
+  .fuel-f{margin-top:10px;font-size:11px;color:#8FA6C8;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .fuel-f b{color:#C9D6EA;font-weight:600}
+  .fuel.stale .fuel-f .upd{color:#FFC94D}
 </style>
 </head>
 <body>
@@ -661,6 +767,15 @@
       </div>
     </div>
   </div>
+  <!-- PRECIOS DEL COMBUSTIBLE (se actualizan solos desde precios.json) -->
+  <section class="fuel" id="fuelBox" aria-labelledby="fuelTitle">
+    <div class="fuel-h">
+      <div><h2 id="fuelTitle">Precios del combustible</h2><p id="fuelSub">Cargando precios…</p></div>
+      <div class="fuel-seg" id="fuelSeg" role="tablist"></div>
+    </div>
+    <ul class="fuel-list" id="fuelList"></ul>
+    <div class="fuel-f"><span id="fuelSrc"></span><span class="upd" id="fuelUpd"></span></div>
+  </section>
 </div>
 
 <!-- ANIMACIÓN DE INICIO — VEHÍCULO CRUZANDO CON LUCES -->
@@ -805,6 +920,13 @@
   </header>
 
   <main>
+    <!-- BIENVENIDA con el primer nombre del usuario -->
+    <section class="welcome hidden" id="welcomeBox">
+      <div class="wl-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></div>
+      <div><h3 id="wlHello"></h3><p id="wlSub"></p></div>
+    </section>
+    <!-- ALERTAS DE MANTENIMIENTO (visibles para todos los usuarios) -->
+    <div class="mant-alerts" id="mantAlerts"></div>
     <!-- ESTADISTICAS DE CONSUMO (solo administradores) -->
     <div id="statsSec" class="hidden">
       <div class="st-head">
@@ -882,6 +1004,8 @@
         </div>
         <button class="change" id="changeVeh">Cambiar vehículo</button>
       </div>
+      <!-- Odómetro y cuenta regresiva al próximo mantenimiento -->
+      <div class="odo st-ok" id="odoPanel"></div>
       <div class="form-card">
         <div class="field"><label for="fGas">Gasolinera</label>
           <select id="fGas">
@@ -911,7 +1035,7 @@
         <div class="err" id="formErr"></div>
         <div class="save-row">
           <button class="btn ghost sm" id="cancelForm" type="button" style="flex:0 0 auto">Cancelar</button>
-          <button class="btn green" id="saveBtn" type="button">Guardar y compartir</button>
+          <button class="btn wa" id="saveBtn" type="button"><svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.5-3.4-1.5-5.2 0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zm8.4-18.2C18.1 1.3 15.2.1 12 .1 5.5.1.2 5.4.2 11.9c0 2.1.5 4.1 1.6 5.9L.1 24l6.3-1.7c1.7.9 3.7 1.4 5.6 1.4 6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.2-6.1-3.4-8.3z"/></svg><span>Enviar y compartir por WhatsApp</span></button>
         </div>
       </div>
     </div>
@@ -1033,6 +1157,33 @@
   </div>
 </div>
 
+<!-- MODAL: actualizar y reportar mantenimiento -->
+<div class="modal" id="mrModal">
+  <div class="modal-box">
+    <div class="mh"><h4>Actualizar y reportar mantenimiento</h4><button class="x" id="mrClose">✕</button></div>
+    <div class="mb">
+      <div class="mr-veh"><div class="plate" id="mrPlate"></div><div><div class="mk" id="mrMk"></div><div class="sub" id="mrSub"></div></div></div>
+      <div class="grid2">
+        <div class="field"><label for="mrKm">Kilometraje del mantenimiento <span class="req" style="color:var(--red)">*</span></label>
+          <div class="with-suffix"><input id="mrKm" type="number" inputmode="numeric" min="0" placeholder="0"><span class="sfx">km</span></div></div>
+        <div class="field"><label for="mrTaller">Taller / lugar <span class="req" style="color:var(--red)">*</span></label>
+          <input id="mrTaller" list="mrTalleres" placeholder="Ej.: Taller Mitsubishi Comayagua"><datalist id="mrTalleres"></datalist></div>
+      </div>
+      <div class="field"><label for="mrCond">Conductor (opcional)</label>
+        <input id="mrCond" placeholder="Ej.: Agente de Policía José Tábora Lara"></div>
+      <div class="mr-next" id="mrNext"></div>
+      <span class="mr-lbl">Vista previa del reporte</span>
+      <div class="msg-prev" id="mrPrev"></div>
+      <div class="err" id="mrErr"></div>
+      <div class="share-btns">
+        <button class="btn wa" id="mrSend" type="button"><svg class="wa-ico" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 21.8c-1.8 0-3.5-.5-5-1.4l-.4-.2-3.7 1 1-3.6-.2-.4c-1-1.6-1.5-3.4-1.5-5.2 0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 6.9 2.9 1.8 1.8 2.9 4.3 2.9 6.9 0 5.4-4.4 9.8-9.8 9.8zm8.4-18.2C18.1 1.3 15.2.1 12 .1 5.5.1.2 5.4.2 11.9c0 2.1.5 4.1 1.6 5.9L.1 24l6.3-1.7c1.7.9 3.7 1.4 5.6 1.4 6.5 0 11.8-5.3 11.8-11.8 0-3.2-1.2-6.1-3.4-8.3z"/></svg><span>Guardar y compartir por WhatsApp</span></button>
+        <a class="btn wa mr-open hidden" id="mrOpen" target="_blank" rel="noopener">Abrir WhatsApp con el reporte</a>
+        <button class="btn ghost" id="mrCancel" type="button">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: coordinar mantenimiento -->
 <div class="modal" id="mantModal">
   <div class="modal-box">
@@ -1122,6 +1273,13 @@ const ROSTER_JEFE = 'ELENA YASMINA ORDOÑEZ GOMEZ';
 const ROSTER_CARGO = 'JEFE URIP-III LA PAZ';
 /* Números de WhatsApp de destino (código de Honduras 504). */
 const WA_NUMEROS = ['50488189266','50444473577'];
+/* Mantenimiento preventivo: cada 5,000 km, alerta cuando faltan 1,000 km. */
+const MANT_INTERVALO = 5000;
+const MANT_AVISO = 1000;
+/* Datos fijos del reporte de mantenimiento por WhatsApp (puede editarlos). */
+const MANT_PROPIETARIO = 'INGLOSA';
+const MANT_ASIGNADO = 'DIPOL URIP-III LA PAZ';
+const MANT_FIRMA = ['Sub Comisario de Policía','Elena Ordoñez Gomez','Jefe URIP-III'];
 function saludoNocturno(dateObj){
   return 'Buenas noche, con todo respeto se envía los kilometrajes de la URIP III La Paz.\nFecha: '+fechaLarga(dateObj)+'.';
 }
@@ -1147,8 +1305,11 @@ function fechaLarga(d){
   return dias[d.getDay()]+' '+pad(d.getDate())+' de '+meses[d.getMonth()]+' del '+d.getFullYear();
 }
 function plateHTML(p){return '<div class="hn"><span class="flag"><i></i><i></i><i></i></span>HONDURAS</div>'+
-  '<div class="no">'+(p||'—')+'</div><div class="ca">CENTROAMÉRICA</div>';}
+  '<div class="no">'+escH(p||'—')+'</div><div class="ca">CENTROAMÉRICA</div>';}
 function vehDesc(v){return v.marca+' '+v.modelo;}
+function nuevoId(){ if(window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  const b=crypto.getRandomValues(new Uint8Array(16)); b[6]=(b[6]&15)|64; b[8]=(b[8]&63)|128;
+  const h=[...b].map(x=>x.toString(16).padStart(2,'0')).join(''); return h.slice(0,8)+'-'+h.slice(8,12)+'-'+h.slice(12,16)+'-'+h.slice(16,20)+'-'+h.slice(20); }
 function dataURLtoBlob(dataurl){ const [head,b64]=dataurl.split(','); const mime=(head.match(/:(.*?);/)||[])[1]||'image/jpeg';
   const bin=atob(b64); const n=bin.length; const u8=new Uint8Array(n); for(let i=0;i<n;i++)u8[i]=bin.charCodeAt(i); return new Blob([u8],{type:mime}); }
 let toastTimer;
@@ -1193,13 +1354,13 @@ async function kmActualMap(){
 
 /* Mantenimiento (en el propio registro del vehículo) */
 function vehById(id){ return vehiculos.find(v=>v.id===id)||{}; }
-function mantOf(id){ const v=vehById(id); return { limite:(v.limiteMantenimiento!=null?Number(v.limiteMantenimiento):5000), kmBase:(v.kmBaseMantenimiento!=null?Number(v.kmBaseMantenimiento):0) }; }
+function mantOf(id){ const v=vehById(id); return { limite:(v.limiteMantenimiento!=null?Number(v.limiteMantenimiento):MANT_INTERVALO), kmBase:(v.kmBaseMantenimiento!=null?Number(v.kmBaseMantenimiento):0) }; }
 async function saveMant(id,obj){ const upd={}; if(obj.limite!=null)upd.limite_mantenimiento=obj.limite; if(obj.kmBase!=null)upd.km_base_mantenimiento=obj.kmBase;
   const { error }=await sb.from('vehiculos').update(upd).eq('id',id); if(error){toast('No se pudo guardar',true);return;} await loadVehiculos(); }
 function mantStatus(id,currentKm){ const {limite,kmBase}=mantOf(id);
-  const cur=(currentKm!=null?currentKm:kmBase); const kmMant=Math.max(0,cur-kmBase);
-  let estado='ok'; if(kmMant>=limite)estado='vencido'; else if(kmMant>=(limite-1000))estado='proximo';
-  return {estado,kmMant,limite,kmBase,cur}; }
+  const cur=(currentKm!=null?Math.max(Number(currentKm),kmBase):kmBase); const kmMant=Math.max(0,cur-kmBase);
+  let estado='ok'; if(kmMant>=limite)estado='vencido'; else if(kmMant>=(limite-MANT_AVISO))estado='proximo';
+  return {estado,kmMant,limite,kmBase,cur,proximo:kmBase+limite,restante:(kmBase+limite)-cur}; }
 /* Baliza LED rojo/azul + km restante para llegar al límite de mantenimiento.
    Aparece cuando el vehículo entra en los 1000 km próximos ('proximo') o ya está 'vencido'.
    Se usa igual en todas las vistas y roles (operadores y administradores). */
@@ -1225,14 +1386,31 @@ function vehChars(r){
 $('#loginBtn').addEventListener('click',doLogin);
 $('#p').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 $('#u').addEventListener('keydown',e=>{if(e.key==='Enter')$('#p').focus();});
+/* ---- Seguridad del inicio de sesión ----
+   Tras 5 intentos fallidos el acceso se bloquea 1 minuto en este dispositivo,
+   y el tiempo se duplica en cada bloqueo siguiente (máx. 15 min). */
+const SEG_MAX_INTENTOS=5, SEG_INACTIVIDAD_MIN=20, SEG_KEY='urip_seg_login';
+function segLeer(){ try{ return JSON.parse(localStorage.getItem(SEG_KEY)||'{}'); }catch(_){ return {}; } }
+function segGuardar(o){ try{ localStorage.setItem(SEG_KEY,JSON.stringify(o)); }catch(_){} }
+function segBloqueoRestante(){ const o=segLeer(); return Math.max(0,(o.hasta||0)-Date.now()); }
+function segFallo(){ const o=segLeer(); o.n=(o.n||0)+1;
+  if(o.n>=SEG_MAX_INTENTOS){ o.bloqueos=(o.bloqueos||0)+1; o.hasta=Date.now()+Math.min(15,Math.pow(2,o.bloqueos-1))*60000; o.n=0; }
+  segGuardar(o); }
+function segExito(){ segGuardar({}); }
 async function doLogin(){
   if(!CONFIG_LISTA){ $('#loginErr').textContent='Falta configurar Supabase (ver instrucciones).'; return; }
   const email=$('#u').value.trim(); const pass=$('#p').value; $('#loginErr').textContent='';
+  const espera=segBloqueoRestante();
+  if(espera>0){ $('#loginErr').textContent='Demasiados intentos fallidos. Intente de nuevo en '+Math.ceil(espera/1000)+' segundos.'; return; }
   if(!email||!pass){ $('#loginErr').textContent='Escriba su correo y contraseña.'; return; }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length>120){ $('#loginErr').textContent='Escriba un correo válido.'; return; }
   const btn=$('#loginBtn'); btn.classList.add('loading'); btn.textContent='Verificando…';
   try{
     const { error }=await sb.auth.signInWithPassword({ email, password:pass });
-    if(error){ $('#loginErr').textContent='Correo o contraseña incorrectos.'; }
+    if(error){ segFallo(); const r=SEG_MAX_INTENTOS-(segLeer().n||0);
+      $('#loginErr').textContent= segBloqueoRestante()>0 ? 'Demasiados intentos fallidos. El acceso quedó bloqueado temporalmente.'
+        : 'Correo o contraseña incorrectos.'+(r<=2?' Le quedan '+r+' intento(s).':''); }
+    else { segExito(); }
   }catch(e){ $('#loginErr').textContent='No se pudo conectar. Revise su internet.'; }
   finally{ btn.classList.remove('loading'); btn.textContent='Entrar'; }
 }
@@ -1243,11 +1421,20 @@ $('#pwToggle').addEventListener('click',()=>{ const p=$('#p'); const show=p.type
     :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
   p.focus(); });
 $('#logoutBtn').addEventListener('click',()=>{ if(sb) sb.auth.signOut(); });
+/* Cierre automático de sesión tras 20 minutos sin actividad (con aviso 1 minuto antes) */
+let segUltimaAct=Date.now(), segAvisado=false;
+['pointerdown','keydown','scroll','touchstart'].forEach(ev=>document.addEventListener(ev,()=>{ segUltimaAct=Date.now(); segAvisado=false; },{passive:true}));
+setInterval(()=>{
+  if(!currentUser || !sb) return;
+  const inactivo=Date.now()-segUltimaAct, lim=SEG_INACTIVIDAD_MIN*60000;
+  if(inactivo>=lim){ toast('Sesión cerrada por inactividad',true); sb.auth.signOut(); }
+  else if(inactivo>=lim-60000 && !segAvisado){ segAvisado=true; toast('Su sesión se cerrará en 1 minuto por inactividad. Toque la pantalla para continuar.'); }
+},15000);
 
 if(CONFIG_LISTA){
   sb.auth.onAuthStateChange((event, session)=>{
     if(session && session.user){ afterLogin(session.user); }
-    else { currentUser=null; stopScheduler(); $('#adminBar').classList.add('hidden'); $('#userBar').classList.add('hidden'); $('#statsSec').classList.add('hidden'); $('#app').classList.add('hidden'); if(!ordMode) $('#login').classList.remove('hidden'); $('#p').value=''; }
+    else { currentUser=null; stopScheduler(); $('#welcomeBox').classList.add('hidden'); $('#mantAlerts').innerHTML=''; ['#vehGrid','#admBody','#admVehGrid'].forEach(id=>{ const e=$(id); if(e) e.innerHTML=''; }); selectedVeh=null; vehiculos=[]; $('#adminBar').classList.add('hidden'); $('#userBar').classList.add('hidden'); $('#statsSec').classList.add('hidden'); $('#app').classList.add('hidden'); if(!ordMode) $('#login').classList.remove('hidden'); $('#p').value=''; }
   });
 } else {
   const h=$('#loginHint'); if(h) h.innerHTML='⚠ Antes de usar la app, pega la URL y la llave anon de tu proyecto Supabase en el archivo (ver la guía de instalación).';
@@ -1264,6 +1451,8 @@ async function afterLogin(user){
   $('#uName').textContent=currentUser.nombre;
   $('#uAvatar').textContent=String(currentUser.nombre||'U').replace(/@.*/,'').split(/[\s._-]+/).filter(Boolean).slice(0,2).map(s=>s[0].toUpperCase()).join('')||'U';
   $('#uRole').textContent=currentUser.rol==='admin'?'Administrador':'Usuario';
+  mostrarBienvenida();
+  refreshMantAlerts();
   $('#uRole').classList.toggle('admin',currentUser.rol==='admin');
   if(currentUser.rol==='admin')showAdmin(); else showOperador();
 }
@@ -1290,23 +1479,28 @@ async function renderVehGrid(){
     const led=ledMantHTML(st);
     const card=document.createElement('div'); card.className='veh-card'+cls;
     card.innerHTML='<div class="plate">'+plateHTML(v.placa)+'</div>'+
-      '<div class="veh-meta"><div class="mk">'+v.marca+' '+v.modelo+'</div>'+
-        '<div class="sub">'+v.tipo+' · '+v.color+' · Año '+(v.anio||'—')+'</div></div>'+
-      '<div class="veh-spec">'+mb+(v.numeroEquipo?'<span class="badge-eq">Equipo '+v.numeroEquipo+'</span>':'')+'</div>'+
+      '<div class="veh-meta"><div class="mk">'+escH(v.marca+' '+v.modelo)+'</div>'+
+        '<div class="sub">'+escH(v.tipo+' · '+v.color+' · Año '+(v.anio||'—'))+'</div></div>'+
+      '<div class="veh-spec">'+mb+(v.numeroEquipo?'<span class="badge-eq">Equipo '+escH(v.numeroEquipo)+'</span>':'')+'</div>'+
       (led?'<div class="veh-spec">'+led+'</div>':'')+
-      '<div class="row-actions"><button class="btn sm">Abastecer este vehículo</button></div>';
-    card.querySelector('button').addEventListener('click',()=>selectVehicle(v));
+      (led?'<div class="veh-spec"><button class="mini gold" data-mrep="'+v.id+'">Actualizar y reportar mantenimiento</button></div>':'')+
+      '<div class="row-actions"><button class="btn sm" data-abast="1">Abastecer este vehículo</button></div>';
+    card.querySelector('[data-abast]').addEventListener('click',()=>selectVehicle(v));
+    const mb2=card.querySelector('[data-mrep]'); if(mb2) mb2.addEventListener('click',()=>openMantReport(v.id));
     grid.appendChild(card);
   });
   if(vehiculos.length===0){ grid.innerHTML='<div class="mant-box">No hay vehículos cargados. Un administrador debe agregarlos.</div>'; }
+  renderMantAlerts(kmMap);
 }
+let selLastKm=null;
 async function selectVehicle(v){
   selectedVeh=v;
   $('#selPlate').innerHTML=plateHTML(v.placa);
   $('#selMk').textContent=vehDesc(v);
   $('#selSub').textContent=v.tipo+' · '+v.color+' · Año '+(v.anio||'—')+(v.numeroEquipo?' · Equipo '+v.numeroEquipo:'');
   resetForm();
-  const last=await lastKmFor(v.id); const hint=$('#kmHint');
+  selLastKm=null; renderOdo();
+  const last=await lastKmFor(v.id); const hint=$('#kmHint'); selLastKm=last; renderOdo();
   if(last!=null){ hint.style.color='var(--ink-2)'; hint.textContent='Último abastecimiento: '+fmtKm(last)+' km.'; }
   $('#opSelect').classList.add('hidden'); $('#opForm').classList.remove('hidden'); window.scrollTo(0,0);
 }
@@ -1336,47 +1530,73 @@ function compressImage(file,maxSide,quality){
 }
 $('#fKm').addEventListener('blur',checkKm);
 async function checkKm(){ const hint=$('#kmHint'); const km=parseFloat($('#fKm').value);
-  if(!selectedVeh)return; const last=await lastKmFor(selectedVeh.id);
+  if(!selectedVeh)return; const last=selLastKm; renderOdo();
   if(isNaN(km)){ if(last!=null){ hint.style.color='var(--ink-2)'; hint.textContent='Último: '+fmtKm(last)+' km.'; } return; }
   if(last!=null && km<last){ hint.style.color='var(--red)'; hint.textContent='El kilometraje es menor que el último registrado ('+fmtKm(last)+' km).'; }
   else { hint.style.color='var(--ink-2)'; hint.textContent=(last!=null?('Último: '+fmtKm(last)+' km. '):'')+'Kilometraje válido para abastecer.'; } }
 function resetForm(){ $('#fGas').value='';$('#fKm').value='';$('#fLps').value='';$('#fLts').value='';
-  $('#kmHint').textContent='';$('#formErr').textContent='';clearPhoto(); }
+  $('#kmHint').textContent='';$('#formErr').textContent='';clearPhoto(); pendingAbast=null; noPhotoWarned=false; setSaveBtn(); }
+$('#fKm').addEventListener('input',()=>renderOdo());
+/* Si cambian los datos después de un intento fallido, se vuelve a enviar y compartir completo */
+['#fGas','#fKm','#fLps','#fLts'].forEach(id=>$(id).addEventListener('input',()=>{ if(pendingAbast){ pendingAbast=null; setSaveBtn(); } }));
 
-/* Guardar (sube foto a Storage y registra en la tabla) */
-$('#saveBtn').addEventListener('click',saveRecord);
-async function saveRecord(){
+/* Enviar y compartir: un solo botón registra el abastecimiento y lo comparte por WhatsApp.
+   El menú de compartir se abre en el mismo toque (los navegadores lo exigen) y el registro
+   se guarda en paralelo. Si el registro falla, el botón pasa a "Reintentar registro"
+   y ya no vuelve a compartir. */
+let pendingAbast=null, noPhotoWarned=false;
+function setSaveBtn(txt,busy){ const b=$('#saveBtn'); if(!b)return; b.disabled=!!busy; b.classList.toggle('loading',!!busy);
+  b.querySelector('span').textContent=txt||'Enviar y compartir por WhatsApp'; }
+$('#saveBtn').addEventListener('click',enviarAbastecimiento);
+function enviarAbastecimiento(){
   const err=$('#formErr'); err.textContent='';
+  if(pendingAbast){ registrarPendiente(); return; }
   const gas=$('#fGas').value, km=parseFloat($('#fKm').value), lps=parseFloat($('#fLps').value), lts=parseFloat($('#fLts').value);
   if(!gas){err.textContent='Selecciona la gasolinera.';return;}
   if(isNaN(km)||km<0){err.textContent='Escribe un kilometraje válido.';return;}
   if(isNaN(lps)||lps<=0){err.textContent='Escribe la cantidad en Lempiras.';return;}
   if(isNaN(lts)||lts<=0){err.textContent='Escribe la cantidad en litros.';return;}
-  const lastKm=await lastKmFor(selectedVeh.id);
-  if(lastKm!=null && km<lastKm){ err.textContent='El kilometraje no puede ser menor que el último registrado ('+fmtKm(lastKm)+' km).'; return; }
-  if(!photoData){ if(!confirm('No adjuntaste foto de la factura. ¿Guardar de todos modos?'))return; }
-
-  $('#saveBtn').disabled=true; $('#saveBtn').textContent='Guardando…';
+  if(selLastKm!=null && km<selLastKm){ err.textContent='El kilometraje no puede ser menor que el último registrado ('+fmtKm(selLastKm)+' km).'; return; }
+  if(!photoData && !noPhotoWarned){ noPhotoWarned=true;
+    err.textContent='No adjuntaste la foto de la factura. Pulsa otra vez "Enviar y compartir" para enviarlo sin foto.'; return; }
+  const id=nuevoId();
+  const row={ id, fecha:new Date().toISOString(),
+    vehiculo_id:selectedVeh.id, vehiculo_desc:vehDesc(selectedVeh), vehiculo_placa:selectedVeh.placa,
+    marca:selectedVeh.marca, tipo:selectedVeh.tipo, color:selectedVeh.color, modelo:selectedVeh.modelo,
+    anio:selectedVeh.anio, motor:selectedVeh.motor, chasis:selectedVeh.chasis, numero_equipo:selectedVeh.numeroEquipo,
+    gasolinera:gas, kilometraje:km, lempiras:lps, litros:lts, foto_url:null,
+    usuario:currentUser.nombre, uid:currentUser.uid };
+  pendingAbast={ row, photo:photoData };
+  compartirAbastecimiento(Object.assign({}, recFromRow(row), {fotoLocal:photoData}));   /* mismo toque */
+  registrarPendiente();
+}
+function compartirAbastecimiento(rec){
+  const msg=mensajeWhats(rec); const wa=()=>window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
+  if(!navigator.share){ wa(); toast('Se abrió WhatsApp con el mensaje. Adjunte la foto de la factura en el chat.'); return; }
+  let data={text:msg};
+  try{ if(rec.fotoLocal){ const f=new File([dataURLtoBlob(rec.fotoLocal)],'factura.jpg',{type:'image/jpeg'});
+    if(navigator.canShare && navigator.canShare({files:[f]})) data={text:msg,files:[f]}; } }catch(_){}
+  navigator.share(data).catch(e=>{ if(e && e.name==='AbortError') return; wa(); });
+}
+async function registrarPendiente(){
+  const p=pendingAbast; if(!p) return; setSaveBtn('Registrando…',true);
   try{
-    const id=crypto.randomUUID(); let fotoURL=null;
-    if(photoData){
-      const blob=dataURLtoBlob(photoData); const path=id+'.jpg';
-      const up=await sb.storage.from('facturas').upload(path, blob, {contentType:'image/jpeg', upsert:true});
+    if(p.photo && !p.row.foto_url){
+      const path=p.row.id+'.jpg';
+      const up=await sb.storage.from('facturas').upload(path, dataURLtoBlob(p.photo), {contentType:'image/jpeg', upsert:true});
       if(up.error) throw up.error;
-      const { data:pub }=sb.storage.from('facturas').getPublicUrl(path); fotoURL=pub.publicUrl;
+      p.row.foto_url=sb.storage.from('facturas').getPublicUrl(path).data.publicUrl;
     }
-    const now=new Date();
-    const row={ id, fecha:now.toISOString(),
-      vehiculo_id:selectedVeh.id, vehiculo_desc:vehDesc(selectedVeh), vehiculo_placa:selectedVeh.placa,
-      marca:selectedVeh.marca, tipo:selectedVeh.tipo, color:selectedVeh.color, modelo:selectedVeh.modelo,
-      anio:selectedVeh.anio, motor:selectedVeh.motor, chasis:selectedVeh.chasis, numero_equipo:selectedVeh.numeroEquipo,
-      gasolinera:gas, kilometraje:km, lempiras:lps, litros:lts, foto_url:fotoURL,
-      usuario:currentUser.nombre, uid:currentUser.uid };
-    const { error }=await sb.from('abastecimientos').insert(row); if(error) throw error;
-    lastSavedRec=Object.assign({}, recFromRow(row), {fotoLocal:photoData});
-    openShare(lastSavedRec);
-  }catch(e){ toast('No se pudo guardar: '+(e.message||''),true); }
-  finally{ $('#saveBtn').disabled=false; $('#saveBtn').textContent='Guardar y compartir'; }
+    const { error }=await sb.from('abastecimientos').insert(p.row);
+    if(error && error.code!=='23505') throw error;           /* 23505 = ya estaba registrado */
+    lastSavedRec=Object.assign({}, recFromRow(p.row), {fotoLocal:p.photo});
+    pendingAbast=null; noPhotoWarned=false; setSaveBtn();
+    toast('Abastecimiento enviado y registrado');
+    renderSelect();
+  }catch(e){
+    setSaveBtn('Reintentar registro');
+    $('#formErr').textContent='El mensaje se compartió, pero el abastecimiento no se registró ('+((e&&e.message)||'sin conexión')+'). Pulse "Reintentar registro".';
+  }
 }
 
 /* Compartir a WhatsApp */
@@ -1481,10 +1701,10 @@ async function refreshAdmin(){
   recs.forEach(r=>{ tLps+=Number(r.lempiras||0); tLts+=Number(r.litros||0); const c=vehChars(r);
     const tr=document.createElement('tr');
     tr.innerHTML='<td>'+fechaLabel(r.fecha)+'</td><td>'+horaLabel(r.fecha)+'</td>'+
-      '<td>'+(c.numeroEquipo||'—')+'</td><td>'+c.marca+'</td><td>'+c.modelo+'</td><td>'+c.tipo+'</td>'+
-      '<td>'+c.color+'</td><td>'+(c.anio||'—')+'</td><td>'+c.placa+'</td><td>'+(c.motor||'—')+'</td><td>'+(c.chasis||'—')+'</td>'+
-      '<td>'+r.gasolinera+'</td><td class="num">'+fmtKm(r.kilometraje)+'</td>'+
-      '<td class="money">'+fmtLps(r.lempiras)+'</td><td class="num">'+fmtNum(r.litros)+'</td><td>'+r.usuario+'</td><td></td>';
+      '<td>'+escH(c.numeroEquipo||'—')+'</td><td>'+escH(c.marca)+'</td><td>'+escH(c.modelo)+'</td><td>'+escH(c.tipo)+'</td>'+
+      '<td>'+escH(c.color)+'</td><td>'+escH(c.anio||'—')+'</td><td>'+escH(c.placa)+'</td><td>'+escH(c.motor||'—')+'</td><td>'+escH(c.chasis||'—')+'</td>'+
+      '<td>'+escH(r.gasolinera)+'</td><td class="num">'+fmtKm(r.kilometraje)+'</td>'+
+      '<td class="money">'+fmtLps(r.lempiras)+'</td><td class="num">'+fmtNum(r.litros)+'</td><td>'+escH(r.usuario)+'</td><td></td>';
     const cell=tr.lastElementChild;
     if(r.fotoURL){const b=document.createElement('button');b.className='see';b.textContent='Ver';b.addEventListener('click',()=>openPhoto(r.fotoURL));cell.appendChild(b);}
     else cell.textContent='—';
@@ -1776,7 +1996,7 @@ async function guardarOrden(){
 
   const btn=$('#ordSave'); btn.disabled=true; btn.textContent='Guardando…';
   try{
-    const id=crypto.randomUUID(); let facturaURL=null, boletaURL=null;
+    const id=nuevoId(); let facturaURL=null, boletaURL=null;
     const subir=async(data,path)=>{ const r=await sb.storage.from('ordenes').upload(path,dataURLtoBlob(data),{contentType:'image/jpeg',upsert:false});
       if(r.error) throw r.error; return sb.storage.from('ordenes').getPublicUrl(path).data.publicUrl; };
     if(ordBoleta) boletaURL=await subir(ordBoleta,'boletas/'+id+'.jpg');
@@ -2112,7 +2332,7 @@ function renderCharts(recs){
   /* Tabla detalle */
   const maxL=Math.max(...vs.map(g=>g.l))||1;
   $('#stTbody').innerHTML=[...vs].sort((a,b)=>b.l-a.l).map(g=>
-    '<tr><td><span class="pl">'+g.placa+'</span> <span class="mm">'+(g.desc||'')+'</span></td>'+
+    '<tr><td><span class="pl">'+escH(g.placa)+'</span> <span class="mm">'+escH(g.desc||'')+'</span></td>'+
     '<td class="n">'+g.n+'</td>'+
     '<td class="n"><span class="bar-mini" style="width:'+Math.max(4,Math.round(g.l/maxL*60))+'px"></span>'+fmtNum(g.l)+'</td>'+
     '<td class="n">'+fmtLps(g.p)+'</td>'+
@@ -2146,17 +2366,18 @@ async function renderAdmVehGrid(){
       : 'Vencido por <b>'+fmtKm(Math.abs(restante))+' km</b>';
     const card=document.createElement('div'); card.className='veh-card'+cls;
     card.innerHTML='<div class="plate">'+plateHTML(v.placa)+'</div>'+
-      '<div class="veh-meta"><div class="mk">'+v.marca+' '+v.modelo+'</div>'+
-        '<div class="sub">'+v.tipo+' · '+v.color+' · Año '+(v.anio||'—')+'</div></div>'+
-      '<div class="veh-spec">'+badge+(v.numeroEquipo?'<span class="badge-eq">Equipo '+v.numeroEquipo+'</span>':'')+'</div>'+
+      '<div class="veh-meta"><div class="mk">'+escH(v.marca+' '+v.modelo)+'</div>'+
+        '<div class="sub">'+escH(v.tipo+' · '+v.color+' · Año '+(v.anio||'—'))+'</div></div>'+
+      '<div class="veh-spec">'+badge+(v.numeroEquipo?'<span class="badge-eq">Equipo '+escH(v.numeroEquipo)+'</span>':'')+'</div>'+
       (led?'<div class="veh-spec">'+led+'</div>':'')+
       '<div class="mant-box">Km actual: <b>'+fmtKm(st.cur)+'</b> · Recorrido desde último mant.: <b>'+fmtKm(st.kmMant)+' km</b><br>'+
         restanteTxt+'<br>'+
-        'Alerta a los '+fmtKm(Math.max(0,st.limite-1000))+' km · Límite de mantenimiento: '+fmtKm(st.limite)+' km'+
+        'Último mantenimiento: <b>'+fmtKm(st.kmBase)+' km</b> · Próximo: <b>'+fmtKm(st.proximo)+' km</b><br>'+
+        'Alerta a los '+fmtKm(Math.max(0,st.proximo-MANT_AVISO))+' km · Intervalo: '+fmtKm(st.limite)+' km'+
         '<div class="mant-ctrls">'+
           '<span>Límite (km):</span><input type="number" min="1000" step="500" value="'+st.limite+'" data-lim="'+v.id+'">'+
           '<button class="mini" data-savelim="'+v.id+'">Guardar</button>'+
-          '<button class="mini" data-done="'+v.id+'">Mant. realizado</button>'+
+          '<button class="mini gold" data-mrep="'+v.id+'">Actualizar y reportar</button>'+
           '<button class="mini wa" data-coord="'+v.id+'">Coordinar</button>'+
         '</div></div>'+
       '<div class="row-actions"><button class="del" data-del="'+v.id+'">Eliminar vehículo</button></div>';
@@ -2166,10 +2387,8 @@ async function renderAdmVehGrid(){
     const id=b.getAttribute('data-savelim'); const inp=grid.querySelector('[data-lim="'+id+'"]');
     const val=parseInt(inp.value,10); if(isNaN(val)||val<1000){toast('El límite debe ser al menos 1000 km',true);return;}
     await saveMant(id,{limite:val}); await renderAdmVehGrid(); toast('Límite de mantenimiento actualizado'); }));
-  grid.querySelectorAll('[data-done]').forEach(b=>b.addEventListener('click',async()=>{
-    const id=b.getAttribute('data-done'); const m=await kmActualMap(); const cur=(m[id]!=null?m[id]:mantOf(id).kmBase);
-    if(!confirm('¿Registrar mantenimiento realizado a los '+fmtKm(cur)+' km? Esto reinicia el contador.'))return;
-    await saveMant(id,{kmBase:cur}); await renderAdmVehGrid(); toast('Mantenimiento registrado'); }));
+  grid.querySelectorAll('[data-mrep]').forEach(b=>b.addEventListener('click',()=>openMantReport(b.getAttribute('data-mrep'))));
+  renderMantAlerts(kmMap);
   grid.querySelectorAll('[data-coord]').forEach(b=>b.addEventListener('click',()=>openMant(b.getAttribute('data-coord'))));
   grid.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>deleteVeh(b.getAttribute('data-del'))));
 }
@@ -2202,12 +2421,220 @@ async function deleteVeh(id){
   await loadVehiculos(); renderAdmVehGrid(); toast('Vehículo eliminado');
 }
 
+
+/* =====================================================================
+   BIENVENIDA · ALERTAS · ODÓMETRO · REPORTE DE MANTENIMIENTO PREVENTIVO
+   ===================================================================== */
+function primerNombre(n){
+  let t=String(n||'').trim(); if(t.includes('@')) t=t.split('@')[0].split(/[._\-\d]+/)[0];
+  const w=(t.split(/\s+/)[0]||'');
+  return w ? w.charAt(0).toUpperCase()+w.slice(1).toLowerCase() : '';
+}
+function saludoHora(d){ const h=(d||new Date()).getHours(); return h<12?'Buenos días':(h<18?'Buenas tardes':'Buenas noches'); }
+function mostrarBienvenida(){
+  const n=primerNombre(currentUser&&currentUser.nombre);
+  $('#wlHello').textContent=saludoHora()+(n?', '+n:'');
+  $('#wlSub').textContent='Bienvenido(a) al Sistema de Abastecimiento URIP III.';
+  $('#welcomeBox').classList.remove('hidden');
+  toast('¡Bienvenido(a)'+(n?', '+n:'')+'!');
+}
+function escH(t){ return String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+/* Alerta general: todos los usuarios ven los vehículos a 1,000 km o menos del mantenimiento */
+function renderMantAlerts(kmMap){
+  const box=$('#mantAlerts'); if(!box) return;
+  const items=vehiculos.map(v=>({v,st:mantStatus(v.id,kmMap[v.id])})).filter(x=>x.st.estado!=='ok')
+    .sort((a,b)=>a.st.restante-b.st.restante);
+  box.innerHTML=items.map(({v,st})=>'<div class="ma-item '+st.estado+'">'+ledMantHTML(st)+
+    '<div class="ma-txt"><b>'+escH(v.marca+' '+v.modelo)+' · Placa '+escH(v.placa)+(v.numeroEquipo?' · Equipo '+escH(v.numeroEquipo):'')+'</b>'+
+    '<span>Km actual '+fmtKm(st.cur)+' · Próximo mantenimiento a los '+fmtKm(st.proximo)+' km</span></div>'+
+    '<button class="mini gold" data-mrep="'+v.id+'">Actualizar y reportar mantenimiento</button></div>').join('');
+  box.querySelectorAll('[data-mrep]').forEach(b=>b.addEventListener('click',()=>openMantReport(b.getAttribute('data-mrep'))));
+}
+async function refreshMantAlerts(){ try{ renderMantAlerts(await kmActualMap()); }catch(_){} }
+
+/* Odómetro del formulario de abastecimiento con cuenta regresiva */
+let odoShown=null, odoRaf=0;
+function renderOdo(){
+  const el=$('#odoPanel'); if(!el || !selectedVeh) return;
+  const typed=parseFloat($('#fKm').value);
+  const base=selLastKm;
+  const useTyped=!isNaN(typed) && (base==null || typed>=base);
+  const st=mantStatus(selectedVeh.id, useTyped?typed:base);
+  const cls=st.estado==='vencido'?'st-danger':(st.estado==='proximo'?'st-warn':'st-ok');
+  const digits=String(Math.round(st.cur)).padStart(6,'0').split('');
+  const pct=Math.min(100,Math.max(0,(st.kmMant/st.limite)*100));
+  const mark=Math.max(0,Math.min(100,((st.limite-MANT_AVISO)/st.limite)*100));
+  const msg = st.estado==='vencido'
+    ? '⚠ <b>Mantenimiento vencido</b> por '+fmtKm(Math.abs(st.restante))+' km. Programe el mantenimiento preventivo de inmediato.'
+    : st.estado==='proximo'
+      ? '⚠ <b>Próximo a mantenimiento:</b> faltan menos de '+fmtKm(MANT_AVISO)+' km. Coordine el mantenimiento preventivo.'
+      : 'Mantenimiento preventivo cada <b>'+fmtKm(st.limite)+' km</b>. Se alertará cuando falten '+fmtKm(MANT_AVISO)+' km.';
+  el.className='odo '+cls;
+  el.innerHTML='<div class="odo-top"><span class="odo-lbl">Odómetro · kilometraje actual</span>'+ledMantHTML(st)+'</div>'+
+    '<div class="odo-read"><span class="odo-digits">'+digits.map((d,i)=>'<span'+(i===digits.length-1?' class="last"':'')+'>'+d+'</span>').join('')+'</span><span class="odo-unit">KM</span></div>'+
+    '<div class="odo-src">'+(useTyped?'Según el kilometraje que está escribiendo':(base!=null?'Según el último abastecimiento registrado':'Sin abastecimientos registrados'))+'</div>'+
+    '<div class="odo-grid"><div class="odo-cell"><small>Próximo mantenimiento</small><b>'+fmtKm(st.proximo)+' km</b></div>'+
+    '<div class="odo-cell"><small>'+(st.restante>=0?'Faltan':'Vencido por')+'</small><b class="odo-count" id="odoCount">'+fmtKm(Math.abs(odoShown==null?st.restante:odoShown))+' km</b></div></div>'+
+    '<div class="odo-bar"><i style="width:'+pct+'%"></i><em style="left:'+mark+'%"></em></div>'+
+    '<div class="odo-msg">'+msg+'</div>'+
+    '<div class="odo-actions"><button class="btn sm gold" type="button" id="odoRep">Actualizar y reportar mantenimiento</button></div>';
+  $('#odoRep').addEventListener('click',()=>openMantReport(selectedVeh.id));
+  animarCuenta(st.restante);
+}
+function animarCuenta(target){
+  cancelAnimationFrame(odoRaf); const from=(odoShown==null?target+Math.min(600,Math.abs(target)):odoShown);
+  const t0=performance.now(), dur=700;
+  const step=t=>{ const k=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-k,3); const val=Math.round(from+(target-from)*e);
+    odoShown=val; const c=$('#odoCount'); if(c){ c.textContent=fmtKm(Math.abs(val))+' km'; }
+    if(k<1) odoRaf=requestAnimationFrame(step); };
+  odoRaf=requestAnimationFrame(step);
+}
+
+/* ---------- Reporte de mantenimiento preventivo ---------- */
+let mrVeh=null, mrSt=null;
+const LS_MANT='urip_mant_v1';
+function lsGet(){ try{ return JSON.parse(localStorage.getItem(LS_MANT)||'{}'); }catch(_){ return {}; } }
+function lsSet(o){ try{ localStorage.setItem(LS_MANT, JSON.stringify(o)); }catch(_){} }
+async function openMantReport(id){
+  const v=vehById(id); if(!v || !v.id) return; mrVeh=v;
+  let kmMap={}; try{ kmMap=await kmActualMap(); }catch(_){}
+  mrSt=mantStatus(id, kmMap[id]);
+  const mem=lsGet();
+  $('#mrPlate').innerHTML=plateHTML(v.placa);
+  $('#mrMk').textContent=v.marca+' '+v.modelo;
+  $('#mrSub').textContent='Km actual '+fmtKm(mrSt.cur)+' · Último mantenimiento '+fmtKm(mrSt.kmBase)+' km';
+  $('#mrKm').value=Math.round(mrSt.cur)||'';
+  $('#mrTaller').value=(mem.taller&&mem.taller[id])||'';
+  $('#mrCond').value=(mem.cond&&mem.cond[id])||'';
+  $('#mrTalleres').innerHTML=(mem.talleres||[]).map(t=>'<option value="'+escH(t)+'">').join('');
+  $('#mrErr').textContent=''; $('#mrOpen').classList.add('hidden'); $('#mrSend').classList.remove('hidden');
+  mrPreview(); $('#mrModal').classList.add('show');
+}
+function fechaDiaCorta(d){ const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
+  return dias[d.getDay()]+' '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(); }
+function msgReporteMant(v,km,taller,cond,limite){
+  const d=new Date(); const prox=km+limite;
+  const items=[['Marca',v.marca],['Tipo',v.tipo],['Modelo',v.modelo],['Color',v.color],['Año',v.anio],['Placas',v.placa],
+    ['Motor',v.motor],['Chasis',v.chasis],['Número de equipo',v.numeroEquipo],['Conductor',cond]]
+    .filter(x=>x[1]!=null && String(x[1]).trim()!=='' && String(x[1]).trim()!=='—');
+  return ['*República de Honduras*','*Secretaría de Seguridad*','*Dirección General Policía Nacional*','*DIPOL-URIP-III*','',
+    '*'+fechaDiaCorta(d)+'*','',
+    '*Mantenimiento preventivo de vehículo asignado a la URIP-III*','',
+    saludoHora(d)+' señor, con todo respeto le reporto que el día de hoy se le realizó mantenimiento preventivo al vehículo con las siguientes características:','',
+    ...items.map((x,i)=>(i+1)+'. '+x[0]+': '+x[1]),'',
+    'Dicho vehículo es propiedad de '+MANT_PROPIETARIO+' y está asignado a '+MANT_ASIGNADO+'.','',
+    'Mantenimiento realizado a los *'+fmtKm(km)+' kilómetros*'+(taller?' en '+taller:'')+'.','',
+    '*NOTA:*','• El próximo mantenimiento se le realizará a los *'+fmtKm(prox)+' kilómetros*.','',
+    'Sin más que informar','','Respetuosamente','',
+    ...MANT_FIRMA.map(x=>'*'+x+'*')].join('\n');
+}
+function mrPreview(){
+  if(!mrVeh) return; const km=parseFloat($('#mrKm').value); const k=isNaN(km)?0:km;
+  $('#mrNext').innerHTML='Próximo mantenimiento: <b>'+fmtKm(k+mrSt.limite)+' km</b> · la alerta se mostrará a los <b>'+fmtKm(k+mrSt.limite-MANT_AVISO)+' km</b>.';
+  $('#mrPrev').textContent=msgReporteMant(mrVeh,k,$('#mrTaller').value.trim(),$('#mrCond').value.trim(),mrSt.limite);
+}
+['#mrKm','#mrTaller','#mrCond'].forEach(id=>$(id).addEventListener('input',mrPreview));
+function cerrarMR(){ $('#mrModal').classList.remove('show'); }
+$('#mrClose').addEventListener('click',cerrarMR); $('#mrCancel').addEventListener('click',cerrarMR);
+$('#mrOpen').addEventListener('click',()=>setTimeout(cerrarMR,300));
+
+/* Guarda el km del mantenimiento. Usa la función segura "registrar_mantenimiento" de Supabase
+   (permite que cualquier usuario reporte y guarda el historial); si no existe, actualiza directo. */
+async function registrarMantenimiento(v,km,taller,cond){
+  const r=await sb.rpc('registrar_mantenimiento',{ p_vehiculo:String(v.id), p_km:km, p_taller:taller, p_conductor:cond||null, p_usuario:currentUser.nombre });
+  if(r.error){
+    const m=(r.error.message||'')+' '+(r.error.code||'');
+    if(!/PGRST202|could not find|does not exist|schema cache/i.test(m)) throw r.error;
+    const u=await sb.from('vehiculos').update({ km_base_mantenimiento:km }).eq('id',v.id).select('id');
+    if(u.error) throw u.error;
+    if(!u.data || !u.data.length) throw new Error('SIN_PERMISO');
+  }
+  await loadVehiculos();
+}
+$('#mrSend').addEventListener('click',async()=>{
+  const err=$('#mrErr'); err.textContent='';
+  const km=parseFloat($('#mrKm').value), taller=$('#mrTaller').value.trim(), cond=$('#mrCond').value.trim();
+  if(isNaN(km)||km<=0){ err.textContent='Escriba el kilometraje en que se realizó el mantenimiento.'; $('#mrKm').focus(); return; }
+  if(km<mrSt.kmBase){ err.textContent='El kilometraje no puede ser menor que el del último mantenimiento ('+fmtKm(mrSt.kmBase)+' km).'; return; }
+  if(!taller){ err.textContent='Escriba el taller o lugar donde se realizó el mantenimiento.'; $('#mrTaller').focus(); return; }
+  if(km>mrSt.cur+MANT_INTERVALO && !confirm('El kilometraje '+fmtKm(km)+' es mucho mayor que el actual ('+fmtKm(mrSt.cur)+'). ¿Es correcto?')) return;
+  const msg=msgReporteMant(mrVeh,km,taller,cond,mrSt.limite);
+  const url='https://wa.me/?text='+encodeURIComponent(msg);
+  const btn=$('#mrSend'); btn.disabled=true; btn.classList.add('loading'); btn.querySelector('span').textContent='Guardando…';
+  try{
+    await registrarMantenimiento(mrVeh,km,taller,cond);
+  }catch(e){
+    err.textContent = (e && e.message==='SIN_PERMISO')
+      ? 'Su usuario no tiene permiso para actualizar el mantenimiento. Pida a un administrador que lo registre o que active la función "registrar_mantenimiento" en Supabase.'
+      : 'No se pudo guardar el mantenimiento: '+((e&&e.message)||'sin conexión');
+    return;
+  }finally{ btn.disabled=false; btn.classList.remove('loading'); btn.querySelector('span').textContent='Guardar y compartir por WhatsApp'; }
+  const mem=lsGet(); mem.taller=mem.taller||{}; mem.cond=mem.cond||{}; mem.taller[mrVeh.id]=taller; if(cond) mem.cond[mrVeh.id]=cond;
+  mem.talleres=[taller].concat((mem.talleres||[]).filter(t=>t!==taller)).slice(0,8); lsSet(mem);
+  toast('Mantenimiento registrado. Próximo a los '+fmtKm(km+mrSt.limite)+' km');
+  const w=window.open(url,'_blank');
+  if(w){ cerrarMR(); }
+  else { $('#mrOpen').href=url; $('#mrOpen').classList.remove('hidden'); $('#mrSend').classList.add('hidden');
+    err.style.color='var(--ink-2)'; err.textContent='Mantenimiento guardado. Pulse el botón verde para enviar el reporte por WhatsApp.'; setTimeout(()=>err.style.color='',4000); }
+  /* Refrescar vistas */
+  refreshMantAlerts();
+  if(!$('#opSelect').classList.contains('hidden')) renderVehGrid();
+  if(selectedVeh && selectedVeh.id===mrVeh.id && !$('#opForm').classList.contains('hidden')){ selectedVeh=vehById(mrVeh.id); renderOdo(); }
+  if($('#admVehiculos') && !$('#admVehiculos').classList.contains('hidden') && !$('#adminView').classList.contains('hidden')) renderAdmVehGrid();
+});
+
+
+/* =====================================================================
+   PRECIOS DEL COMBUSTIBLE (pantalla de inicio de sesión)
+   La app lee "precios.json" (mismo sitio). Ese archivo lo actualiza todos
+   los días una tarea automática de GitHub (.github/workflows/precios-combustible.yml).
+   Si no se puede leer, se muestran los últimos precios incluidos aquí.
+   ===================================================================== */
+const PRECIOS_RESPALDO={"vigencia":"2026-09-28","hasta":"2026-10-04","actualizado":"2026-09-30T19:00:00-06:00",
+  "fuente":"Secretaría de Energía (vía tunota.com)",
+  "ciudades":{
+    "Tegucigalpa":{"super":{"precio":153.17,"var":4.87},"regular":{"precio":135.26,"var":2.45},"diesel":{"precio":153.53,"var":2.43},
+      "kerosene":{"precio":138.39,"var":3.84},"glp_vehicular":{"precio":51.92,"var":0.83}},
+    "San Pedro Sula":{"super":{"precio":148.69,"var":4.75},"regular":{"precio":130.98,"var":2.38},"diesel":{"precio":149.20,"var":2.35},
+      "kerosene":{"precio":133.86,"var":3.70},"glp_vehicular":{"precio":48.39,"var":0.83}}}};
+const FUEL_TIPOS=[['super','Súper','Gasolina','#E04848'],['regular','Regular','Gasolina','#1F9D57'],['diesel','Diésel','','#E8A317'],
+  ['kerosene','Kerosene','','#2BB4EC'],['glp_vehicular','GLP vehicular','','#9B7BEA']];
+let fuelData=null, fuelCiudad='Tegucigalpa';
+function fuelValido(d){ try{ const c=d.ciudades[Object.keys(d.ciudades)[0]]; return !!(d.vigencia && c && Number(c.super.precio)>0); }catch(_){ return false; } }
+function fechaDM(iso){ const [y,m,dd]=String(iso).slice(0,10).split('-'); return dd+'/'+m+'/'+y; }
+function renderFuel(){
+  const d=fuelData; if(!d) return;
+  const ciudades=Object.keys(d.ciudades||{}); if(!ciudades.includes(fuelCiudad)) fuelCiudad=ciudades[0];
+  $('#fuelSeg').innerHTML=ciudades.map(c=>'<button type="button" role="tab" data-c="'+escH(c)+'" class="'+(c===fuelCiudad?'active':'')+'">'+escH(c==='San Pedro Sula'?'SPS':c==='Tegucigalpa'?'Tegucigalpa':c)+'</button>').join('');
+  const hoy=new Date(); const dias=['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  $('#fuelSub').textContent='Hoy '+dias[hoy.getDay()]+' '+pad(hoy.getDate())+'/'+pad(hoy.getMonth()+1)+' · vigentes del '+fechaDM(d.vigencia)+(d.hasta?' al '+fechaDM(d.hasta):'')+' · L por galón';
+  const c=d.ciudades[fuelCiudad]||{};
+  $('#fuelList').innerHTML=FUEL_TIPOS.filter(t=>c[t[0]]).map(t=>{ const x=c[t[0]]; const v=Number(x.var||0);
+    const cls=v>0.004?'up':(v<-0.004?'down':'eq'); const vt=cls==='eq'?'= Igual':(cls==='up'?'▲ +':'▼ ')+fmtNum(v);
+    return '<li><span class="fuel-dot" style="background:'+t[3]+'"></span><span class="fuel-name">'+t[1]+(t[2]?'<small>'+t[2]+'</small>':'')+'</span>'+
+      '<span class="fuel-price">L '+fmtNum(x.precio)+'</span><span class="fuel-var '+cls+'" title="Variación semanal">'+vt+'</span></li>'; }).join('');
+  $('#fuelSrc').innerHTML='Fuente: <b>'+escH(d.fuente||'Secretaría de Energía')+'</b>';
+  const upd=d.actualizado?new Date(d.actualizado):null;
+  const viejo=(Date.now()-new Date(d.vigencia+'T00:00:00').getTime())>8*864e5;
+  $('#fuelBox').classList.toggle('stale',viejo);
+  $('#fuelUpd').textContent=viejo?'⚠ Precios de la semana pasada':(upd?'Revisado '+fechaLabel(upd.toISOString())+' '+horaLabel(upd.toISOString()):'');
+}
+$('#fuelSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; fuelCiudad=b.dataset.c; renderFuel(); });
+async function cargarPrecios(){
+  fuelData=PRECIOS_RESPALDO; renderFuel();
+  try{
+    const r=await fetch('precios.json?d='+toDateStr(new Date()),{cache:'no-store'});
+    if(r.ok){ const j=await r.json(); if(fuelValido(j) && j.vigencia>=fuelData.vigencia){ fuelData=j; renderFuel(); } }
+  }catch(_){ /* sin conexión o abierto como archivo: se quedan los precios de respaldo */ }
+}
+cargarPrecios();
 /* Coordinar mantenimiento */
 let mantTarget=null, mantTargetSt=null;
 async function openMant(id){
   const v=vehById(id); if(!v)return; mantTarget=v;
   const kmMap=await kmActualMap(); mantTargetSt=mantStatus(id,kmMap[id]);
-  $('#mantInfo').innerHTML='<b>'+v.marca+' '+v.modelo+'</b> · Placa '+v.placa+(v.numeroEquipo?' · Equipo '+v.numeroEquipo:'')+
+  $('#mantInfo').innerHTML='<b>'+escH(v.marca+' '+v.modelo)+'</b> · Placa '+escH(v.placa)+(v.numeroEquipo?' · Equipo '+escH(v.numeroEquipo):'')+
     '<br>Km actual: <b>'+fmtKm(mantTargetSt.cur)+'</b> · Desde último mant.: <b>'+fmtKm(mantTargetSt.kmMant)+' km</b> · Límite '+fmtKm(mantTargetSt.limite)+' km';
   $('#mantModal').classList.add('show');
 }

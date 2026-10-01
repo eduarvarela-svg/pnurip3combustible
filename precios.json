@@ -1,0 +1,22 @@
+{
+  "vigencia": "2026-09-28",
+  "hasta": "2026-10-04",
+  "actualizado": "2026-09-30T19:00:00-06:00",
+  "fuente": "Secretaría de Energía (vía tunota.com)",
+  "ciudades": {
+    "Tegucigalpa": {
+      "super": { "precio": 153.17, "var": 4.87 },
+      "regular": { "precio": 135.26, "var": 2.45 },
+      "diesel": { "precio": 153.53, "var": 2.43 },
+      "kerosene": { "precio": 138.39, "var": 3.84 },
+      "glp_vehicular": { "precio": 51.92, "var": 0.83 }
+    },
+    "San Pedro Sula": {
+      "super": { "precio": 148.69, "var": 4.75 },
+      "regular": { "precio": 130.98, "var": 2.38 },
+      "diesel": { "precio": 149.20, "var": 2.35 },
+      "kerosene": { "precio": 133.86, "var": 3.70 },
+      "glp_vehicular": { "precio": 48.39, "var": 0.83 }
+    }
+  }
+}
