@@ -148,6 +148,28 @@
       border-color 0.15s,
       box-shadow 0.15s;
   }
+  .field textarea {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    font: inherit;
+    font-size: 15px;
+    line-height: 1.45;
+    background: #fff;
+    color: var(--ink);
+    resize: vertical;
+    min-height: 96px;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+  .field-hint {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .field textarea:focus,
   .field input:focus,
   .field select:focus {
     outline: none;
@@ -3348,7 +3370,7 @@
   <div class="login-card">
     <div class="login-top">
       <svg class="login-pump" role="img" aria-label="Bomba de combustible" viewBox="0 0 120 120" width="96" height="96" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lpBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2BB4EC"/><stop offset="1" stop-color="#0077AD"/></linearGradient><linearGradient id="lpGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6C65A"/><stop offset="1" stop-color="#A8871B"/></linearGradient><radialGradient id="lpHalo" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#0093D0" stop-opacity=".45"/><stop offset="1" stop-color="#0093D0" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="60" r="58" fill="url(#lpHalo)"/><circle cx="60" cy="60" r="52" fill="rgba(255,255,255,.06)" stroke="#C9A227" stroke-opacity=".55" stroke-width="1.5"/><circle cx="60" cy="60" r="46" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="1" stroke-dasharray="2 4"/><rect x="30" y="88" width="50" height="7" rx="3" fill="#051634"/><rect x="34" y="24" width="42" height="66" rx="8" fill="url(#lpBody)"/><rect x="34" y="24" width="42" height="10" rx="8" fill="#fff" fill-opacity=".18"/><rect x="40" y="32" width="30" height="18" rx="3" fill="#0A2450"/><rect x="43" y="36" width="16" height="3" rx="1.5" fill="#5FD0FF"/><rect x="43" y="42" width="11" height="3" rx="1.5" fill="#5FD0FF" fill-opacity=".65"/><circle cx="64" cy="41" r="2.4" fill="#C9A227"/><path d="M55 57c0 0-7 8-7 12.5a7 7 0 0 0 14 0C62 65 55 57 55 57z" fill="url(#lpGold)"/><path d="M52 69a3 3 0 0 0 3 3" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M76 40h5a4 4 0 0 1 4 4v30a5 5 0 0 0 10 0V48" fill="none" stroke="#E3EAF4" stroke-width="3.2" stroke-linecap="round"/><path d="M98 39h5a4 4 0 0 1 4 4v8" fill="none" stroke="#C9A227" stroke-width="3.2" stroke-linecap="round"/><path d="M91 36h8l-2 14h-6z" fill="url(#lpGold)"/><rect x="92.5" y="30" width="5" height="7" rx="1.5" fill="#0A2450"/><g class="lp-fuel"><path class="lp-stream" d="M107 53v9" stroke="#E6C65A" stroke-width="2.2" stroke-linecap="round"/><path class="lp-drop d1" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><path class="lp-drop d2" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><path class="lp-drop d3" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><ellipse class="lp-splash" cx="107" cy="97" rx="6" ry="1.6" fill="#E6C65A"/></g></svg>
-      <h1><br>ABASTECIMIENTO<br>URIP III</h1>
+      <h1>SISTEMA DE<br>ABASTECIMIENTO<br>URIP III</h1>
       <p>Abastecimiento de vehículos y motocicletas</p>
     </div>
     <div class="login-body">
@@ -3397,7 +3419,7 @@
       </div><!-- /loginPane -->
       <div class="login-footer">
         <span class="flag-mini"><span class="b"></span><span class="w"></span><span class="b"></span></span>
-        &copy; 2026 Eduar Varela ·
+        &copy; 2026 Eduar Varela · URIP III La Paz ·
         <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button>
       </div>
     </div>
@@ -3420,7 +3442,7 @@
   <div class="dfx-inner">
     <div class="dfx-word"><span>D</span><span>I</span><span>P</span><span>O</span><span>L</span></div>
     <div class="dfx-rule"></div>
-    <div class="dfx-sub">· URIP III</div>
+    <div class="dfx-sub">Policía Nacional de Honduras · URIP III La Paz</div>
     <div class="dfx-hello" id="dfxHello"></div>
   </div>
 </div>
@@ -3432,14 +3454,14 @@
     <span class="priv-bar-t">Política de privacidad</span>
   </header>
   <article class="priv-doc">
-    <p class="priv-kicker">Sobre el presente uso</p>
+    <p class="priv-kicker">DIPOL · URIP III La Paz</p>
     <h1 id="privTitle">Política de privacidad</h1>
     <p class="priv-meta">Sistema de Control de Abastecimiento de Vehículos · Vigente desde el 8 de octubre de 2026</p>
 
-    <p>Esta política explica qué información recoge la aplicación de Control de Abastecimiento, para qué se usa, quién puede verla y cómo se protege. Aplica a todas las personas que usan la aplicación: personal de la unidad con usuario y contraseña, administradores y quienes registran un abastecimiento con orden.</p>
+    <p>Esta política explica qué información recoge la aplicación de Control de Abastecimiento de la URIP III La Paz, para qué se usa, quién puede verla y cómo se protege. Aplica a todas las personas que usan la aplicación: personal de la unidad con usuario y contraseña, administradores y quienes registran un abastecimiento con orden.</p>
 
     <h2>1. Responsable</h2>
-    <p>La información es administrada por el desarrollador. El uso de la aplicación es exclusivamente para uso y control interno de los funcionarios.</p>
+    <p>La información es administrada por la Jefatura de la Unidad Regional de Investigación Policial (URIP III) La Paz, de la Policía Nacional de Honduras. El uso de la aplicación es exclusivamente institucional.</p>
 
     <h2>2. Información que se recoge</h2>
     <h3>Cuenta de usuario</h3>
@@ -3456,11 +3478,11 @@
     <h2>3. Para qué se usa</h2>
     <ul>
       <li>Controlar el consumo de combustible de cada vehículo y rendir cuentas del gasto.</li>
-      <li>Generar reportes diarios, semanales y mensuales, y estadísticas para unidad.</li>
+      <li>Generar reportes diarios, semanales y mensuales, y estadísticas para la Jefatura.</li>
       <li>Programar y documentar los mantenimientos preventivos.</li>
       <li>Proteger el acceso a la aplicación y detectar usos indebidos.</li>
     </ul>
-    <p>La información no se vende, no se usa con fines comerciales y no se comparte fuera de la unidad, salvo cuando una autoridad competente la requiera conforme a la ley.</p>
+    <p>La información no se vende, no se usa con fines comerciales y no se comparte fuera de la institución, salvo cuando una autoridad competente la requiera conforme a la ley.</p>
 
     <h2>4. Cámara y fotografías</h2>
     <p>La aplicación solo usa la cámara cuando usted toca un botón para fotografiar una factura o una boleta. La lectura del texto de la boleta se realiza dentro de su propio dispositivo; la imagen no se envía a ningún servicio de lectura externo. Las fotos se guardan en el almacenamiento de la aplicación y se acceden mediante un enlace: no comparta esos enlaces fuera de los canales oficiales.</p>
@@ -3500,13 +3522,13 @@
     </ul>
 
     <h2>11. Sus derechos</h2>
-    <p>Puede solicitar al administrador del sistema el acceso a sus datos personales o su corrección cuando sean inexactos, conforme a la garantía de hábeas data de la Constitución de la República y a la Ley de Transparencia y Acceso a la Información Pública.</p>
+    <p>Puede solicitar a la Jefatura de la URIP III La Paz o al administrador del sistema el acceso a sus datos personales o su corrección cuando sean inexactos, conforme a la garantía de hábeas data de la Constitución de la República y a la Ley de Transparencia y Acceso a la Información Pública.</p>
 
     <h2>12. Cambios a esta política</h2>
     <p>Esta política puede actualizarse. La fecha de vigencia al inicio indica la versión actual y los cambios importantes se comunicarán a los usuarios.</p>
 
     <h2>13. Contacto</h2>
-    <p>Para consultas sobre esta política, diríjase al desarrollador del sistema Eduar Varela 9799-9098 Correo electronico eduarvarela079@gmail.com.</p>
+    <p>Para consultas sobre esta política, diríjase a la Jefatura de la URIP III La Paz o al administrador del sistema.</p>
 
     <button type="button" class="btn ghost priv-back-bottom" id="privBack2">Volver</button>
   </article>
@@ -3876,6 +3898,9 @@
       </div>
       <div class="field"><label for="mrCond">Conductor (opcional)</label>
         <input id="mrCond"></div>
+      <div class="field"><label for="mrDesc">Descripción de cambios en el mantenimiento <span class="req" style="color:var(--red)">*</span></label>
+        <textarea id="mrDesc" rows="4"></textarea>
+        <div class="field-hint">Escriba un cambio por línea.</div></div>
       <div class="mr-next" id="mrNext"></div>
       <span class="mr-lbl">Vista previa del reporte</span>
       <div class="msg-prev" id="mrPrev"></div>
@@ -5286,13 +5311,15 @@ async function openMantReport(id){
   $('#mrKm').value=Math.round(mrSt.cur)||'';
   $('#mrTaller').value=(mem.taller&&mem.taller[id])||'';
   $('#mrCond').value=(mem.cond&&mem.cond[id])||'';
+  $('#mrDesc').value='';
   $('#mrTalleres').innerHTML=(mem.talleres||[]).map(t=>'<option value="'+escH(t)+'">').join('');
   $('#mrErr').textContent=''; $('#mrOpen').classList.add('hidden'); $('#mrSend').classList.remove('hidden');
   mrPreview(); $('#mrModal').classList.add('show');
 }
 function fechaDiaCorta(d){ const dias=['Domingo','Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'];
   return dias[d.getDay()]+' '+pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear(); }
-function msgReporteMant(v,km,taller,cond,limite){
+function lineasDesc(desc){ return String(desc||'').split(/\r?\n/).map(x=>x.replace(/^[\s\-•*·]+/,'').trim()).filter(Boolean); }
+function msgReporteMant(v,km,taller,cond,limite,desc){
   const d=new Date(); const prox=km+limite;
   const items=[['Marca',v.marca],['Tipo',v.tipo],['Modelo',v.modelo],['Color',v.color],['Año',v.anio],['Placas',v.placa],
     ['Motor',v.motor],['Chasis',v.chasis],['Número de equipo',v.numeroEquipo],['Conductor',cond]]
@@ -5304,6 +5331,7 @@ function msgReporteMant(v,km,taller,cond,limite){
     ...items.map((x,i)=>(i+1)+'. '+x[0]+': '+x[1]),'',
     'Dicho vehículo es propiedad de '+MANT_PROPIETARIO+' y está asignado a '+MANT_ASIGNADO+'.','',
     'Mantenimiento realizado a los *'+fmtKm(km)+' kilómetros*'+(taller?' en '+taller:'')+'.','',
+    ...(lineasDesc(desc).length?['*Descripción de cambios en el mantenimiento:*',...lineasDesc(desc).map(x=>'• '+x),'']:[]),
     '*NOTA:*','• El próximo mantenimiento se le realizará a los *'+fmtKm(prox)+' kilómetros*.','',
     'Sin más que informar','','Respetuosamente','',
     ...MANT_FIRMA.map(x=>'*'+x+'*')].join('\n');
@@ -5311,17 +5339,21 @@ function msgReporteMant(v,km,taller,cond,limite){
 function mrPreview(){
   if(!mrVeh) return; const km=parseFloat($('#mrKm').value); const k=isNaN(km)?0:km;
   $('#mrNext').innerHTML='Próximo mantenimiento: <b>'+fmtKm(k+mrSt.limite)+' km</b> · la alerta se mostrará a los <b>'+fmtKm(k+mrSt.limite-MANT_AVISO)+' km</b>.';
-  $('#mrPrev').textContent=msgReporteMant(mrVeh,k,$('#mrTaller').value.trim(),$('#mrCond').value.trim(),mrSt.limite);
+  $('#mrPrev').textContent=msgReporteMant(mrVeh,k,$('#mrTaller').value.trim(),$('#mrCond').value.trim(),mrSt.limite,$('#mrDesc').value);
 }
-['#mrKm','#mrTaller','#mrCond'].forEach(id=>$(id).addEventListener('input',mrPreview));
+['#mrKm','#mrTaller','#mrCond','#mrDesc'].forEach(id=>$(id).addEventListener('input',()=>{ $('#mrErr').textContent=''; mrPreview(); }));
 function cerrarMR(){ $('#mrModal').classList.remove('show'); }
 $('#mrClose').addEventListener('click',cerrarMR); $('#mrCancel').addEventListener('click',cerrarMR);
 $('#mrOpen').addEventListener('click',()=>setTimeout(cerrarMR,300));
 
 /* Guarda el km del mantenimiento. Usa la función segura "registrar_mantenimiento" de Supabase
    (permite que cualquier usuario reporte y guarda el historial); si no existe, actualiza directo. */
-async function registrarMantenimiento(v,km,taller,cond){
-  const r=await sb.rpc('registrar_mantenimiento',{ p_vehiculo:String(v.id), p_km:km, p_taller:taller, p_conductor:cond||null, p_usuario:currentUser.nombre });
+async function registrarMantenimiento(v,km,taller,cond,desc){
+  const base={ p_vehiculo:String(v.id), p_km:km, p_taller:taller, p_conductor:cond||null, p_usuario:currentUser.nombre };
+  const noExiste=e=>/PGRST202|could not find|does not exist|schema cache/i.test((e.message||'')+' '+(e.code||''));
+  /* Primero con la descripción (requiere el SQL nuevo); si esa versión no existe, se usa la anterior */
+  let r=await sb.rpc('registrar_mantenimiento',Object.assign({p_descripcion:desc||null},base));
+  if(r.error && noExiste(r.error)) r=await sb.rpc('registrar_mantenimiento',base);
   if(r.error){
     const m=(r.error.message||'')+' '+(r.error.code||'');
     if(!/PGRST202|could not find|does not exist|schema cache/i.test(m)) throw r.error;
@@ -5333,16 +5365,17 @@ async function registrarMantenimiento(v,km,taller,cond){
 }
 $('#mrSend').addEventListener('click',async()=>{
   const err=$('#mrErr'); err.textContent='';
-  const km=parseFloat($('#mrKm').value), taller=$('#mrTaller').value.trim(), cond=$('#mrCond').value.trim();
+  const km=parseFloat($('#mrKm').value), taller=$('#mrTaller').value.trim(), cond=$('#mrCond').value.trim(), desc=lineasDesc($('#mrDesc').value).join('\n');
   if(isNaN(km)||km<=0){ err.textContent='Escriba el kilometraje en que se realizó el mantenimiento.'; $('#mrKm').focus(); return; }
   if(km<mrSt.kmBase){ err.textContent='El kilometraje no puede ser menor que el del último mantenimiento ('+fmtKm(mrSt.kmBase)+' km).'; return; }
   if(!taller){ err.textContent='Escriba el taller o lugar donde se realizó el mantenimiento.'; $('#mrTaller').focus(); return; }
+  if(!desc){ err.textContent='Escriba la descripción de los cambios realizados en el mantenimiento.'; $('#mrDesc').focus(); return; }
   if(km>mrSt.cur+MANT_INTERVALO && !confirm('El kilometraje '+fmtKm(km)+' es mucho mayor que el actual ('+fmtKm(mrSt.cur)+'). ¿Es correcto?')) return;
-  const msg=msgReporteMant(mrVeh,km,taller,cond,mrSt.limite);
+  const msg=msgReporteMant(mrVeh,km,taller,cond,mrSt.limite,desc);
   const url='https://wa.me/?text='+encodeURIComponent(msg);
   const btn=$('#mrSend'); btn.disabled=true; btn.classList.add('loading'); btn.querySelector('span').textContent='Guardando…';
   try{
-    await registrarMantenimiento(mrVeh,km,taller,cond);
+    await registrarMantenimiento(mrVeh,km,taller,cond,desc);
   }catch(e){
     err.textContent = (e && e.message==='SIN_PERMISO')
       ? 'Su usuario no tiene permiso para actualizar el mantenimiento. Pida a un administrador que lo registre o que active la función "registrar_mantenimiento" en Supabase.'
