@@ -3954,7 +3954,7 @@
         <div class="veh-grid" id="admVehGrid"></div>
       </div>
     </div>
-      <footer class="app-foot">&copy; 2026 URIP III La Paz · Versión 19-10-2026 E · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
+      <footer class="app-foot">&copy; 2026 URIP III La Paz · Versión 19-10-2026 F · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
   </main>
 </div>
 
@@ -4451,16 +4451,20 @@ function enviarAbastecimiento(){
     gasolinera:gas, kilometraje:km, lempiras:lps, litros:lts, foto_url:null,
     usuario:currentUser.nombre, uid:currentUser.uid };
   pendingAbast={ row, photo:photoData };
-  compartirAbastecimiento(Object.assign({}, recFromRow(row), {fotoLocal:photoData}));   /* mismo toque */
+  pendingAbast.share=compartirAbastecimiento(Object.assign({}, recFromRow(row), {fotoLocal:photoData}));   /* mismo toque */
   registrarPendiente();
 }
 function compartirAbastecimiento(rec){
   const msg=mensajeWhats(rec); const wa=()=>window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank');
-  if(!navigator.share){ wa(); toast('Se abrió WhatsApp con el mensaje. Adjunte la foto de la factura en el chat.'); return; }
+  if(!navigator.share){ wa(); toast('Se abrió WhatsApp con el mensaje. Adjunte la foto de la factura en el chat.'); return Promise.resolve(); }
   let data={text:msg};
   try{ if(rec.fotoLocal){ const f=new File([dataURLtoBlob(rec.fotoLocal)],'factura.jpg',{type:'image/jpeg'});
     if(navigator.canShare && navigator.canShare({files:[f]})) data={text:msg,files:[f]}; } }catch(_){}
-  navigator.share(data).catch(e=>{ if(e && e.name==='AbortError') return; wa(); });
+  return navigator.share(data).catch(e=>{ if(e && e.name==='AbortError') return; wa(); });
+}
+/* Espera a que termine de compartir (y a que el usuario regrese a la app) antes de la despedida */
+function despedirAlTerminar(sharePromise,nombre){
+  Promise.resolve(sharePromise).catch(()=>{}).then(()=>setTimeout(()=>despedida(nombre),700));
 }
 async function registrarPendiente(){
   const p=pendingAbast; if(!p) return; setSaveBtn('Registrando…',true);
@@ -4475,7 +4479,7 @@ async function registrarPendiente(){
     if(error && error.code!=='23505') throw error;           /* 23505 = ya estaba registrado */
     lastSavedRec=Object.assign({}, recFromRow(p.row), {fotoLocal:p.photo});
     pendingAbast=null; noPhotoWarned=false; setSaveBtn();
-    despedida(primerNombre(currentUser&&currentUser.nombre));
+    despedirAlTerminar(p.share, primerNombre(currentUser&&currentUser.nombre));
     renderSelect();
   }catch(e){
     setSaveBtn('Reintentar registro');
@@ -4899,7 +4903,7 @@ function enviarOrden(){
   ordPending={ row, rec, boleta:ordBoleta, foto:ordFoto, guardarVeh:$('#oGuardarVeh').checked,
     sv:{ placa, marca, modelo:row.modelo||'', tipo:row.tipo||'', color:row.color||'', anio:row.anio||'', motor:row.motor||'',
       chasis:row.chasis||'', equipo:row.numero_equipo||'', asignado:row.asignado_a||'', conductor:cond } };
-  compartirAbastecimiento(rec);   /* mismo toque */
+  ordPending.share=compartirAbastecimiento(rec);   /* mismo toque */
   registrarOrden();
 }
 async function registrarOrden(){
@@ -4914,7 +4918,7 @@ async function registrarOrden(){
     lastSavedRec=Object.assign({}, p.rec, {fotoURL:p.row.factura_url});
     if(p.guardarVeh){ try{ svUpsert(p.sv); }catch(_){} }
     ordPending=null; ordAvisos={}; setOrdBtn();
-    despedida(primerNombre(p.row.conductor));
+    despedirAlTerminar(p.share, primerNombre(p.row.conductor));
     closeOrderView();
   }catch(e){
     const m=(e&&e.message)||'';
