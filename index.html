@@ -2973,6 +2973,113 @@
       padding: 15px 13px;
     }
   }
+  /*  ===== DESPEDIDA AL FINALIZAR EL ABASTECIMIENTO =====  */
+  #byeFx {
+    position: fixed;
+    inset: 0;
+    z-index: 210;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    color: #fff;
+    text-align: center;
+    background: radial-gradient(120% 90% at 50% 40%, #0b2e63 0%, #061634 55%, #030b1e 100%);
+  }
+  #byeFx.out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+  .bye-inner {
+    padding: 24px;
+  }
+  .bye-emoji {
+    display: block;
+    font-size: clamp(64px, 18vw, 110px);
+    line-height: 1;
+    opacity: 0;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45));
+  }
+  #byeFx.play .bye-emoji {
+    animation: byeSalute 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .bye-word {
+    margin-top: 18px;
+    font-family: "Cinzel", Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(46px, 14vw, 104px);
+    line-height: 1;
+    letter-spacing: 0.04em;
+    background: linear-gradient(180deg, #f6e6a8 0%, #e0bd4e 45%, #a8871b 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0;
+  }
+  #byeFx.play .bye-word {
+    animation: dfxLetter 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.45s forwards;
+  }
+  .bye-rule {
+    height: 1px;
+    width: 0;
+    margin: 18px auto 14px;
+    background: linear-gradient(90deg, transparent, #c9a227 20%, #e6c65a 50%, #c9a227 80%, transparent);
+  }
+  #byeFx.play .bye-rule {
+    animation: dfxRule 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 1s forwards;
+  }
+  .bye-name {
+    font-family: "Barlow Condensed", sans-serif;
+    font-size: clamp(26px, 7vw, 40px);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    opacity: 0;
+  }
+  .bye-sub {
+    margin-top: 8px;
+    font-size: clamp(11px, 3vw, 13px);
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: #a9bedc;
+    opacity: 0;
+  }
+  #byeFx.play .bye-name {
+    animation: dfxFade 0.7s ease 1.3s forwards;
+  }
+  #byeFx.play .bye-sub {
+    animation: dfxFade 0.7s ease 1.7s forwards;
+  }
+  @keyframes byeSalute {
+    0% {
+      opacity: 0;
+      transform: translateY(24px) scale(0.6) rotate(-14deg);
+    }
+    45% {
+      opacity: 1;
+      transform: translateY(0) scale(1.12) rotate(6deg);
+    }
+    70% {
+      transform: scale(1) rotate(-4deg);
+    }
+    100% {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #byeFx.play .bye-emoji,
+    #byeFx.play .bye-word,
+    #byeFx.play .bye-name,
+    #byeFx.play .bye-sub {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    #byeFx.play .bye-rule {
+      animation: none;
+      width: min(360px, 70vw);
+    }
+  }
   /*  ===== POLÍTICA DE PRIVACIDAD =====  */
   #privacyView {
     position: fixed;
@@ -3447,6 +3554,17 @@
   </div>
 </div>
 
+<!-- DESPEDIDA AL FINALIZAR EL ABASTECIMIENTO -->
+<div id="byeFx" class="hidden" role="status" aria-live="polite">
+  <div class="bye-inner">
+    <span class="bye-emoji" aria-hidden="true">👮‍♂️🫡</span>
+    <div class="bye-word">GRACIAS</div>
+    <div class="bye-rule"></div>
+    <div class="bye-name" id="byeName"></div>
+    <div class="bye-sub">Abastecimiento registrado · URIP III</div>
+  </div>
+</div>
+
 <!-- POLÍTICA DE PRIVACIDAD -->
 <div id="privacyView" class="hidden" role="dialog" aria-modal="true" aria-labelledby="privTitle">
   <header class="priv-bar">
@@ -3836,7 +3954,7 @@
         <div class="veh-grid" id="admVehGrid"></div>
       </div>
     </div>
-      <footer class="app-foot">&copy; 2026 URIP III La Paz · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
+      <footer class="app-foot">&copy; 2026 URIP III La Paz · Versión 19-10-2026 E · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
   </main>
 </div>
 
@@ -3982,9 +4100,9 @@ const ROSTER_URIP = [
   { no:1, marca:'NISSAN',     tipo:'PICK-UP',     color:'BLANCO',        motor:'YD25797681P',    chasis:'3N6CD33B4ZK477663', placa:'JAS 9203', rentado:'X', organico:'',  equipo:'10008285', s1:'X', s3:'',  s4:'' },
   { no:2, marca:'MITSUBISHI', tipo:'PICK-UP',     color:'GRIS METALICO', motor:'4N16UAL5443',    chasis:'MMBJJLC10SH011105', placa:'JAT 8941', rentado:'X', organico:'',  equipo:'10007452', s1:'X', s3:'',  s4:'' },
   { no:3, marca:'MITSUBISHI', tipo:'PICK-UP',     color:'BLANCO',        motor:'4N16UAN4358',    chasis:'MMBJJLC10SH015999', placa:'JAW2737',  rentado:'X', organico:'',  equipo:'10007712', s1:'X', s3:'',  s4:'' },
-  { no:4, marca:'HONDA',      tipo:'MOTOCICLETA', color:'NEGRO/ROJA',    motor:'MDO-65432N1',    chasis:'9C2MD3400ER512359', placa:'N-03',     rentado:'',  organico:'X', equipo:'10001593', s1:'',  s3:'X', s4:'' },
-  { no:5, marca:'HONDA',      tipo:'MOTOCICLETA', color:'NEGRO',         motor:'MDO34E-E512340', chasis:'9C2MD3400ER512340', placa:'N-05',     rentado:'',  organico:'X', equipo:'10001591', s1:'',  s3:'X', s4:'' },
-  { no:6, marca:'HONDA',      tipo:'MOTOCICLETA', color:'NEGRO',         motor:'ND34E-E512373',  chasis:'9C2MO3400ER512373', placa:'N-19',     rentado:'',  organico:'X', equipo:'10001580', s1:'',  s3:'X', s4:'' }
+  { no:4, marca:'HONDA',      tipo:'MOTOCICLETA', color:'NEGRO/ROJA',    motor:'MDO-65432N1',    chasis:'9C2MD3400ER512359', placa:'N-03', kmBase:24236,     rentado:'',  organico:'X', equipo:'10001593', s1:'',  s3:'X', s4:'' },
+  { no:5, marca:'HONDA',      tipo:'MOTOCICLETA', color:'NEGRO',         motor:'MDO34E-E512340', chasis:'9C2MD3400ER512340', placa:'N-05', kmBase:18823,     rentado:'',  organico:'X', equipo:'10001591', s1:'',  s3:'X', s4:'' },
+  { no:6, marca:'HONDA',      tipo:'MOTOCICLETA', color:'NEGRO',         motor:'ND34E-E512373',  chasis:'9C2MO3400ER512373', placa:'N-19', kmBase:31118,     rentado:'',  organico:'X', equipo:'10001580', s1:'',  s3:'X', s4:'' }
 ];
 const ROSTER_JEFE = 'ELENA YASMINA ORDOÑEZ GOMEZ';
 const ROSTER_CARGO = 'JEFE URIP-III LA PAZ';
@@ -4058,20 +4176,32 @@ async function loadAll(){
   if(error){ toast('Error al leer abastecimientos',true); return []; }
   return (data||[]).map(recFromRow);
 }
+/* Kilometraje base fijo de un vehículo (motocicletas del roster), o null */
+function kmBaseRoster(v){ if(!v) return null;
+  const r=ROSTER_URIP.find(x=>x.kmBase && (normPlaca(x.placa)===normPlaca(v.placa) || (v.numeroEquipo && String(x.equipo)===String(v.numeroEquipo))));
+  return r?r.kmBase:null; }
 async function lastKmFor(vehId){
   const recs=await loadAll();
   const list=recs.filter(r=>r.vehiculoId===vehId).sort((a,b)=>new Date(b.fecha)-new Date(a.fecha));
-  return list.length?list[0].kilometraje:null;
+  const km=list.length?list[0].kilometraje:null; const base=kmBaseRoster(vehById(vehId));
+  if(base!=null && (km==null || km<base)) return base;
+  return km;
 }
 async function kmActualMap(){
   const { data }=await sb.from('abastecimientos').select('vehiculo_id,kilometraje'); const map={};
   (data||[]).forEach(r=>{ const k=Number(r.kilometraje||0); if(map[r.vehiculo_id]==null||k>map[r.vehiculo_id]) map[r.vehiculo_id]=k; });
+  vehiculos.forEach(v=>{ const b=kmBaseRoster(v); if(b!=null && (map[v.id]==null || map[v.id]<b)) map[v.id]=b; });
   return map;
 }
 
 /* Mantenimiento (en el propio registro del vehículo) */
 function vehById(id){ return vehiculos.find(v=>v.id===id)||{}; }
-function mantOf(id){ const v=vehById(id); return { limite:(v.limiteMantenimiento!=null?Number(v.limiteMantenimiento):MANT_INTERVALO), kmBase:(v.kmBaseMantenimiento!=null?Number(v.kmBaseMantenimiento):0) }; }
+/* Las motocicletas llevan mantenimiento preventivo cada 3,000 km (si no se cambió a mano otro límite) */
+const MANT_INTERVALO_MOTO = 3000;
+function limiteMant(v){ const l=(v.limiteMantenimiento!=null?Number(v.limiteMantenimiento):null);
+  if(grupoDe(v)==='moto' && (l==null || l===MANT_INTERVALO)) return MANT_INTERVALO_MOTO;
+  return l!=null?l:MANT_INTERVALO; }
+function mantOf(id){ const v=vehById(id); return { limite:limiteMant(v), kmBase:Math.max(Number(v.kmBaseMantenimiento)||0, kmBaseRoster(v)||0) }; }
 async function saveMant(id,obj){ const upd={}; if(obj.limite!=null)upd.limite_mantenimiento=obj.limite; if(obj.kmBase!=null)upd.km_base_mantenimiento=obj.kmBase;
   const { error }=await sb.from('vehiculos').update(upd).eq('id',id); if(error){toast('No se pudo guardar',true);return;} await loadVehiculos(); }
 function mantStatus(id,currentKm){ const {limite,kmBase}=mantOf(id);
@@ -4345,7 +4475,7 @@ async function registrarPendiente(){
     if(error && error.code!=='23505') throw error;           /* 23505 = ya estaba registrado */
     lastSavedRec=Object.assign({}, recFromRow(p.row), {fotoLocal:p.photo});
     pendingAbast=null; noPhotoWarned=false; setSaveBtn();
-    toast('Abastecimiento enviado y registrado');
+    despedida(primerNombre(currentUser&&currentUser.nombre));
     renderSelect();
   }catch(e){
     setSaveBtn('Reintentar registro');
@@ -4784,7 +4914,7 @@ async function registrarOrden(){
     lastSavedRec=Object.assign({}, p.rec, {fotoURL:p.row.factura_url});
     if(p.guardarVeh){ try{ svUpsert(p.sv); }catch(_){} }
     ordPending=null; ordAvisos={}; setOrdBtn();
-    toast('Abastecimiento con orden enviado y registrado');
+    despedida(primerNombre(p.row.conductor));
     closeOrderView();
   }catch(e){
     const m=(e&&e.message)||'';
@@ -5298,7 +5428,7 @@ function renderOdo(){
   el.className='odo '+cls;
   el.innerHTML='<div class="odo-top"><span class="odo-lbl">Odómetro · kilometraje actual</span>'+ledMantHTML(st)+'</div>'+
     '<div class="odo-read"><span class="odo-digits">'+digits.map((d,i)=>'<span'+(i===digits.length-1?' class="last"':'')+'>'+d+'</span>').join('')+'</span><span class="odo-unit">KM</span></div>'+
-    '<div class="odo-src">'+(useTyped?'Según el kilometraje que está escribiendo':(base!=null?'Según el último abastecimiento registrado':'Sin abastecimientos registrados'))+'</div>'+
+    '<div class="odo-src">'+(useTyped?'Según el kilometraje que está escribiendo':(base!=null?(kmBaseRoster(selectedVeh)===base?'Kilometraje registrado de la unidad':'Según el último abastecimiento registrado'):'Sin abastecimientos registrados'))+'</div>'+
     '<div class="odo-grid"><div class="odo-cell"><small>Próximo mantenimiento</small><b>'+fmtKm(st.proximo)+' km</b></div>'+
     '<div class="odo-cell"><small>'+(st.restante>=0?'Faltan':'Vencido por')+'</small><b class="odo-count" id="odoCount">'+fmtKm(Math.abs(odoShown==null?st.restante:odoShown))+' km</b></div></div>'+
     '<div class="odo-bar"><i style="width:'+pct+'%"></i><em style="left:'+mark+'%"></em></div>'+
@@ -5484,6 +5614,22 @@ cargarAlertaLogin();
    TRANSICIÓN "DIPOL" AL INICIAR SESIÓN
    Se muestra una vez por sesión (no en cada recarga). Tocar la pantalla la omite.
    ===================================================================== */
+/* Despedida: "GRACIAS" + primer nombre con saludo policial. Tocar la pantalla la cierra. */
+let byeT1=null, byeT2=null;
+function despedida(nombre){
+  /* Si el usuario sigue en WhatsApp, esperar a que regrese a la app para mostrarla */
+  if(document.hidden){ const alVolver=()=>{ if(document.hidden) return;
+      document.removeEventListener('visibilitychange',alVolver); despedida(nombre); };
+    document.addEventListener('visibilitychange',alVolver); return; }
+  const fx=$('#byeFx'); clearTimeout(byeT1); clearTimeout(byeT2);
+  $('#byeName').textContent=nombre?('¡'+nombre+'!'):'¡Buen servicio!';
+  fx.classList.remove('hidden','out','play'); void fx.offsetWidth; fx.classList.add('play');
+  const reducido=window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cerrar=()=>{ clearTimeout(byeT1); fx.classList.add('out');
+    byeT2=setTimeout(()=>{ fx.classList.add('hidden'); fx.classList.remove('play','out'); },500); };
+  byeT1=setTimeout(cerrar, reducido?1800:3400);
+  fx.onclick=cerrar;
+}
 function transicionDipol(){
   let visto=false; try{ visto=sessionStorage.getItem('dipolFx')==='1'; sessionStorage.setItem('dipolFx','1'); }catch(_){}
   if(visto) return;
@@ -5553,6 +5699,9 @@ async function lastKmRosterMap(){
   all.forEach(r=>{ const v=rosterOf(r); const key=v.no||('P'+normPlaca(vehChars(r).placa));
     const km=Number(r.kilometraje||0); const d=new Date(r.fecha);
     if(!map[key] || d>map[key].fecha){ map[key]={km:km, fecha:d}; } });
+  /* Kilometraje base de las motocicletas según la plantilla de Excel (19/10/2026): se usa
+     mientras no haya un abastecimiento registrado con un kilometraje mayor. */
+  ROSTER_URIP.forEach(v=>{ if(v.kmBase && (!map[v.no] || map[v.no].km<v.kmBase)) map[v.no]={km:v.kmBase, fecha:new Date('2026-10-19T00:00:00')}; });
   return map;
 }
 function dayDataFor(v, recs, lastKmMap){
