@@ -9,7 +9,7 @@
      - IMPORTANTE: si modifica el código JavaScript de este archivo, la huella cambia y el navegador
        bloqueará el script. Abra la consola del navegador (F12): el error indica la huella nueva
        ('sha256-…'); cópiela en lugar de la actual en script-src. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-tVTSeqCuHrW2DYYC5ZIxx/BV5PBsutHmn3Po9jBZrrA=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-xshue3guo6aovo0q4zT/nJv8xaXKYerrh+Av3G8QMMA=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
 <title>Control de Abastecimiento de vehiculos URIP III</title>
@@ -3965,7 +3965,7 @@
         <div class="veh-grid" id="admVehGrid"></div>
       </div>
     </div>
-      <footer class="app-foot">&copy; 2026 Eduar Varela · Versión 20-10-2026 · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
+      <footer class="app-foot">&copy; 2026 Eduar Varela · Versión 20-10-2026 B · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
   </main>
 </div>
 
@@ -5944,68 +5944,74 @@ async function buildOfficialXLSX(recs, subtitle, mode, dateStr){
 }
 
 /* ===================== PDF OFICIAL (jsPDF + autoTable) ===================== */
+/* Mismo cuadro que el Excel (plantilla 19-10-26): columnas No. … NUMERO DE EQUIPO, LTS, KM, LPS. */
 async function buildOfficialPDF(recs, subtitle, mode, dateStr){
   const { jsPDF }=window.jspdf;
   const doc=new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-  const pw=doc.internal.pageSize.getWidth();
-  let y=8;
-  try{ const hw=150, hh=hw/4.307; doc.addImage('data:image/png;base64,'+IMG_HEADER,'PNG',(pw-hw)/2,y,hw,hh); y+=hh+2; }catch(e){ y+=4; }
-  doc.setFont('helvetica','bold'); doc.setTextColor(11,42,94); doc.setFontSize(11);
-  ['DIRECCION GENERAL DE LA POLICIA NACIONAL','DIRECCION DE INTELIGENCIA POLICIAL (DIPOL)','VEHICULOS ASIGNADOS A LA URIP III']
-    .forEach(t=>{ doc.text(t,pw/2,y,{align:'center'}); y+=5; });
-  doc.setFont('helvetica','italic'); doc.setFontSize(8); doc.setTextColor(90,90,90);
-  if(subtitle){ doc.text(subtitle,pw/2,y,{align:'center'}); y+=3; }
+  const pw=doc.internal.pageSize.getWidth(), M=8, AZUL=[157,195,230], AZUL_CLARO=[189,215,238];
+  /* Anchos proporcionales a las columnas de la plantilla (B a U) */
+  const xw=[5.38,10.76,10.76,10.76,10.76,17.08,13.86,13.45,14.8,15.33,10.89,10.76,10.76,10.76,10.76,10.76,10.76,10.76,10.76,10.76];
+  const tot=xw.reduce((a,b)=>a+b,0), ancho=pw-2*M;
+  const colW=xw.map(w=>w/tot*ancho);
+  let y=6;
+  try{ const hh=ancho/7.73; doc.addImage('data:image/png;base64,'+IMG_HEADER,'PNG',M+colW[0]*0.6,y,ancho-colW[0]*0.6,hh); y+=hh+4; }catch(e){ y+=4; }
+  doc.setTextColor(0,0,0); doc.setFontSize(10);
+  doc.setFont('times','italic'); doc.text('Dirección General Policía Nacional',pw/2,y,{align:'center'}); y+=4.2;
+  doc.text('Dirección de Inteligencia Policial (DIPOL)',pw/2,y,{align:'center'}); y+=4.2;
+  doc.setFont('times','bolditalic'); doc.text('Dirección de Inteligencia Policial (DIPOL)',pw/2,y,{align:'center'}); y+=3;
+  if(mode!=='dia' && subtitle){ doc.setFont('helvetica','italic'); doc.setFontSize(7.5); doc.setTextColor(90,90,90);
+    y+=3; doc.text(subtitle,pw/2,y,{align:'center'}); doc.setTextColor(0,0,0); }
 
-  const head=[[
-    {content:'No.',rowSpan:2},{content:'MARCA',rowSpan:2},{content:'TIPO',rowSpan:2},{content:'COLOR',rowSpan:2},
-    {content:'SERIE MOTOR',rowSpan:2},{content:'SERIE CHASIS',rowSpan:2},{content:'PLACA',rowSpan:2},
-    {content:'RENT.',rowSpan:2},{content:'ORG.',rowSpan:2},{content:'N. EQUIPO',rowSpan:2},
-    {content:'VEHICULOS ABASTECIDOS',colSpan:4},{content:'ESTATUS',colSpan:3}
-  ],['FECHA','LITROS','VALOR LPS','KMTS','S-1','S-3','S-4']];
-
-  const body=[]; const noFuelRows=[];
+  const H=(t,o)=>Object.assign({content:t},o||{});
+  const extra={fillColor:AZUL_CLARO,fontStyle:'italic',fontSize:7.5};
+  const head=[
+    [H('URIP, III LA PAZ.',{colSpan:20,styles:{fillColor:[255,255,255],fontStyle:'bolditalic',fontSize:7.5,lineWidth:0.4}})],
+    [H('No.',{rowSpan:2}),H('MARCA',{rowSpan:2}),H('TIPO',{rowSpan:2}),H('COLOR',{rowSpan:2}),H('MOTOR',{rowSpan:2}),H('CHASIS',{rowSpan:2}),
+     H('REGISTRO',{rowSpan:2}),H('RENTADO',{rowSpan:2}),H('ORGANICO',{rowSpan:2}),
+     H('VEHICULOS ABASTECIDOS',{colSpan:4}),H('ESTATUS DEL VEHICULO',{colSpan:3}),H('NUMERO DE EQUIPO',{rowSpan:2}),
+     H('LTS',{styles:extra}),H('KM',{styles:extra}),H('LPS',{styles:extra})],
+    ['FECHA','CANTIDAD LITROS','VALOR EN LPS.','KMTS','S-1','S-3','S-4',
+     H('',{styles:{fillColor:[255,255,255]}}),H('',{styles:{fillColor:[255,255,255]}}),H('',{styles:{fillColor:[255,255,255]}})]
+  ];
+  const n3=v=>v===''||v==null?'':fmtNum(v,3), n2=v=>v===''||v==null?'':Number(v).toFixed(2), km=v=>v===''||v==null?'':fmtKm(v);
+  const body=[];
   if(mode==='dia'){
     const lastKmMap=await lastKmRosterMap();
     ROSTER_URIP.forEach((v,i)=>{ const d=dayDataFor(v,recs,lastKmMap);
-      if(d.noAbastecido) noFuelRows.push(i);
-      body.push([String(v.no),v.marca,v.tipo,v.color,v.motor,v.chasis,v.placa,v.rentado,v.organico,v.equipo,
-        (d.noAbastecido?'—':dateStr), (d.litros!==''?fmtNum(d.litros,3):'—'), (d.valor!==''?fmtLps(d.valor):'—'),
-        (d.kmts!==''?fmtKm(d.kmts):'—'), v.s1,v.s3,v.s4]); });
+      const fila=[String(v.no),v.marca,v.tipo,v.color,v.motor,v.chasis,v.placa,v.rentado,v.organico];
+      if(i===0) fila.push(H(dateStr,{rowSpan:ROSTER_URIP.length,styles:{fontStyle:'bolditalic',fontSize:8}}));
+      fila.push(n3(d.litros),n2(d.valor),km(d.kmts),v.s1,v.s3,v.s4,String(v.equipo||''),'','','');
+      body.push(fila); });
   } else {
     const sorted=[...recs].sort((a,b)=>new Date(a.fecha)-new Date(b.fecha));
     sorted.forEach((rec,i)=>{ const v=rosterOf(rec);
-      body.push([String(i+1),v.marca,v.tipo,v.color,v.motor,v.chasis,v.placa,v.rentado,v.organico,v.equipo,
-        fechaLabel(rec.fecha), fmtNum(rec.litros,3), fmtLps(rec.lempiras), fmtKm(rec.kilometraje), v.s1,v.s3,v.s4]); });
-    if(!sorted.length) body.push([{content:'No hubo abastecimientos en este período.',colSpan:17,
-      styles:{halign:'center',textColor:[136,136,136],fontStyle:'italic'}}]);
+      body.push([String(i+1),v.marca,v.tipo,v.color,v.motor,v.chasis,v.placa,v.rentado,v.organico,
+        fechaLabel(rec.fecha),n3(rec.litros),n2(rec.lempiras),km(rec.kilometraje),v.s1,v.s3,v.s4,String(v.equipo||''),'','','']); });
+    if(!sorted.length) body.push([H('No hubo abastecimientos en este período.',{colSpan:20,styles:{textColor:[136,136,136],fontStyle:'italic'}})]);
   }
-
+  const columnStyles={}; colW.forEach((w,i)=>{ columnStyles[i]={cellWidth:w}; });
+  [1,2,3,4,5,6,16].forEach(i=>{ Object.assign(columnStyles[i],{fontSize:4.6,fontStyle:'normal',cellPadding:0.3}); });  /* texto pequeño como en la plantilla (Calibri 8) */
+  Object.assign(columnStyles[10],{halign:'right',fontSize:5,fontStyle:'normal'});
   doc.autoTable({
-    head, body, startY:y+2, theme:'grid',
-    styles:{fontSize:6.5,cellPadding:1,halign:'center',valign:'middle',lineColor:[120,120,120],lineWidth:0.1,textColor:[20,20,20],overflow:'linebreak'},
-    headStyles:{fillColor:[46,155,214],textColor:[0,0,0],fontStyle:'bold',fontSize:6.5,halign:'center'},
-    columnStyles:{11:{halign:'right'},12:{halign:'right'},13:{halign:'right'}},
-    margin:{left:8,right:8},
-    didParseCell:function(data){
-      if(mode==='dia' && data.section==='body' && noFuelRows.indexOf(data.row.index)>-1){
-        data.cell.styles.fillColor=[255,243,205];
-        if(data.column.index===13) data.cell.styles.textColor=[165,97,10];
-      }
-    }
+    head, body, startY:y+3, theme:'grid', margin:{left:M,right:M}, tableWidth:ancho,
+    styles:{font:'helvetica',fontStyle:'italic',fontSize:7.5,cellPadding:0.8,halign:'center',valign:'middle',
+      lineColor:[0,0,0],lineWidth:0.15,textColor:[0,0,0],overflow:'linebreak',minCellHeight:5},
+    headStyles:{fillColor:AZUL,textColor:[0,0,0],fontStyle:'bolditalic',fontSize:7,halign:'center',valign:'middle'},
+    columnStyles,
+    didParseCell(data){ if(data.section==='body' && data.column.index===0) data.cell.styles.fontSize=7.5; }
   });
+  /* Borde exterior grueso como en la plantilla */
+  const t=doc.lastAutoTable; doc.setLineWidth(0.5); doc.setDrawColor(0);
+  doc.rect(M,(t.settings.startY),ancho,t.finalY-t.settings.startY);
 
-  let fy=doc.lastAutoTable.finalY+10;
-  if(mode==='dia' && noFuelRows.length){
-    doc.setFont('helvetica','italic'); doc.setFontSize(7); doc.setTextColor(165,97,10);
-    doc.text('Filas resaltadas: vehículos NO abastecidos este día (KMTS = último kilometraje registrado).',8,fy);
-    fy+=6;
-  }
-  try{ doc.addImage('data:image/png;base64,'+IMG_SELLO,'PNG',pw/2-25,fy,50,23); }catch(e){}
-  fy+=27;
-  doc.setDrawColor(0); doc.line(pw/2-45,fy,pw/2+45,fy); fy+=4;
-  doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.setTextColor(0,0,0);
-  doc.text(ROSTER_JEFE,pw/2,fy,{align:'center'}); fy+=4;
-  doc.setFont('helvetica','normal'); doc.text(ROSTER_CARGO,pw/2,fy,{align:'center'});
+  /* Firma con sello (a la altura de la columna RENTADO, igual que la plantilla) */
+  const xFirma=M+colW.slice(0,7).reduce((a,b)=>a+b,0)+2;
+  let fy=t.finalY+5;
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.text(ROSTER_GRADO,xFirma+8,fy);
+  try{ doc.addImage('data:image/png;base64,'+IMG_SELLO,'PNG',xFirma-6,fy+1,40,18.4); }catch(e){}
+  fy+=24;
+  doc.text(ROSTER_JEFE,xFirma,fy); fy+=4;
+  doc.text(ROSTER_CARGO,xFirma+8,fy);
   return doc;
 }
 async function downloadPDF(){
