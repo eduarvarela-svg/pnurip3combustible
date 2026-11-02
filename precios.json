@@ -1,43 +1,35 @@
 {
-  "vigencia": "2026-10-26",
-  "hasta": "2026-11-01",
-  "actualizado": "2026-10-31T17:14:13.399Z",
-  "fuente": "Secretaría de Energía (vía tiempo.hn)",
+  "vigencia": "2026-11-02",
+  "hasta": "2026-11-08",
+  "actualizado": "2026-11-02T21:40:59.072Z",
+  "fuente": "Secretaría de Energía (vía laprensa.hn)",
   "ciudades": {
     "Tegucigalpa": {
       "super": {
-        "precio": 154.51,
-        "var": -2.64
+        "precio": 152.22,
+        "var": -2.79
       },
       "regular": {
-        "precio": 140.01,
-        "var": -0.96
+        "precio": 137.23,
+        "var": -2.78
       },
       "diesel": {
         "precio": 153.53,
         "var": 0
-      },
-      "kerosene": {
-        "precio": 147.1,
-        "var": 1.22
       }
     },
     "San Pedro Sula": {
       "super": {
-        "precio": 149.45,
-        "var": -2.82
+        "precio": 147.01,
+        "var": -2.44
       },
       "regular": {
-        "precio": 134.97,
-        "var": -1.41
+        "precio": 132.04,
+        "var": -2.93
       },
       "diesel": {
         "precio": 149.2,
         "var": 0
-      },
-      "kerosene": {
-        "precio": 141.99,
-        "var": 1.04
       }
     }
   }
