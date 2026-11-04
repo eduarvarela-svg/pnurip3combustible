@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" font-family="Segoe UI, Arial, sans-serif">
+  <defs>
+    <clipPath id="cU"><rect x="50" y="90" width="340" height="210" rx="10"/></clipPath>
+    <clipPath id="cL"><rect x="810" y="90" width="340" height="290" rx="10"/></clipPath>
+    <clipPath id="cP"><rect x="430" y="500" width="340" height="240" rx="10"/></clipPath>
+  </defs>
+
+  <!-- Fondo -->
+  <rect x="0" y="0" width="1200" height="820" fill="#f6f8fb"/>
+
+  <!-- Título -->
+  <text x="50" y="45" fill="#0b2e63" font-size="26" font-weight="700">Modelo Entidad-Relación — Sistema de Biblioteca</text>
+  <text x="50" y="68" fill="#5a6474" font-size="14">Entidades: Usuarios · Libros · Préstamos</text>
+
+  <!-- Relaciones -->
+  <polyline points="220,300 220,450 470,450 470,500" fill="none" stroke="#0b2e63" stroke-width="2.5"/>
+  <polyline points="980,380 980,450 720,450 720,500" fill="none" stroke="#0b2e63" stroke-width="2.5"/>
+  <text x="292" y="440" fill="#0b2e63" font-size="13" font-style="italic">realiza</text>
+  <text x="806" y="440" fill="#0b2e63" font-size="13" font-style="italic">contiene</text>
+
+  <!-- Cardinalidades -->
+  <text x="228" y="340" fill="#0b2e63" font-size="17" font-weight="700">1</text>
+  <text x="452" y="492" fill="#0b2e63" font-size="17" font-weight="700">N</text>
+  <text x="988" y="415" fill="#0b2e63" font-size="17" font-weight="700">1</text>
+  <text x="734" y="492" fill="#0b2e63" font-size="17" font-weight="700">N</text>
+
+  <!-- ===================== USUARIOS ===================== -->
+  <rect x="50" y="90" width="340" height="210" rx="10" fill="#ffffff" stroke="#0b2e63" stroke-width="2"/>
+  <g clip-path="url(#cU)"><rect x="50" y="90" width="340" height="40" fill="#0b2e63"/></g>
+  <text x="66" y="116" fill="#ffffff" font-size="17" font-weight="700">USUARIOS</text>
+
+  <text x="66" y="152" fill="#141a22" font-size="14" font-weight="600">id_usuario</text>
+  <text x="370" y="152" fill="#c9a227" font-size="11" font-weight="700" text-anchor="end">PK</text>
+  <text x="66" y="178" fill="#141a22" font-size="14">nombre</text>
+  <text x="66" y="204" fill="#141a22" font-size="14">correo</text>
+  <text x="370" y="204" fill="#1f9d57" font-size="11" font-weight="700" text-anchor="end">UQ</text>
+  <text x="66" y="230" fill="#141a22" font-size="14">telefono</text>
+  <text x="66" y="256" fill="#141a22" font-size="14">fecha_registro</text>
+  <text x="66" y="282" fill="#141a22" font-size="14">activo</text>
+
+  <!-- ===================== LIBROS ===================== -->
+  <rect x="810" y="90" width="340" height="290" rx="10" fill="#ffffff" stroke="#0b2e63" stroke-width="2"/>
+  <g clip-path="url(#cL)"><rect x="810" y="90" width="340" height="40" fill="#0b2e63"/></g>
+  <text x="826" y="116" fill="#ffffff" font-size="17" font-weight="700">LIBROS</text>
+
+  <text x="826" y="152" fill="#141a22" font-size="14" font-weight="600">id_libro</text>
+  <text x="1130" y="152" fill="#c9a227" font-size="11" font-weight="700" text-anchor="end">PK</text>
+  <text x="826" y="178" fill="#141a22" font-size="14">titulo</text>
+  <text x="826" y="204" fill="#141a22" font-size="14">autor</text>
+  <text x="826" y="230" fill="#141a22" font-size="14">isbn</text>
+  <text x="1130" y="230" fill="#1f9d57" font-size="11" font-weight="700" text-anchor="end">UQ</text>
+  <text x="826" y="256" fill="#141a22" font-size="14">categoria</text>
+  <text x="826" y="282" fill="#141a22" font-size="14">editorial</text>
+  <text x="826" y="308" fill="#141a22" font-size="14">anio</text>
+  <text x="826" y="334" fill="#141a22" font-size="14">cantidad_total</text>
+  <text x="826" y="360" fill="#141a22" font-size="14">cantidad_disponible</text>
+
+  <!-- ===================== PRÉSTAMOS ===================== -->
+  <rect x="430" y="500" width="340" height="240" rx="10" fill="#ffffff" stroke="#0b2e63" stroke-width="2"/>
+  <g clip-path="url(#cP)"><rect x="430" y="500" width="340" height="40" fill="#0b2e63"/></g>
+  <text x="446" y="526" fill="#ffffff" font-size="17" font-weight="700">PRÉSTAMOS</text>
+
+  <text x="446" y="562" fill="#141a22" font-size="14" font-weight="600">id_prestamo</text>
+  <text x="750" y="562" fill="#c9a227" font-size="11" font-weight="700" text-anchor="end">PK</text>
+  <text x="446" y="588" fill="#141a22" font-size="14">id_usuario</text>
+  <text x="750" y="588" fill="#0093d0" font-size="11" font-weight="700" text-anchor="end">FK</text>
+  <text x="446" y="614" fill="#141a22" font-size="14">id_libro</text>
+  <text x="750" y="614" fill="#0093d0" font-size="11" font-weight="700" text-anchor="end">FK</text>
+  <text x="446" y="640" fill="#141a22" font-size="14">fecha_prestamo</text>
+  <text x="446" y="666" fill="#141a22" font-size="14">fecha_devolucion_esperada</text>
+  <text x="446" y="692" fill="#141a22" font-size="14">fecha_devolucion_real</text>
+  <text x="446" y="718" fill="#141a22" font-size="14">estado</text>
+
+  <!-- Leyenda -->
+  <text x="50" y="792" fill="#5a6474" font-size="13">
+    PK = Clave primaria   ·   FK = Clave foránea   ·   UQ = Valor único   ·   1:N = uno a muchos
+  </text>
+</svg>

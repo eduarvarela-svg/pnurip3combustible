@@ -1,0 +1,34 @@
+erDiagram
+    USUARIOS ||--o{ PRESTAMOS : realiza
+    LIBROS   ||--o{ PRESTAMOS : contiene
+
+    USUARIOS {
+        int id_usuario PK
+        varchar nombre
+        varchar correo UK
+        varchar telefono
+        date fecha_registro
+        boolean activo
+    }
+
+    LIBROS {
+        int id_libro PK
+        varchar titulo
+        varchar autor
+        varchar isbn UK
+        varchar categoria
+        varchar editorial
+        year anio
+        int cantidad_total
+        int cantidad_disponible
+    }
+
+    PRESTAMOS {
+        int id_prestamo PK
+        int id_usuario FK
+        int id_libro FK
+        date fecha_prestamo
+        date fecha_devolucion_esperada
+        date fecha_devolucion_real
+        enum estado
+    }

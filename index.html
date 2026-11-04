@@ -9,7 +9,7 @@
      - IMPORTANTE: si modifica el código JavaScript de este archivo, la huella cambia y el navegador
        bloqueará el script. Abra la consola del navegador (F12): el error indica la huella nueva
        ('sha256-…'); cópiela en lugar de la actual en script-src. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-xshue3guo6aovo0q4zT/nJv8xaXKYerrh+Av3G8QMMA=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JbIv8Ao8QOaFXKiDkNSbHw569p+EmrxbjWo6fMzz0QM=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
 <title>Control de Abastecimiento de vehiculos URIP III</title>
@@ -1876,7 +1876,7 @@
   }
   /* Botón "Reportar mantenimiento" a la par del odómetro */
   .odo-read .odo-rep {
-    width: auto;
+    width: auto; margin-left: 0 !important;
     align-self: center;
     margin-left: auto;
     white-space: nowrap;
@@ -2026,6 +2026,13 @@
       animation: none;
     }
   }
+  /*  ===== BOTÓN AGENDAR MANTENIMIENTO (INGLOSA) =====  */
+  .btn.teal, .mini.teal { background: linear-gradient(135deg, #2aa8c4 0%, #127e98 100%); color: #fff; border-color: #127e98; }
+  .btn.teal { box-shadow: 0 6px 16px rgba(18, 126, 152, 0.3); }
+  .mini.teal:hover { filter: brightness(1.07); background: linear-gradient(135deg, #2aa8c4, #127e98); }
+  .odo-acts { display: flex; gap: 8px; margin-left: auto; align-self: center; flex-wrap: wrap; }
+  .odo-acts .btn { width: auto; white-space: nowrap; }
+  @media (max-width: 420px) { .odo-acts { margin-left: 0; width: 100%; } .odo-acts .btn { flex: 1; } }
   /*  ===== VENTANAS (MODALES) =====  */
   .mant-box {
     background: #f6f7f9;
@@ -3623,6 +3630,7 @@
       <li><b>GitHub Pages:</b> publica la aplicación.</li>
        <li><b>Vercel:</b> se encuentra desplegada la aplicacion.</li>
       <li><b>Google Fonts y jsDelivr:</b> entregan tipografías y componentes del programa. Pueden registrar datos técnicos de la conexión, como la dirección IP, pero no reciben la información de los registros.</li>
+      <li><b>INGLOSA (citas.inglosa.hn):</b> el botón "Agendar mantenimiento" solo abre su página; los datos de la cita se escriben directamente en ella.</li>
       <li><b>WhatsApp:</b> solo recibe un mensaje cuando usted decide compartirlo. A partir de ese momento aplican las políticas de WhatsApp.</li>
     </ul>
     <p>Los precios del combustible se obtienen de publicaciones oficiales y no contienen datos personales.</p>
@@ -4403,9 +4411,11 @@ function pintarVehiculos(){
       ((mb||v.numeroEquipo)?'<div class="veh-spec">'+mb+(v.numeroEquipo?'<span class="badge-eq">Equipo '+escH(v.numeroEquipo)+'</span>':'')+'</div>':'')+
       (led?'<div class="veh-spec">'+led+'</div>':'')+
       (led?'<div class="veh-spec"><button class="mini gold" data-mrep="'+escH(v.id)+'">Actualizar y reportar mantenimiento</button></div>':'')+
-      '<div class="row-actions"><button class="btn sm" data-abast="1">Abastecer este vehículo</button></div>';
+      '<div class="row-actions"><button class="btn sm" data-abast="1">Abastecer este vehículo</button>'+
+        '<button class="mini teal" data-cita="1" title="Abrir la página de citas de INGLOSA">Agendar mantenimiento</button></div>';
     card.querySelector('[data-abast]').addEventListener('click',()=>selectVehicle(v));
     const mb2=card.querySelector('[data-mrep]'); if(mb2) mb2.addEventListener('click',()=>openMantReport(v.id));
+    card.querySelector('[data-cita]').addEventListener('click',abrirCitaInglosa);
     grid.appendChild(card);
   });
 }
@@ -5338,6 +5348,7 @@ async function renderAdmVehGrid(){
           '<button class="mini" data-savelim="'+escH(v.id)+'">Guardar</button>'+
           '<button class="mini gold" data-mrep="'+escH(v.id)+'">Actualizar y reportar</button>'+
           '<button class="mini wa" data-coord="'+escH(v.id)+'">Coordinar</button>'+
+          '<button class="mini teal" data-cita="1">Agendar cita</button>'+
         '</div></div>'+
       '<div class="row-actions"><button class="del" data-del="'+escH(v.id)+'">Eliminar vehículo</button></div>';
     grid.appendChild(card);
@@ -5349,6 +5360,7 @@ async function renderAdmVehGrid(){
   grid.querySelectorAll('[data-mrep]').forEach(b=>b.addEventListener('click',()=>openMantReport(b.getAttribute('data-mrep'))));
   renderMantAlerts(kmMap);
   grid.querySelectorAll('[data-coord]').forEach(b=>b.addEventListener('click',()=>openMant(b.getAttribute('data-coord'))));
+  grid.querySelectorAll('[data-cita]').forEach(b=>b.addEventListener('click',abrirCitaInglosa));
   grid.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>deleteVeh(b.getAttribute('data-del'))));
 }
 async function seedVehiculos(){
@@ -5411,8 +5423,10 @@ function renderMantAlerts(kmMap){
   box.innerHTML=items.map(({v,st})=>'<div class="ma-item '+escH(st.estado)+'">'+ledMantHTML(st)+
     '<div class="ma-txt"><b>'+escH(v.marca+' '+v.modelo)+' · Placa '+escH(v.placa)+(v.numeroEquipo?' · Equipo '+escH(v.numeroEquipo):'')+'</b>'+
     '<span>Km actual '+fmtKm(st.cur)+' · Próximo mantenimiento a los '+fmtKm(st.proximo)+' km</span></div>'+
+    '<button class="mini teal" data-cita="1">Agendar mantenimiento</button>'+
     '<button class="mini gold" data-mrep="'+escH(v.id)+'">Actualizar y reportar mantenimiento</button></div>').join('');
   box.querySelectorAll('[data-mrep]').forEach(b=>b.addEventListener('click',()=>openMantReport(b.getAttribute('data-mrep'))));
+  box.querySelectorAll('[data-cita]').forEach(b=>b.addEventListener('click',abrirCitaInglosa));
   /* Resumen en la bienvenida */
   const wa=$('#wlAlert');
   if(items.length){
@@ -5448,13 +5462,15 @@ function renderOdo(){
   el.className='odo '+cls;
   el.innerHTML='<div class="odo-top"><span class="odo-lbl">Odómetro · kilometraje actual</span>'+ledMantHTML(st)+'</div>'+
     '<div class="odo-read"><span class="odo-digits">'+digits.map((d,i)=>'<span'+(i===digits.length-1?' class="last"':'')+'>'+d+'</span>').join('')+'</span><span class="odo-unit">KM</span>'+
-      '<button class="btn sm gold odo-rep" type="button" id="odoRep">Reportar mantenimiento</button></div>'+
+      '<span class="odo-acts"><button class="btn sm teal odo-rep" type="button" id="odoCita">Agendar mantenimiento</button>'+
+      '<button class="btn sm gold odo-rep" type="button" id="odoRep">Reportar mantenimiento</button></span></div>'+
     '<div class="odo-src">'+(useTyped?'Según el kilometraje que está escribiendo':(base!=null?(kmBaseRoster(selectedVeh)===base?'Kilometraje registrado de la unidad':'Según el último abastecimiento registrado'):'Sin abastecimientos registrados'))+'</div>'+
     '<div class="odo-grid"><div class="odo-cell"><small>Próximo mantenimiento</small><b>'+fmtKm(st.proximo)+' km</b></div>'+
     '<div class="odo-cell"><small>'+(st.restante>=0?'Faltan':'Vencido por')+'</small><b class="odo-count" id="odoCount">'+fmtKm(Math.abs(odoShown==null?st.restante:odoShown))+' km</b></div></div>'+
     '<div class="odo-bar"><i style="width:'+pct+'%"></i><em style="left:'+mark+'%"></em></div>'+
     '<div class="odo-msg">'+msg+'</div>';
   $('#odoRep').addEventListener('click',()=>openMantReport(selectedVeh.id));
+  $('#odoCita').addEventListener('click',abrirCitaInglosa);
   animarCuenta(st.restante);
 }
 function animarCuenta(target){
@@ -5683,6 +5699,12 @@ $('#privBack2').addEventListener('click',()=>cerrarPrivacidad(false));
 window.addEventListener('popstate',()=>{ if(privAbierta) cerrarPrivacidad(true); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && privAbierta) cerrarPrivacidad(false); });
 if(location.hash==='#privacidad'){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(_){} abrirPrivacidad(); }
+/* Agendar mantenimiento: abre la página de citas de INGLOSA para llenarla manualmente */
+const CITA_URL='https://citas.inglosa.hn/';
+function abrirCitaInglosa(){
+  let w=null; try{ w=window.open(CITA_URL,'_blank'); if(w){ try{ w.opener=null; }catch(_){} } }catch(_){}
+  if(!w) location.href=CITA_URL;
+}
 /* Coordinar mantenimiento */
 let mantTarget=null, mantTargetSt=null;
 async function openMant(id){
