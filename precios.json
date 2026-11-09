@@ -1,7 +1,7 @@
 {
-  "vigencia": "2026-11-02",
-  "hasta": "2026-11-08",
-  "actualizado": "2026-11-08T17:54:04.842Z",
+  "vigencia": "2026-11-09",
+  "hasta": "2026-11-15",
+  "actualizado": "2026-11-09T22:16:08.506Z",
   "fuente": "Secretaría de Energía (vía laprensa.hn)",
   "ciudades": {
     "Tegucigalpa": {
@@ -11,7 +11,7 @@
       },
       "regular": {
         "precio": 137.23,
-        "var": -2.78
+        "var": 0
       },
       "diesel": {
         "precio": 153.53,
@@ -25,7 +25,7 @@
       },
       "regular": {
         "precio": 132.04,
-        "var": -2.93
+        "var": 0
       },
       "diesel": {
         "precio": 149.2,
