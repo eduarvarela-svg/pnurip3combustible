@@ -9,7 +9,7 @@
      - IMPORTANTE: si modifica el código JavaScript de este archivo, la huella cambia y el navegador
        bloqueará el script. Abra la consola del navegador (F12): el error indica la huella nueva
        ('sha256-…'); cópiela en lugar de la actual en script-src. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-DGDWN/SXpkTSyZ64h2PO4SMIbW6Cav450FQvnLaMOJc=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n+TjUb3DL+HXjJje2xaI8lg+SIColVn09kwbO7equDY=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
 <title>Control de Abastecimiento de vehiculos URIP III</title>
@@ -2166,17 +2166,62 @@
   .mini.navy { background: linear-gradient(135deg, #1d4f9c 0%, #0b2e63 100%); color: #fff; border-color: #0b2e63; }
   .mini.navy:hover { filter: brightness(1.1); background: linear-gradient(135deg, #1d4f9c, #0b2e63); }
   .mant-acts { display: flex; flex-wrap: wrap; gap: 8px; }
-  .gm-list { display: grid; gap: 6px; margin: 12px 0 14px; }
-  .gm-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px; background: #f8fafc; }
-  .gm-row small { flex: 0 0 120px; font-size: 11.5px; color: var(--ink-2); font-weight: 600; }
-  .gm-row span { flex: 1 1 auto; min-width: 0; font-size: 13.5px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
-  .gm-row input { flex: 1 1 auto; min-width: 0; padding: 6px 8px; font-size: 13.5px; }
-  .gm-row .mini { padding: 5px 9px; font-size: 11.5px; }
-  .gm-help { margin-top: 12px; font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
-  .gm-help summary { cursor: pointer; font-weight: 700; color: var(--navy); }
-  .gm-help ol { margin: 8px 0 8px 18px; padding: 0; }
-  .gm-bm { display: inline-block; margin: 4px 6px 4px 0; padding: 7px 12px; border-radius: 8px; border: 1.5px dashed #127e98; color: #127e98; font-weight: 700; text-decoration: none; cursor: grab; }
-  @media (max-width: 480px) { .gm-row { flex-wrap: wrap; } .gm-row small { flex-basis: 100%; } }
+
+  /*  ===== GRÁFICOS DE PASTEL INTERACTIVOS =====  */
+  .pie-wrap { display: grid; grid-template-columns: minmax(220px, 280px) minmax(0, 1fr); gap: 22px; align-items: center; }
+  .pie-wrap.stack { grid-template-columns: 1fr; gap: 14px; }
+  .pie-box { position: relative; height: 260px; }
+  .pie-wrap.stack .pie-box { height: 230px; max-width: 280px; width: 100%; margin: 0 auto; }
+  .pie-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; pointer-events: none; padding: 0 22%; }
+  .pie-center small { display: block; font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-2);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+  .pie-center b { display: block; font-family: "Barlow Condensed", sans-serif; font-size: 27px; line-height: 1.1; color: var(--ink); margin: 2px 0; }
+  .pie-center span { display: block; font-size: 12px; color: var(--ink-2); }
+  .pie-center.pop { animation: pieCenter 0.35s cubic-bezier(0.2, 0.8, 0.2, 1); }
+  @keyframes pieCenter { from { opacity: 0.2; transform: scale(0.9); } to { opacity: 1; transform: none; } }
+  .pie-legend { display: grid; gap: 4px; max-height: 300px; overflow: auto; padding: 2px; }
+  .pl-item { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto 46px; grid-template-rows: auto 4px; column-gap: 9px; row-gap: 5px;
+    align-items: center; width: 100%; text-align: left; padding: 8px 10px; border: 1px solid transparent; border-radius: 10px; background: transparent;
+    font: inherit; color: var(--ink); cursor: pointer; transition: background 0.2s, border-color 0.2s, opacity 0.25s, transform 0.2s; }
+  .pl-item:hover, .pl-item.on { background: #f3f6fb; border-color: var(--line); }
+  .pl-item.on { transform: translateX(3px); }
+  .pl-item i { width: 14px; height: 14px; border-radius: 4px; grid-row: 1; transition: transform 0.2s; }
+  .pl-item:hover i { transform: scale(1.2); }
+  .pl-l { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pl-l small { font-weight: 500; color: var(--ink-2); margin-left: 4px; }
+  .pl-v { font-size: 12.5px; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pl-p { font-size: 13px; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+  .pl-bar { grid-column: 2 / -1; height: 4px; border-radius: 3px; background: #edf1f6; overflow: hidden; }
+  .pl-bar u { display: block; height: 100%; border-radius: 3px; transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); text-decoration: none; }
+  .pl-item.off { opacity: 0.42; }
+  .pl-item.off .pl-l { text-decoration: line-through; }
+  @media (max-width: 640px) { .pie-wrap { grid-template-columns: 1fr; } .pie-box { height: 230px; max-width: 280px; width: 100%; margin: 0 auto; } }
+  /*  ===== AUDITORÍA (SOLO SUPER USUARIOS) =====  */
+  .au-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 700;
+    background: #fdf3d6; color: #7a5a06; border: 1px solid #ecd48a; margin-left: 8px; vertical-align: middle; }
+  .au-pies { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0 0 14px; }
+  @media (max-width: 760px) { .au-pies { grid-template-columns: 1fr; } }
+  .au-list { display: grid; gap: 8px; }
+  .au-item { display: grid; grid-template-columns: 38px minmax(0, 1fr) auto; gap: 12px; align-items: start; padding: 12px 14px; border: 1px solid var(--line);
+    border-radius: 12px; background: #fff; animation: fxUp 0.35s var(--ease) backwards; }
+  .au-ico { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; font-size: 17px; color: #fff; }
+  .au-main > b { display: block; font-size: 13.5px; color: var(--ink); line-height: 1.35; font-weight: 500; }
+  .au-main > b b { display: inline; font-weight: 700; }
+  .au-ico svg { width: 18px; height: 18px; }
+  .au-main span { display: block; font-size: 12px; color: var(--ink-2); margin-top: 2px; }
+  .au-time { text-align: right; font-size: 12px; color: var(--ink-2); white-space: nowrap; }
+  .au-time b { display: block; font-size: 13px; color: var(--ink); }
+  .au-more { margin-top: 6px; border: 0; background: none; padding: 0; font: inherit; font-size: 12px; font-weight: 700; color: var(--azul); cursor: pointer; }
+  .au-diff { grid-column: 2 / -1; margin-top: 2px; border: 1px solid var(--line); border-radius: 9px; overflow: auto; font-size: 12px; }
+  .au-diff table { min-width: 0; width: 100%; font-size: 12px; }
+  .au-diff th, .au-diff td { padding: 6px 9px; border-bottom: 1px solid #eef0f2; text-align: left; white-space: normal; word-break: break-word; vertical-align: top; }
+  .au-diff th { background: #f6f7f9; font-weight: 700; color: var(--ink-2); }
+  .au-diff .old { color: #b42318; text-decoration: line-through; }
+  .au-diff .new { color: #067647; font-weight: 600; }
+  .au-day { margin: 14px 2px 2px; font-size: 12px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+  .au-setup { padding: 16px 18px; border-radius: 12px; border: 1px solid #ecd48a; background: #fffaf0; font-size: 13px; color: #5f4706; line-height: 1.55; }
+  .au-setup code { background: #fff; padding: 1px 5px; border-radius: 5px; border: 1px solid #ecd48a; }
+  .au-filters select, .au-filters input { padding: 9px 11px; border: 1.5px solid var(--line); border-radius: 10px; font-size: 13px; background: #fff; }
   /*  ===== BOTÓN AGENDAR MANTENIMIENTO (INGLOSA) =====  */
   .btn.teal, .mini.teal { background: linear-gradient(135deg, #2aa8c4 0%, #127e98 100%); color: #fff; border-color: #127e98; }
   .btn.teal { box-shadow: 0 6px 16px rgba(18, 126, 152, 0.3); }
@@ -3636,6 +3681,336 @@
 #bootFail{position:fixed;left:12px;right:12px;bottom:12px;z-index:99999;background:#7a1010;color:#fff;padding:12px 14px;border-radius:10px;
   font:500 14px/1.4 system-ui,sans-serif;opacity:0;pointer-events:none;animation:bootFailIn .3s ease 4s forwards}
 @keyframes bootFailIn{to{opacity:1;pointer-events:auto}}
+
+  /* =====================================================================
+     TEMA INSTITUCIONAL DIPOL – URIP III
+     Se aplica a todo el sistema excepto la pantalla de inicio de sesión.
+     Paleta: azul marino #142D4E · azul #1D3D64 · gris #E9EDF2 · grafito #263746
+             dorado #B69A42 · verde #25845A
+     ===================================================================== */
+  body { background: #e9edf2; }
+  :is(#app, #orderView, .modal, #privacyView, .toast) {
+    --navy: #142d4e; --navy-2: #1d3d64; --azul: #1d3d64; --azul-dk: #142d4e;
+    --gold: #b69a42; --gold-dk: #8f7a33; --graphite: #263746; --graphite-2: #1b2733;
+    --body: #e9edf2; --surface: #ffffff; --line: #d3dae3; --line-2: #e4e9ef;
+    --ink: #1b2733; --ink-2: #55657a; --amber: #8f7a33; --amber-dk: #7a6528;
+    --green: #25845a; --green-dk: #1c6845; --wa: #25845a; --wa-dk: #1c6845;
+    --red: #b42318; --warn: #b4690e; --blue: #1d3d64; --radius: 4px; --shadow: none;
+    --ease: ease;
+  }
+  :is(#app, #orderView, .modal) :is(div, section, span, li, tr, td, h3, h4, p, i, b, ul, button, a, label) { animation: none !important; }
+  :is(#app, #orderView, .modal) :is(.btn, .mini, button) { transform: none !important; filter: none !important; }
+
+  /* ---------- Estructura general ---------- */
+  #app, #orderView { background: #e9edf2 !important; color: var(--ink); }
+  #app::before, #app::after, #orderView::before, #orderView::after { display: none !important; }
+  #pageBar { background: var(--gold) !important; box-shadow: none !important; height: 2px; }
+  #app main { max-width: 1240px; padding: 0 20px 40px; }
+  .app-strip { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 -20px 18px; padding: 10px 20px;
+    background: #fff; border-bottom: 1px solid var(--line); font-size: 12.5px; color: var(--ink-2); }
+  .app-strip .crumb { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .app-strip .crumb b { color: var(--ink); font-weight: 600; }
+  .app-strip .crumb svg { width: 14px; height: 14px; color: #8a97a8; }
+  .app-strip .today { white-space: nowrap; }
+
+  /* ---------- Encabezado institucional ---------- */
+  :is(#app, #orderView) header.top { background: #142d4e !important; border-bottom: 3px solid #b69a42 !important; box-shadow: none !important; }
+  :is(#app, #orderView) header.top::before, :is(#app, #orderView) header.top::after { display: none !important; }
+  :is(#app, #orderView) header.top .brand .mark { border-radius: 2px; border-width: 1px; color: #d8c27a; border-color: #b69a42; font-size: 12px; }
+  :is(#app, #orderView) .brand-txt h2 { font-family: "Inter", sans-serif !important; font-weight: 600 !important; font-size: 16px !important; letter-spacing: 0 !important; }
+  :is(#app, #orderView) .brand-txt small { color: #9db0c8; letter-spacing: 0.08em; font-size: 10.5px; }
+  :is(#app, #orderView) .avatar { background: #b69a42 !important; color: #142d4e !important; box-shadow: none !important; border-radius: 3px; width: 34px; height: 34px; font-size: 13px; }
+  :is(#app, #orderView) .logout { border-radius: 3px; border-color: rgba(255, 255, 255, 0.25); }
+  :is(#app, #orderView) .logout:hover { background: #8a1c14; }
+  :is(#app, #orderView) .logout svg { width: 15px; height: 15px; }
+  #app header.top .who .role { border-radius: 2px; background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #d5dde8; }
+  #app header.top .who .role.admin { color: #d8c27a; border-color: rgba(182, 154, 66, 0.6); }
+  #app .who-id { display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 0; color: inherit; font: inherit; cursor: pointer; text-align: left; min-width: 0; }
+  #app .who-id:focus-visible { outline: 2px solid #b69a42; outline-offset: 3px; }
+  .nav-tabs { background: #1d3d64 !important; border-top: 0 !important; }
+  .nav-tabs .subnav button { color: #c5d1e0 !important; font-weight: 500 !important; font-size: 13.5px !important; gap: 8px !important; }
+  .nav-tabs .subnav button svg { width: 17px; height: 17px; flex: none; opacity: 0.85; }
+  .nav-tabs .subnav button:hover { background: rgba(255, 255, 255, 0.06) !important; color: #fff !important; }
+  .nav-tabs .subnav button.active { background: #142d4e !important; color: #fff !important; font-weight: 600 !important; }
+  .nav-tabs .subnav button::after { background: #b69a42 !important; border-radius: 0 !important; transition: none !important; }
+  .nav-grp { display: none; }
+
+  /* Permisos del usuario conectado */
+  .perm-pop { position: absolute; z-index: 60; width: 300px; background: #fff; color: var(--ink); border: 1px solid var(--line); border-radius: 4px;
+    box-shadow: 0 8px 24px rgba(20, 45, 78, 0.18); padding: 0; font-size: 13px; }
+  .perm-pop header { padding: 12px 14px; border-bottom: 1px solid var(--line-2); }
+  .perm-pop header b { display: block; font-size: 14px; }
+  .perm-pop header span { font-size: 12px; color: var(--ink-2); }
+  .perm-pop ul { list-style: none; margin: 0; padding: 8px 14px 12px; display: grid; gap: 6px; }
+  .perm-pop li { display: flex; align-items: center; gap: 8px; color: var(--ink); }
+  .perm-pop li svg { width: 15px; height: 15px; color: #25845a; flex: none; }
+  .perm-pop li.no { color: #98a3b1; }
+  .perm-pop li.no svg { color: #b8c0ca; }
+  .perm-pop h5 { margin: 4px 14px 0; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-2); }
+
+  /* Menú lateral en pantallas anchas */
+  @media (min-width: 1100px) {
+    #app:not(.hidden) { display: grid; grid-template-columns: 236px minmax(0, 1fr); align-items: start; }
+    #app > header.top { position: sticky; top: 0; height: 100vh; height: 100dvh; display: flex !important; flex-direction: column;
+      border-bottom: 0 !important; border-right: 1px solid #0d2140; align-items: stretch !important; justify-content: flex-start !important; }
+    #app > header.top .nav-row { display: contents; }
+    #app > header.top .brand { order: 1; padding: 18px 16px 16px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); align-items: flex-start; }
+    #app > header.top .brand-txt h2 { white-space: normal; line-height: 1.2 !important; }
+    #app > header.top .brand-txt .t-full { display: inline !important; }
+    #app > header.top .brand-txt .t-short { display: none !important; }
+    #app > header.top .nav-tabs { order: 2; flex: 1; overflow: auto; background: transparent !important; padding: 10px 0; }
+    #app .nav-tabs .subnav { flex-direction: column; padding: 0 !important; max-width: none !important; gap: 1px !important; overflow: visible; }
+    #app .nav-tabs .subnav button { width: 100%; justify-content: flex-start !important; padding: 10px 18px !important; border-radius: 0 !important; }
+    #app .nav-tabs .subnav button::after { left: 0 !important; right: auto !important; top: 0 !important; bottom: 0 !important; width: 3px !important; height: auto !important; }
+    #app .nav-tabs .subnav button.active { background: #1d3d64 !important; }
+    #app .nav-grp { display: block; padding: 14px 18px 6px; font-size: 10.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #7f93ad; }
+    #app .nav-grp.hidden { display: none; }
+    #app > header.top .who { order: 3; flex-wrap: wrap; padding: 14px 16px; border-top: 1px solid rgba(255, 255, 255, 0.1); background: #10253f; gap: 10px; position: relative; }
+    #app > header.top .who .who-txt { display: flex !important; }
+    #app > header.top .who .uname { display: block !important; max-width: 140px; }
+    #app > header.top .who .logout { width: 100%; justify-content: center; }
+    #app > main { padding: 0 28px 40px; max-width: none; width: 100%; }
+    #app > main .app-strip { margin: 0 -28px 22px; padding: 12px 28px; }
+    #app .perm-pop { left: 12px; bottom: 100px; }
+  }
+  @media (max-width: 1099.98px) {
+    #app .perm-pop { right: 12px; top: 58px; }
+    #app header.top .who { position: relative; }
+  }
+
+  /* ---------- Títulos de sección ---------- */
+  :is(#app, #orderView) .section-h { padding-left: 0; margin: 0 0 14px; }
+  :is(#app, #orderView) .section-h::before { display: none; }
+  :is(#app, #orderView) .section-h h3 { font-family: "Inter", sans-serif; font-size: 20px; font-weight: 600; color: #142d4e; letter-spacing: -0.01em; }
+  :is(#app, #orderView) .section-h p { font-size: 13px; }
+
+  /* ---------- Paneles ---------- */
+  :is(#app, #orderView) :is(.chart-card, .kpi, .stat, .table-wrap, .filters, .form-card, .ord-card, .veh-card, .au-item, .mant-box, .sv-item, .selected-bar, .odo, .veh-types button, .welcome, .ma-item) {
+    border-radius: 4px !important; box-shadow: none !important; }
+  :is(#app, #orderView) :is(.chart-card, .kpi, .stat, .table-wrap, .filters, .form-card, .ord-card, .veh-card, .au-item) { border: 1px solid var(--line) !important; background: #fff; }
+  :is(#app, #orderView) .kpi::before { width: 3px; }
+  :is(#app, #orderView) :is(.kpi .v, .stat .v) { font-family: "Inter", sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.01em; color: var(--ink); }
+  :is(#app, #orderView) .stat .v.amber { color: var(--ink); }
+  :is(#app, #orderView) :is(.kpi .k, .stat .k) { font-size: 11.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-2); }
+  :is(#app, #orderView) .cc-head h4 { font-family: "Inter", sans-serif; font-weight: 600; font-size: 15px; color: #142d4e; }
+  :is(#app, #orderView) .cc-head p { font-size: 12.5px; }
+
+  /* Bienvenida: franja compacta de estado */
+  #app .welcome { background: #fff !important; color: var(--ink) !important; border: 1px solid var(--line); border-left: 3px solid #142d4e; padding: 12px 16px; flex-wrap: wrap; }
+  #app .welcome::before, #app .welcome::after { display: none !important; }
+  #app .welcome h3 { font-family: "Inter", sans-serif; font-size: 16px; font-weight: 600; color: #142d4e; }
+  #app .welcome p { color: var(--ink-2); font-size: 12.5px; }
+  #app .wl-alert { background: #fbf6e7 !important; border: 1px solid #e6d8a6 !important; border-radius: 3px !important; color: #4f430f !important; box-shadow: none !important; }
+  #app .wl-alert.vencido { background: #fdf0ef !important; border-color: #efc4c0 !important; color: #6b1a12 !important; }
+  #app .wl-alert * { color: inherit !important; }
+
+  /* Alertas de mantenimiento: filas compactas */
+  #app .ma-item { background: #fff !important; border: 1px solid var(--line) !important; border-left: 3px solid #b4690e !important; padding: 10px 14px; }
+  #app .ma-item.vencido { border-left-color: #b42318 !important; }
+  #app .ma-txt b { font-size: 13.5px; font-weight: 600; }
+
+  /* Indicador de mantenimiento (sin luces) */
+  :is(#app, .modal) .led-mant { border-radius: 2px !important; padding: 3px 8px !important; font-size: 11.5px !important; font-weight: 600 !important; gap: 6px !important; }
+  :is(#app, .modal) .led-mant.proximo { background: #fbf1df !important; color: #7a4508 !important; border: 1px solid #ecc98f !important; }
+  :is(#app, .modal) .led-mant.vencido { background: #fdecea !important; color: #8a1c14 !important; border: 1px solid #f0bdb7 !important; }
+  :is(#app, .modal) .led-mant .led-bar { display: none !important; }
+  :is(#app, .modal) .led-mant::before { content: ""; width: 7px; height: 7px; border-radius: 1px; background: currentColor; }
+  :is(#app, .modal) .badge-mant, :is(#app, .modal) .badge-eq { border-radius: 2px !important; font-weight: 600; }
+  #app .wl-alert .led-bar { display: none !important; }
+
+  /* ---------- Botones ---------- */
+  :is(#app, #orderView, .modal) .btn { background: #142d4e; background-image: none !important; color: #fff; border: 1px solid #142d4e; border-radius: 3px !important;
+    box-shadow: none !important; font-weight: 600; letter-spacing: 0; transition: background-color 0.15s, border-color 0.15s; }
+  :is(#app, #orderView, .modal) .btn:hover { background: #1d3d64; border-color: #1d3d64; }
+  :is(#app, #orderView, .modal) .btn.ghost { background: #fff; color: #142d4e; border: 1px solid #b9c4d2; }
+  :is(#app, #orderView, .modal) .btn.ghost:hover { background: #f1f4f8; border-color: #8e9db0; }
+  :is(#app, #orderView, .modal) :is(.btn.wa, .btn.green, .btn.dl-btn) { background: #25845a; border-color: #25845a; color: #fff; }
+  :is(#app, #orderView, .modal) :is(.btn.wa, .btn.green, .btn.dl-btn):hover { background: #1c6845; border-color: #1c6845; }
+  :is(#app, #orderView, .modal) .btn.gold { background: #b69a42; border-color: #a2883a; color: #1f1a08; }
+  :is(#app, #orderView, .modal) .btn.gold:hover { background: #a2883a; }
+  :is(#app, #orderView, .modal) .btn.teal { background: #fff; color: #142d4e; border-color: #142d4e; }
+  :is(#app, #orderView, .modal) .btn.teal:hover { background: #eef2f7; }
+  :is(#app, #orderView, .modal) .btn.danger { background: #b42318; border-color: #b42318; }
+  :is(#app, #orderView, .modal) .btn.danger:hover { background: #8a1c14; }
+  :is(#app, #orderView, .modal) .btn.loading::before { animation: spin 0.8s linear infinite !important; }
+  :is(#app, #orderView, .modal) .mini { border-radius: 3px; font-weight: 600; font-size: 12.5px; padding: 6px 10px; background: #fff; border: 1px solid #b9c4d2; color: #142d4e; box-shadow: none; background-image: none !important; }
+  :is(#app, #orderView, .modal) .mini:hover { background: #f1f4f8; }
+  :is(#app, #orderView, .modal) .mini.teal { background: #fff; color: #142d4e; border-color: #142d4e; }
+  :is(#app, #orderView, .modal) .mini.navy { background: #142d4e; color: #fff; border-color: #142d4e; }
+  :is(#app, #orderView, .modal) .mini.navy:hover { background: #1d3d64; }
+  :is(#app, #orderView, .modal) .mini.gold { background: #b69a42; color: #1f1a08; border-color: #a2883a; }
+  :is(#app, #orderView, .modal) .mini.gold:hover { background: #a2883a; }
+  :is(#app, #orderView, .modal) .mini.wa { background: #25845a; color: #fff; border-color: #25845a; }
+  :is(#app, #orderView, .modal) .mini.danger { background: #fff; color: #b42318; border-color: #e3a49d; }
+  :is(#app, #orderView, .modal) .mini.danger:hover { background: #fdf0ef; }
+  :is(#app, #orderView, .modal) .del { border-radius: 3px; }
+  :is(#app, #orderView, .modal) .cap-btn { background: #142d4e !important; background-image: none !important; color: #fff !important; border-radius: 3px !important; box-shadow: none !important; }
+
+  /* Selectores de período */
+  :is(#app, #orderView, .modal) :is(.seg, .cc-toggle) { background: #fff; border: 1px solid #b9c4d2; border-radius: 3px; padding: 0; gap: 0; box-shadow: none; overflow: hidden; }
+  :is(#app, #orderView, .modal) :is(.seg, .cc-toggle) button { border-radius: 0 !important; padding: 7px 13px; font-weight: 500; color: var(--ink-2); border-right: 1px solid #d3dae3 !important; box-shadow: none !important; }
+  :is(#app, #orderView, .modal) :is(.seg, .cc-toggle) button:last-child { border-right: 0 !important; }
+  :is(#app, #orderView, .modal) :is(.seg, .cc-toggle) button.active { background: #142d4e !important; color: #fff !important; font-weight: 600; }
+
+  /* ---------- Formularios ---------- */
+  :is(#app, #orderView, .modal) .field label { font-size: 12.5px; font-weight: 600; color: #263746; margin-bottom: 5px; }
+  :is(#app, #orderView, .modal) :is(.field input, .field select, .field textarea, .fdate input, .fdate select, .au-filters select, .au-filters input, .saved-h input, .mant-ctrls input) {
+    border: 1px solid #b9c4d2 !important; border-radius: 3px !important; background: #fff !important; box-shadow: none !important; padding: 9px 11px; font-size: 14px; color: var(--ink); min-height: 38px; }
+  :is(#app, #orderView, .modal) :is(.field input, .field select, .field textarea, .fdate input, .fdate select, .au-filters select, .au-filters input):focus {
+    outline: none; border-color: #1d3d64 !important; box-shadow: 0 0 0 2px rgba(29, 61, 100, 0.18) !important; }
+  :is(#app, #orderView, .modal) .field input.auto { background: #f2f6fb !important; border-color: #8fa6c4 !important; }
+  :is(#app, #orderView, .modal) .field input:disabled { background: #f1f3f6 !important; color: #6b7889; }
+  :is(#app, #orderView, .modal) .err { color: #b42318; font-size: 12.5px; }
+  :is(#app, #orderView, .modal) .fdate label { font-size: 11.5px; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.04em; }
+  :is(#app, #orderView, .modal) .filters { padding: 12px 14px; gap: 10px 14px; align-items: flex-end; }
+  :is(#app, #orderView, .modal) .photo-zone, :is(#app, #orderView, .modal) .scan-zone { border-radius: 3px !important; background: #f7f9fb !important; border: 1px dashed #b9c4d2 !important; }
+  :is(#app, #orderView) .ord-card h4 .n { border-radius: 2px !important; background: #142d4e !important; }
+  :is(#app, #orderView) .save-veh-opt { border-radius: 3px; background: #f1f7f3; border-color: #c7dfd0; }
+  :is(#app, #orderView) .form-card { border-top: 3px solid #142d4e !important; }
+  :is(#app, #orderView) .form-card::before { display: none !important; }
+
+  /* ---------- Selección de vehículo ---------- */
+  #app .veh-types button { border: 1px solid var(--line) !important; background: #fff; }
+  #app .veh-types button.active { background: #142d4e !important; border-color: #142d4e !important; }
+  #app .vt-name { font-family: "Inter", sans-serif; font-size: 16px; font-weight: 600; }
+  #app .veh-card { border-top: 3px solid #142d4e !important; }
+  #app .veh-card.warn { border-top-color: #b4690e !important; }
+  #app .veh-card.danger { border-top-color: #b42318 !important; }
+  #app .veh-card::before, #app .veh-card::after { display: none !important; }
+  #app .veh-card .mk { font-family: "Inter", sans-serif; font-weight: 600; font-size: 15px; }
+  #app .veh-hint { border-radius: 3px; background: #fff; border: 1px dashed #b9c4d2; }
+  #app .selected-bar { background: #fff !important; color: var(--ink) !important; border: 1px solid var(--line) !important; border-left: 3px solid #142d4e !important; }
+  #app .selected-bar::after, #app .selected-bar::before { display: none !important; }
+  #app .selected-bar .info, #app .selected-bar .mk { color: var(--ink) !important; }
+  #app .selected-bar .sub, #app .selected-bar small { color: var(--ink-2) !important; }
+  #app .selected-bar .btn, #app .selected-bar button { background: #fff !important; color: #142d4e !important; border: 1px solid #b9c4d2 !important; }
+
+  /* Odómetro: panel sobrio */
+  #app .odo { background: #fff !important; color: var(--ink) !important; border: 1px solid var(--line) !important; border-left: 3px solid #25845a !important; }
+  #app .odo.st-warn { border-left-color: #b4690e !important; }
+  #app .odo.st-danger { border-left-color: #b42318 !important; }
+  #app .odo::before, #app .odo::after { display: none !important; }
+  #app .odo .odo-lbl, #app .odo .odo-src, #app .odo .odo-msg, #app .odo .odo-unit, #app .odo small { color: var(--ink-2) !important; }
+  #app .odo .odo-msg b, #app .odo .odo-cell b { color: var(--ink) !important; }
+  #app .odo .odo-digits span { background: #1b2733 !important; color: #fff !important; border-radius: 2px !important; box-shadow: none !important; background-image: none !important; }
+  #app .odo .odo-digits span.last { background: #e9edf2 !important; color: #142d4e !important; }
+  #app .odo .odo-digits { background: transparent !important; box-shadow: none !important; border: 0 !important; }
+  #app .odo .odo-cell { background: #f5f7fa !important; border: 1px solid var(--line-2) !important; border-radius: 3px !important; }
+  #app .odo .odo-count { color: #25845a !important; }
+  #app .odo.st-warn .odo-count { color: #b4690e !important; }
+  #app .odo.st-danger .odo-count { color: #b42318 !important; }
+  #app .odo .odo-bar { background: #e4e9ef !important; border-radius: 0 !important; }
+  #app .odo .odo-bar i { background: #25845a !important; background-image: none !important; box-shadow: none !important; }
+  #app .odo.st-warn .odo-bar i { background: #b4690e !important; }
+  #app .odo.st-danger .odo-bar i { background: #b42318 !important; }
+
+  /* ---------- Tablas ---------- */
+  :is(#app, .modal) table { font-size: 13px; }
+  :is(#app, .modal) thead th { background: #e9edf2 !important; color: #263746 !important; font-size: 11.5px !important; font-weight: 700 !important; text-transform: uppercase;
+    letter-spacing: 0.04em; padding: 9px 10px !important; border-bottom: 1px solid #c9d2dd !important; position: sticky; top: 0; z-index: 1; }
+  :is(#app, .modal) tbody td { padding: 7px 10px !important; border-bottom: 1px solid #eceff3 !important; }
+  :is(#app, .modal) tbody tr:nth-child(even) td { background: #fafbfc; }
+  :is(#app, .modal) tbody tr:hover td { background: #f1f5fa !important; }
+  :is(#app, .modal) td.num, :is(#app, .modal) td.money, :is(#app, .modal) td.n { text-align: right; font-variant-numeric: tabular-nums; }
+  #app .table-scroll { max-height: 70vh; overflow: auto; }
+  #app .st-table th { position: static; }
+  th.tp-sort { cursor: pointer; user-select: none; white-space: nowrap; }
+  th.tp-sort:hover { background: #dfe5ec !important; }
+  th.tp-sort::after { content: ""; display: inline-block; width: 0; height: 0; margin-left: 6px; vertical-align: 2px;
+    border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid #b5c0cc; }
+  th.tp-sort[aria-sort="ascending"]::after { border-top: 0; border-bottom: 5px solid #142d4e; }
+  th.tp-sort[aria-sort="descending"]::after { border-top-color: #142d4e; }
+  .tp-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin: 0 0 8px; }
+  .tp-search { position: relative; flex: 0 1 320px; }
+  .tp-search svg { position: absolute; left: 10px; top: 50%; width: 15px; height: 15px; transform: translateY(-50%); color: #8a97a8; pointer-events: none; }
+  .tp-search input { width: 100%; padding: 8px 10px 8px 32px; border: 1px solid #b9c4d2; border-radius: 3px; font-size: 13px; background: #fff; min-height: 36px; }
+  .tp-search input:focus { outline: none; border-color: #1d3d64; box-shadow: 0 0 0 2px rgba(29, 61, 100, 0.18); }
+  .tp-info { font-size: 12.5px; color: var(--ink-2); }
+  .tp-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 8px 12px; border-top: 1px solid #e4e9ef;
+    background: #fafbfc; font-size: 12.5px; color: var(--ink-2); }
+  .tp-pager { display: flex; align-items: center; gap: 2px; }
+  .tp-pager button { min-width: 30px; height: 28px; padding: 0 8px; border: 1px solid #c9d2dd; background: #fff; border-radius: 2px; font-size: 12.5px; color: #142d4e; cursor: pointer; }
+  .tp-pager button:hover:not(:disabled) { background: #eef2f7; }
+  .tp-pager button.on { background: #142d4e; border-color: #142d4e; color: #fff; font-weight: 600; }
+  .tp-pager button:disabled { color: #b5c0cc; cursor: default; }
+  .tp-pager .gap { padding: 0 4px; }
+  .tp-size select { padding: 4px 6px; border: 1px solid #c9d2dd; border-radius: 2px; font-size: 12.5px; background: #fff; }
+  .tp-empty td { text-align: center; color: var(--ink-2); padding: 18px !important; }
+
+  /* ---------- Ventanas (modales) ---------- */
+  .modal { background: rgba(20, 30, 45, 0.55) !important; backdrop-filter: none !important; }
+  .modal .modal-box { border-radius: 4px !important; box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3) !important; }
+  .modal .modal-box .mh { background: #142d4e !important; border-bottom: 3px solid #b69a42 !important; padding: 12px 16px; }
+  .modal .modal-box .mh h4 { font-family: "Inter", sans-serif !important; font-size: 15.5px !important; font-weight: 600 !important; letter-spacing: 0 !important; }
+  .modal .modal-box .mh .x { border-radius: 2px; border: 1px solid rgba(255, 255, 255, 0.25); padding: 4px 10px; font-size: 12.5px; }
+  .modal .mr-veh { background: #f5f7fa !important; color: var(--ink) !important; border: 1px solid var(--line) !important; border-radius: 3px !important; }
+  .modal .mr-veh * { color: inherit; }
+  .modal .mr-veh .sub { color: var(--ink-2) !important; }
+  .modal .msg-prev { border-radius: 3px; background: #f7f9fb !important; color: #1b2733 !important; border: 1px solid var(--line) !important; }
+  .modal .mant-box { border-radius: 3px; }
+  .toast { border-radius: 3px !important; background: #263746 !important; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25) !important; }
+
+  /* ---------- Gráficos ---------- */
+  :is(#app) .pl-item { border-radius: 3px; }
+  :is(#app) .pl-item i { border-radius: 1px; }
+  :is(#app) .pl-item.on { transform: none; }
+  :is(#app) .pie-center b { font-family: "Inter", sans-serif; font-weight: 600; font-size: 22px; }
+  :is(#app) .st-range { border-radius: 2px !important; background: #fff !important; border: 1px solid var(--line) !important; color: var(--ink-2) !important; }
+
+  /* ---------- Auditoría ---------- */
+  #app .au-ico { border-radius: 3px; }
+  #app .au-badge { border-radius: 2px; }
+
+  /* ---------- Usuarios y configuración ---------- */
+  .tag { display: inline-block; padding: 2px 7px; border-radius: 2px; font-size: 11.5px; font-weight: 600; border: 1px solid #c9d2dd; color: #263746; background: #f5f7fa; margin: 1px 4px 1px 0; white-space: nowrap; }
+  .tag.admin { background: #e8edf4; border-color: #b9c6d8; color: #142d4e; }
+  .tag.super { background: #f7f1de; border-color: #dcc98d; color: #6b5718; }
+  .st-act { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; }
+  .st-act::before { content: ""; width: 8px; height: 8px; border-radius: 1px; background: #25845a; }
+  .st-act.off { color: #8a1c14; }
+  .st-act.off::before { background: #b42318; }
+  td.acts { white-space: nowrap; text-align: right; }
+  td.acts .mini { margin-left: 4px; }
+  .usr-toolbar { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; padding: 12px 14px; margin-bottom: 14px; background: #fff; border: 1px solid var(--line); border-radius: 4px; }
+  .usr-toolbar .grow { flex: 1; }
+  .kpis.k4 { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 14px; }
+  @media (max-width: 760px) { .kpis.k4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  .setup-box { padding: 14px 16px; border-radius: 4px; border: 1px solid #dcc98d; background: #fbf7ea; font-size: 13px; color: #4f430f; line-height: 1.55; margin-bottom: 14px; }
+  .setup-box code { background: #fff; padding: 1px 5px; border: 1px solid #dcc98d; border-radius: 2px; }
+  .cfg-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 18px; align-items: start; }
+  .cfg-nav { position: sticky; top: 16px; background: #fff; border: 1px solid var(--line); border-radius: 4px; padding: 6px 0; }
+  .cfg-nav a { display: block; padding: 9px 14px; font-size: 13px; color: #263746; text-decoration: none; border-left: 3px solid transparent; }
+  .cfg-nav a:hover { background: #f1f4f8; }
+  .cfg-nav a.on { border-left-color: #b69a42; background: #f1f4f8; font-weight: 600; color: #142d4e; }
+  .cfg-sec { background: #fff; border: 1px solid var(--line); border-radius: 4px; margin-bottom: 14px; scroll-margin-top: 16px; }
+  .cfg-sec > header { padding: 12px 16px; border-bottom: 1px solid var(--line-2); }
+  .cfg-sec > header h4 { margin: 0; font-size: 14.5px; font-weight: 600; color: #142d4e; }
+  .cfg-sec > header p { margin: 2px 0 0; font-size: 12.5px; color: var(--ink-2); }
+  .cfg-body { padding: 14px 16px 4px; }
+  .cfg-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
+  .cfg-grid.g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .cfg-help { font-size: 12px; color: var(--ink-2); margin-top: 4px; }
+  .cfg-actions { position: sticky; bottom: 0; display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 12px 16px; background: #fff;
+    border: 1px solid var(--line); border-radius: 4px; z-index: 2; }
+  .cfg-actions .grow { flex: 1; font-size: 12.5px; color: var(--ink-2); }
+  .cfg-actions .btn { width: auto; }
+  .cfg-ro { display: grid; grid-template-columns: 180px 1fr; gap: 6px 14px; font-size: 13px; padding-bottom: 12px; }
+  .cfg-ro dt { color: var(--ink-2); }
+  .cfg-ro dd { margin: 0; font-weight: 600; }
+  .cfg-dirty { color: #8f7a33; font-weight: 600; }
+  @media (max-width: 860px) { .cfg-layout { grid-template-columns: 1fr; } .cfg-nav { display: none; } .cfg-grid, .cfg-grid.g3 { grid-template-columns: 1fr; } }
+  .chk { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; color: var(--ink); margin: 6px 0 12px; cursor: pointer; }
+  .chk input { width: 17px; height: 17px; margin: 1px 0 0; accent-color: #142d4e; flex: none; }
+  .chk small { display: block; color: var(--ink-2); font-size: 12px; }
+  .pw-rules { font-size: 12px; color: var(--ink-2); margin: -6px 0 12px; }
+  .pw-rules span { margin-right: 10px; }
+  .pw-rules span.ok { color: #25845a; font-weight: 600; }
+
+  /* ---------- Pie de página ---------- */
+  #app .app-foot { border-top: 1px solid var(--line); text-align: left; }
+  #app main:has(#adminView:not(.hidden)) .welcome, #app main:has(#statsSec:not(.hidden)) .welcome { display: none !important; }
+  .usr-toolbar .fdate { display: flex; flex-direction: column; gap: 4px; }
+  .usr-mail { display: block; font-size: 12px; color: var(--ink-2); font-weight: 400; }
 </style>
 </head>
 <body>
@@ -3789,7 +4164,7 @@
       <li><b>GitHub Pages:</b> publica la aplicación.</li>
        <li><b>Vercel:</b> se encuentra desplegada la aplicacion.</li>
       <li><b>Google Fonts y jsDelivr:</b> entregan tipografías y componentes del programa. Pueden registrar datos técnicos de la conexión, como la dirección IP, pero no reciben la información de los registros.</li>
-      <li><b>INGLOSA (citas.inglosa.hn):</b> el botón "Gestionar mantenimiento" abre su página y copia en su dispositivo los datos del vehículo y del solicitante para autocompletar la cita. La aplicación no envía datos a INGLOSA; solo se escriben en su página cuando usted usa el marcador de autocompletado.</li>
+      <li><b>INGLOSA (citas.inglosa.hn):</b> el botón "Gestionar mantenimiento" solo abre su página; los datos de la cita se escriben directamente en ella.</li>
       <li><b>WhatsApp:</b> solo recibe un mensaje cuando usted decide compartirlo. A partir de ese momento aplican las políticas de WhatsApp.</li>
     </ul>
     <p>Los precios del combustible se obtienen de publicaciones oficiales y no contienen datos personales.</p>
@@ -3914,28 +4289,37 @@
     <div class="nav-row">
       <div class="brand"><div class="mark" aria-hidden="true">DIPOL</div><div class="brand-txt"><h2><span class="t-full">Control de Abastecimiento</span><span class="t-short">Abastecimiento</span></h2><small>URIP III · La Paz</small></div></div>
       <div class="who">
-        <div class="avatar" id="uAvatar" aria-hidden="true">U</div>
-        <div class="who-txt"><span class="uname" id="uName"></span><span class="role" id="uRole"></span></div>
-        <button class="logout" id="logoutBtn"><span>Salir</span></button>
+        <button class="who-id" type="button" id="whoBtn" aria-haspopup="true" aria-expanded="false" title="Ver rol y permisos">
+          <div class="avatar" id="uAvatar" aria-hidden="true">U</div>
+          <div class="who-txt"><span class="uname" id="uName"></span><span class="role" id="uRole"></span></div></button>
+        <button class="logout" id="logoutBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/></svg><span>Cerrar sesión</span></button>
+        <div class="perm-pop hidden" id="permPop" role="dialog" aria-label="Rol y permisos"></div>
       </div>
     </div>
     <nav class="nav-tabs" aria-label="Navegación principal">
       <!-- Barra de navegación del administrador -->
       <div class="subnav hidden" id="adminBar">
-        <button data-v="abast" class="active">Abastecer</button>
-        <button data-v="rep">Reportes</button>
-        <button data-v="veh">Vehículos</button>
-        <button data-v="orden">Con orden</button>
-        <button data-v="graf">Estadísticas</button>
+        <span class="nav-grp">Operación</span>
+        <button data-v="abast" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22h12M4 9h10"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V9.8a2 2 0 0 0-.6-1.4L18 5"/></svg><span>Abastecer</span></button>
+        <span class="nav-grp">Control</span>
+        <button data-v="rep"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z"/><path d="M14 2v5h6M16 13H8M16 17H8M10 9H8"/></svg><span>Reportes</span></button>
+        <button data-v="veh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.6a1 1 0 0 0-.2-.6l-3.5-4.4a1 1 0 0 0-.8-.4H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span>Vehículos</span></button>
+        <button data-v="orden"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span>Con orden</span></button>
+        <button data-v="graf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg><span>Estadísticas</span></button>
+        <span class="nav-grp hidden" id="navGrpAdm">Administración</span>
+        <button data-v="usr" class="hidden super-only" id="usrTab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg><span>Usuarios</span></button>
+        <button data-v="cfg" class="hidden super-only" id="cfgTab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg><span>Configuración</span></button>
+        <button data-v="audit" class="hidden super-only" id="auditTab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg><span>Auditoría</span></button>
       </div>
       <!-- Barra de navegación del usuario normal (sin estadísticas: solo administradores) -->
       <div class="subnav hidden" id="userBar">
-        <button data-u="abast" class="active">Abastecer</button>
+        <button data-u="abast" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 22h12M4 9h10"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V9.8a2 2 0 0 0-.6-1.4L18 5"/></svg><span>Abastecer</span></button>
       </div>
     </nav>
   </header>
 
   <main>
+    <div class="app-strip"><div class="crumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg><span>URIP III La Paz</span><span>/</span><b id="crumbCur">Abastecer</b></div><div class="today" id="stripDate"></div></div>
     <!-- BIENVENIDA con el primer nombre del usuario -->
     <section class="welcome hidden" id="welcomeBox">
       <div class="wl-main"><h3 id="wlHello"></h3><p id="wlSub"></p></div>
@@ -4000,6 +4384,27 @@
         <div class="chart-card wide">
           <div class="cc-head"><div><h4>Gasolineras más utilizadas</h4><p>Abastecimientos y porcentaje del total por gasolinera</p></div></div>
           <div class="chart-box hbar" id="boxGas"><canvas id="chGas" role="img" aria-label="Gasolineras más utilizadas"></canvas></div>
+        </div>
+
+        <div class="chart-card wide pie-card">
+          <div class="cc-head">
+            <div><h4>Distribución por vehículo</h4><p>Toque una sección o un nombre para ver el detalle · toque el color para ocultarlo</p></div>
+            <div class="cc-toggle" id="pieVehTg"><button data-m="p" class="active">Lempiras</button><button data-m="l">Litros</button><button data-m="n">Abastecimientos</button></div>
+          </div>
+          <div class="pie-wrap"><div class="pie-box" id="pbVeh"><canvas id="chPieVeh" role="img" aria-label="Distribución por vehículo"></canvas><div class="pie-center"></div></div>
+            <div class="pie-legend" id="plVeh"></div></div>
+        </div>
+
+        <div class="chart-card pie-card">
+          <div class="cc-head"><div><h4>Por tipo de vehículo</h4><p>Gasto en Lempiras</p></div></div>
+          <div class="pie-wrap stack"><div class="pie-box" id="pbTipo"><canvas id="chPieTipo" role="img" aria-label="Gasto por tipo de vehículo"></canvas><div class="pie-center"></div></div>
+            <div class="pie-legend" id="plTipo"></div></div>
+        </div>
+
+        <div class="chart-card pie-card">
+          <div class="cc-head"><div><h4>Participación por gasolinera</h4><p>Litros despachados</p></div></div>
+          <div class="pie-wrap stack"><div class="pie-box" id="pbGas"><canvas id="chPieGas" role="img" aria-label="Litros por gasolinera"></canvas><div class="pie-center"></div></div>
+            <div class="pie-legend" id="plGas"></div></div>
         </div>
 
         <div class="chart-card wide">
@@ -4131,6 +4536,112 @@
         <div style="margin-bottom:16px"><button class="btn sm" id="openAddVeh">+ Agregar vehículo</button></div>
         <div class="veh-grid" id="admVehGrid"></div>
       </div>
+
+      <!-- Usuarios (solo super usuarios) -->
+      <div id="admUsuarios" class="hidden">
+        <div class="section-h"><h3>Administración de usuarios</h3><p>Cree cuentas, asigne roles, restablezca contraseñas y active o desactive el acceso.</p></div>
+        <div id="usrSetup" class="setup-box hidden"></div>
+        <div id="usrBody">
+          <div class="kpis k4">
+            <div class="kpi" style="--kc:#142D4E"><div class="k">Usuarios</div><div class="v" id="usrKTot">0</div><div class="s">registrados</div></div>
+            <div class="kpi" style="--kc:#25845A"><div class="k">Activos</div><div class="v" id="usrKAct">0</div><div class="s">pueden iniciar sesión</div></div>
+            <div class="kpi" style="--kc:#1D3D64"><div class="k">Administradores</div><div class="v" id="usrKAdm">0</div><div class="s">acceso a reportes</div></div>
+            <div class="kpi" style="--kc:#B69A42"><div class="k">Super usuarios</div><div class="v" id="usrKSup">0</div><div class="s">administran el sistema</div></div>
+          </div>
+          <div class="usr-toolbar">
+            <div class="fdate"><label for="usrRolF">Rol</label><select id="usrRolF"><option value="">Todos</option><option value="usuario">Usuario</option><option value="admin">Administrador</option><option value="super">Super usuario</option></select></div>
+            <div class="fdate"><label for="usrEstF">Estado</label><select id="usrEstF"><option value="">Todos</option><option value="1">Activos</option><option value="0">Inactivos</option></select></div>
+            <div class="grow"></div>
+            <button class="btn sm" id="usrNuevo" type="button" style="width:auto">Nuevo usuario</button>
+          </div>
+          <div class="table-wrap"><div class="table-scroll"><table id="usrTable" style="min-width:820px"><thead><tr>
+            <th>Usuario</th><th>Rol</th><th>Estado</th><th>Último acceso</th><th>Creado</th><th>Acciones</th>
+          </tr></thead><tbody id="usrTbody"></tbody></table></div></div>
+        </div>
+      </div>
+
+      <!-- Configuración (solo super usuarios) -->
+      <div id="admConfig" class="hidden">
+        <div class="section-h"><h3>Configuración del sistema</h3><p>Parámetros que usa la aplicación en todos los dispositivos. Los cambios quedan registrados en la auditoría.</p></div>
+        <div id="cfgSetup" class="setup-box hidden"></div>
+        <div class="cfg-layout" id="cfgBody">
+          <nav class="cfg-nav" id="cfgNav" aria-label="Secciones de configuración">
+            <a href="#cfgMant" class="on">Mantenimiento preventivo</a><a href="#cfgRep">Reporte de mantenimiento</a>
+            <a href="#cfgJefe">Firmas de reportes</a><a href="#cfgGas">Gasolineras</a><a href="#cfgSeg">Seguridad</a><a href="#cfgSis">Información del sistema</a>
+          </nav>
+          <div>
+            <section class="cfg-sec" id="cfgMant"><header><h4>Mantenimiento preventivo</h4><p>Intervalos y aviso anticipado. Aplica a vehículos que no tienen un límite propio.</p></header>
+              <div class="cfg-body"><div class="cfg-grid g3">
+                <div class="field"><label for="cfMantInt">Intervalo pick up y otros (km)</label><input id="cfMantInt" type="number" min="1000" max="50000" step="500"></div>
+                <div class="field"><label for="cfMantMoto">Intervalo motocicletas (km)</label><input id="cfMantMoto" type="number" min="500" max="50000" step="500"></div>
+                <div class="field"><label for="cfMantAviso">Avisar cuando falten (km)</label><input id="cfMantAviso" type="number" min="100" max="10000" step="100"></div>
+              </div></div></section>
+            <section class="cfg-sec" id="cfgRep"><header><h4>Reporte de mantenimiento</h4><p>Datos fijos del mensaje de entrada y salida de mantenimiento.</p></header>
+              <div class="cfg-body"><div class="cfg-grid">
+                <div class="field"><label for="cfProp">Propietario de los vehículos</label><input id="cfProp" maxlength="60"></div>
+                <div class="field"><label for="cfAsig">Asignados a</label><input id="cfAsig" maxlength="60"></div>
+              </div>
+              <div class="field"><label for="cfCita">Página de citas del taller</label><input id="cfCita" maxlength="200" type="url"><div class="cfg-help">Debe comenzar con https://</div></div>
+              <div class="field"><label for="cfFirma">Firma del reporte (una línea por renglón)</label><textarea id="cfFirma" rows="3" maxlength="300"></textarea></div>
+              </div></section>
+            <section class="cfg-sec" id="cfgJefe"><header><h4>Firmas de reportes</h4><p>Jefatura que firma los reportes de abastecimiento en Excel y PDF.</p></header>
+              <div class="cfg-body"><div class="cfg-grid g3">
+                <div class="field"><label for="cfJefe">Nombre completo</label><input id="cfJefe" maxlength="80"></div>
+                <div class="field"><label for="cfGrado">Grado</label><input id="cfGrado" maxlength="60"></div>
+                <div class="field"><label for="cfCargo">Cargo</label><input id="cfCargo" maxlength="60"></div>
+              </div></div></section>
+            <section class="cfg-sec" id="cfgGas"><header><h4>Gasolineras</h4><p>Lista que aparece al registrar un abastecimiento (también en "Con orden").</p></header>
+              <div class="cfg-body"><div class="field"><label for="cfGasList">Una gasolinera por línea</label><textarea id="cfGasList" rows="7" maxlength="3000"></textarea>
+                <div class="cfg-help" id="cfGasCount"></div></div></div></section>
+            <section class="cfg-sec" id="cfgSeg"><header><h4>Seguridad</h4><p>Cierre automático de sesión por inactividad.</p></header>
+              <div class="cfg-body"><div class="cfg-grid g3">
+                <div class="field"><label for="cfInact">Minutos sin actividad</label><input id="cfInact" type="number" min="5" max="240" step="5"></div>
+              </div></div></section>
+            <section class="cfg-sec" id="cfgSis"><header><h4>Información del sistema</h4><p>Solo lectura.</p></header>
+              <div class="cfg-body"><dl class="cfg-ro" id="cfgInfo"></dl></div></section>
+            <div class="cfg-actions"><span class="grow" id="cfgState">Sin cambios.</span>
+              <button class="btn ghost sm" id="cfgDefault" type="button">Valores predeterminados</button>
+              <button class="btn ghost sm" id="cfgReset" type="button">Descartar cambios</button>
+              <button class="btn sm" id="cfgSave" type="button">Guardar cambios</button></div>
+            <div class="err" id="cfgErr" style="margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Auditoría (solo super usuarios) -->
+      <div id="admAuditoria" class="hidden">
+        <div class="section-h"><h3>Auditoría del sistema <span class="au-badge">Solo super usuarios</span></h3>
+          <p>Quién hizo qué y cuándo: inicios de sesión, registros creados, modificados o eliminados, reportes y mensajes enviados.</p></div>
+        <div class="filters au-filters">
+          <div><div class="seg" id="auPeriodSeg">
+            <button data-ap="dia">Hoy</button><button data-ap="7" class="active">7 días</button><button data-ap="30">30 días</button><button data-ap="todo">Todo</button>
+          </div></div>
+          <div class="fdate"><label for="auTipo">Acción</label><select id="auTipo"><option value="">Todas</option></select></div>
+          <div class="fdate"><label for="auUser">Usuario</label><select id="auUser"><option value="">Todos</option></select></div>
+          <div class="fdate"><label for="auBuscar">Buscar</label><input id="auBuscar" type="search" maxlength="40" placeholder="Placa, nombre, gasolinera…"></div>
+          <div class="grow"></div>
+          <button class="btn sm ghost" id="auRefresh" type="button" style="width:auto">Actualizar</button>
+          <button class="btn dl-btn sm" id="auExcel" type="button">Descargar Excel</button>
+        </div>
+        <div id="auSetup" class="au-setup hidden"></div>
+        <div id="auBody">
+          <div class="kpis">
+            <div class="kpi" style="--kc:var(--navy)"><div class="k">Eventos</div><div class="v" id="auKEv">0</div><div class="s" id="auKEvS">&nbsp;</div></div>
+            <div class="kpi" style="--kc:var(--azul)"><div class="k">Usuarios activos</div><div class="v" id="auKUs">0</div><div class="s">con actividad</div></div>
+            <div class="kpi" style="--kc:var(--green)"><div class="k">Registros y cambios</div><div class="v" id="auKCam">0</div><div class="s">creados o modificados</div></div>
+            <div class="kpi" style="--kc:var(--red)"><div class="k">Eliminaciones</div><div class="v" id="auKDel">0</div><div class="s">revise con atención</div></div>
+          </div>
+          <div class="au-pies">
+            <div class="chart-card pie-card"><div class="cc-head"><div><h4>Eventos por tipo</h4><p>Toque una sección para ver el detalle</p></div></div>
+              <div class="pie-wrap stack"><div class="pie-box" id="pbAuTipo"><canvas id="chAuTipo" role="img" aria-label="Eventos por tipo"></canvas><div class="pie-center"></div></div><div class="pie-legend" id="plAuTipo"></div></div></div>
+            <div class="chart-card pie-card"><div class="cc-head"><div><h4>Actividad por usuario</h4><p>Número de eventos de cada usuario</p></div></div>
+              <div class="pie-wrap stack"><div class="pie-box" id="pbAuUser"><canvas id="chAuUser" role="img" aria-label="Actividad por usuario"></canvas><div class="pie-center"></div></div><div class="pie-legend" id="plAuUser"></div></div></div>
+          </div>
+          <div class="au-list" id="auList"></div>
+          <div class="empty hidden" id="auEmpty"><div class="big">Sin eventos en este período</div><div>Cambie el período o los filtros.</div></div>
+          <div style="text-align:center;margin-top:12px"><button class="btn sm ghost hidden" id="auMore" type="button" style="width:auto">Mostrar más</button></div>
+        </div>
+      </div>
     </div>
       <footer class="app-foot">&copy; 2026 Eduar Varela · Versión 2.2 · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
   </main>
@@ -4197,28 +4708,43 @@
   </div>
 </div>
 
-<!-- MODAL: gestionar mantenimiento (citas INGLOSA con datos autocompletados) -->
-<div class="modal" id="gmModal">
+
+<!-- MODAL: usuario (crear / editar) -->
+<div class="modal" id="usrModal">
   <div class="modal-box">
-    <div class="mh"><h4>Gestionar mantenimiento</h4><button class="x" type="button" aria-label="Cerrar" id="gmClose">Cerrar</button></div>
+    <div class="mh"><h4 id="usrTitle">Nuevo usuario</h4><button class="x" type="button" aria-label="Cerrar" id="usrClose">Cerrar</button></div>
     <div class="mb">
-      <div class="mr-veh"><div class="plate" id="gmPlate"></div><div><div class="mk" id="gmMk"></div><div class="sub" id="gmSub"></div></div></div>
-      <div class="gm-list" id="gmList"></div>
-      <div class="share-btns">
-        <button class="btn teal" id="gmOpen" type="button">Abrir citas INGLOSA y autocompletar</button>
-        <button class="btn ghost" id="gmCopy" type="button">Copiar todos los datos</button>
+      <div class="field"><label for="usrNombre">Nombre completo <span class="req" style="color:var(--red)">*</span></label><input id="usrNombre" maxlength="60" autocomplete="off"></div>
+      <div class="field"><label for="usrEmail">Correo electrónico <span class="req" style="color:var(--red)">*</span></label><input id="usrEmail" type="email" maxlength="120" autocomplete="off"></div>
+      <div id="usrPwWrap">
+        <div class="grid2">
+          <div class="field"><label for="usrPass">Contraseña <span class="req" style="color:var(--red)">*</span></label><input id="usrPass" type="password" maxlength="72" autocomplete="new-password"></div>
+          <div class="field"><label for="usrPass2">Confirmar contraseña <span class="req" style="color:var(--red)">*</span></label><input id="usrPass2" type="password" maxlength="72" autocomplete="new-password"></div>
+        </div>
+        <div class="pw-rules" id="usrPwRules"></div>
       </div>
-      <details class="gm-help">
-        <summary>¿Cómo se autocompletan los campos en INGLOSA?</summary>
-        <p>Por seguridad, ninguna página puede escribir en otra. Por eso el botón copia los datos del vehículo y el autocompletado se hace con un marcador que se guarda <b>una sola vez</b>:</p>
-        <ol>
-          <li>Arrastre este botón a la barra de favoritos: <a class="gm-bm" id="gmBookmark" href="#">Autocompletar INGLOSA</a><br>
-            En el teléfono: <button class="mini" type="button" id="gmCopyBm">Copiar código</button>, cree un favorito llamado <b>Autocompletar INGLOSA</b> y pegue el código como dirección.</li>
-          <li>Pulse <b>Abrir citas INGLOSA y autocompletar</b> (los datos quedan copiados).</li>
-          <li>En la página de INGLOSA abra el favorito <b>Autocompletar INGLOSA</b> (en el teléfono, escriba ese nombre en la barra de direcciones y elíjalo). Los campos del vehículo y del solicitante se llenan solos.</li>
-        </ol>
-        <p>Si el navegador no permite leer lo copiado, el marcador le pedirá pegar los datos. Revise siempre la cita antes de enviarla.</p>
-      </details>
+      <div class="field"><label for="usrRol">Rol</label><select id="usrRol"><option value="usuario">Usuario · registra abastecimientos</option><option value="admin">Administrador · reportes, vehículos y estadísticas</option></select></div>
+      <label class="chk"><input type="checkbox" id="usrSuper"><span><b>Super usuario</b><small>Administra usuarios, configuración y auditoría. Requiere rol Administrador.</small></span></label>
+      <label class="chk" id="usrActWrap"><input type="checkbox" id="usrActivo" checked><span><b>Cuenta activa</b><small>Si se desactiva, el usuario no podrá iniciar sesión.</small></span></label>
+      <div class="err" id="usrErr"></div>
+      <div class="share-btns"><button class="btn" id="usrSave" type="button"><span>Guardar</span></button><button class="btn ghost" id="usrCancel" type="button">Cancelar</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: cambiar contraseña de un usuario -->
+<div class="modal" id="pwdModal">
+  <div class="modal-box">
+    <div class="mh"><h4>Restablecer contraseña</h4><button class="x" type="button" aria-label="Cerrar" id="pwdClose">Cerrar</button></div>
+    <div class="mb">
+      <div class="mant-box" id="pwdInfo" style="margin-bottom:14px"></div>
+      <div class="grid2">
+        <div class="field"><label for="pwdNew">Nueva contraseña</label><input id="pwdNew" type="password" maxlength="72" autocomplete="new-password"></div>
+        <div class="field"><label for="pwdNew2">Confirmar contraseña</label><input id="pwdNew2" type="password" maxlength="72" autocomplete="new-password"></div>
+      </div>
+      <div class="pw-rules" id="pwdRules"></div>
+      <div class="err" id="pwdErr"></div>
+      <div class="share-btns"><button class="btn" id="pwdSave" type="button"><span>Cambiar contraseña</span></button><button class="btn ghost" id="pwdCancel" type="button">Cancelar</button></div>
     </div>
   </div>
 </div>
@@ -4296,16 +4822,16 @@ const ROSTER_URIP = [
   { no:5, marca:'HONDA',      tipo:'MOTOCICLETA', color:'NEGRO',         motor:'MDO34E-E512340', chasis:'9C2MD3400ER512340', placa:'N-05', kmBase:18823,     rentado:'',  organico:'X', equipo:'10001591', s1:'X', s3:'',  s4:'' },
   { no:6, marca:'HONDA',      tipo:'MOTOCICLETA', color:'NEGRO',         motor:'ND34E-E512373',  chasis:'9C2MO3400ER512373', placa:'N-19', kmBase:31118,     rentado:'',  organico:'X', equipo:'10001580', s1:'',  s3:'X', s4:'' }
 ];
-const ROSTER_JEFE = 'ELENA YASMINA ORDOÑEZ GOMEZ';
-const ROSTER_CARGO = 'JEFE URIP-III LA PAZ';
-const ROSTER_GRADO = 'SUB COMISARIO DE POLICIA';
+let ROSTER_JEFE = 'ELENA YASMINA ORDOÑEZ GOMEZ';
+let ROSTER_CARGO = 'JEFE URIP-III LA PAZ';
+let ROSTER_GRADO = 'SUB COMISARIO DE POLICIA';
 /* Mantenimiento preventivo: cada 5,000 km, alerta cuando faltan 1,000 km. */
-const MANT_INTERVALO = 5000;
-const MANT_AVISO = 1000;
+let MANT_INTERVALO = 5000;
+let MANT_AVISO = 1000;
 /* Datos fijos del reporte de mantenimiento por WhatsApp (puede editarlos). */
-const MANT_PROPIETARIO = 'INGLOSA';
-const MANT_ASIGNADO = 'DIPOL URIP-III LA PAZ';
-const MANT_FIRMA = ['Sub Comisario de Policía','Elena Ordoñez Gomez','Jefe URIP-III'];
+let MANT_PROPIETARIO = 'INGLOSA';
+let MANT_ASIGNADO = 'DIPOL URIP-III LA PAZ';
+let MANT_FIRMA = ['Sub Comisario de Policía','Elena Ordoñez Gomez','Jefe URIP-III'];
 function saludoNocturno(dateObj){
   return 'Buenas noche, con todo respeto se envía los kilometrajes de la URIP III La Paz.\nFecha: '+fechaLarga(dateObj)+'.';
 }
@@ -4419,9 +4945,9 @@ async function kmActualMap(){
 /* Mantenimiento (en el propio registro del vehículo) */
 function vehById(id){ return vehiculos.find(v=>v.id===id)||{}; }
 /* Las motocicletas llevan mantenimiento preventivo cada 3,000 km (si no se cambió a mano otro límite) */
-const MANT_INTERVALO_MOTO = 3000;
+let MANT_INTERVALO_MOTO = 3000;
 function limiteMant(v){ const l=(v.limiteMantenimiento!=null?Number(v.limiteMantenimiento):null);
-  if(grupoDe(v)==='moto' && (l==null || l===MANT_INTERVALO)) return MANT_INTERVALO_MOTO;
+  if(grupoDe(v)==='moto' && (l==null || l===MANT_INTERVALO || l===5000)) return MANT_INTERVALO_MOTO;
   return l!=null?l:MANT_INTERVALO; }
 function mantOf(id){ const v=vehById(id); return { limite:limiteMant(v), kmBase:Math.max(Number(v.kmBaseMantenimiento)||0, kmBaseRoster(v)||0) }; }
 async function saveMant(id,obj){ const upd={}; if(obj.limite!=null)upd.limite_mantenimiento=obj.limite; if(obj.kmBase!=null)upd.km_base_mantenimiento=obj.kmBase;
@@ -4458,7 +4984,7 @@ $('#u').addEventListener('keydown',e=>{if(e.key==='Enter')$('#p').focus();});
 /* ---- Seguridad del inicio de sesión ----
    Tras 5 intentos fallidos el acceso se bloquea 1 minuto en este dispositivo,
    y el tiempo se duplica en cada bloqueo siguiente (máx. 15 min). */
-const SEG_MAX_INTENTOS=5, SEG_INACTIVIDAD_MIN=20, SEG_KEY='urip_seg_login';
+const SEG_MAX_INTENTOS=5, SEG_KEY='urip_seg_login'; let SEG_INACTIVIDAD_MIN=20;
 function segLeer(){ try{ return JSON.parse(localStorage.getItem(SEG_KEY)||'{}'); }catch(_){ return {}; } }
 function segGuardar(o){ try{ localStorage.setItem(SEG_KEY,JSON.stringify(o)); }catch(_){} }
 function segBloqueoRestante(){ const o=segLeer(); return Math.max(0,(o.hasta||0)-Date.now()); }
@@ -4479,7 +5005,7 @@ async function doLogin(){
     if(error){ segFallo(); const r=SEG_MAX_INTENTOS-(segLeer().n||0);
       $('#loginErr').textContent= segBloqueoRestante()>0 ? 'Demasiados intentos fallidos. El acceso quedó bloqueado temporalmente.'
         : 'Correo o contraseña incorrectos.'+(r<=2?' Le quedan '+r+' intento(s).':''); }
-    else { segExito(); }
+    else { segExito(); setTimeout(()=>auditar('inicio_sesion',{dispositivo:navigator.userAgent.slice(0,120)}),1500); }
   }catch(e){ $('#loginErr').textContent='No se pudo conectar. Revise su internet.'; }
   finally{ btn.classList.remove('loading'); btn.textContent='Iniciar sesión'; }
 }
@@ -4499,13 +5025,16 @@ function mostrarLogin(){
   ['#vehGrid','#admBody','#admVehGrid'].forEach(id=>{ const e=$(id); if(e) e.innerHTML=''; });
   selectedVeh=null; vehiculos=[];
   $('#adminBar').classList.add('hidden'); $('#userBar').classList.add('hidden'); $('#statsSec').classList.add('hidden');
+  document.querySelectorAll('.super-only').forEach(b=>b.classList.add('hidden')); $('#navGrpAdm').classList.add('hidden');
+  $('#auList').innerHTML=''; auDatos=[]; $('#usrTbody').innerHTML=''; $('#permPop').classList.add('hidden');
   $('#app').classList.add('hidden'); if(!ordMode) $('#login').classList.remove('hidden');
   $('#p').value=''; window.scrollTo(0,0);
   cargarAlertaLogin();
 }
-function cerrarSesion(){
+function cerrarSesion(motivo){
   /* Primero se borra la sesión del dispositivo; aunque algo falle, la pantalla vuelve al inicio */
-  if(sb){ try{ sb.auth.signOut({scope:'local'}).catch(()=>{}); }catch(_){} }
+  const reg=currentUser?auditar(motivo==='inactividad'?'cierre_inactividad':'cierre_sesion',null):Promise.resolve();
+  if(sb){ try{ Promise.race([reg,new Promise(r=>setTimeout(r,1200))]).finally(()=>{ sb.auth.signOut({scope:'local'}).catch(()=>{}); }); }catch(_){} }
   try{ mostrarLogin(); }
   catch(_){ $('#app').classList.add('hidden'); $('#login').classList.remove('hidden'); }
   try{ sessionStorage.clear(); }catch(_){}
@@ -4517,7 +5046,7 @@ let segUltimaAct=Date.now(), segAvisado=false;
 setInterval(()=>{
   if(!currentUser || !sb) return;
   const inactivo=Date.now()-segUltimaAct, lim=SEG_INACTIVIDAD_MIN*60000;
-  if(inactivo>=lim){ cerrarSesion(); toast('Sesión cerrada por inactividad',true); }
+  if(inactivo>=lim){ cerrarSesion('inactividad'); toast('Sesión cerrada por inactividad',true); }
   else if(inactivo>=lim-60000 && !segAvisado){ segAvisado=true; toast('Su sesión se cerrará en 1 minuto por inactividad. Toque la pantalla para continuar.'); }
 },15000);
 
@@ -4534,14 +5063,22 @@ async function afterLogin(user){
   if(currentUser && currentUser.uid===user.id) return;
   const { data, error }=await sb.from('perfiles').select('nombre,rol').eq('id', user.id).single();
   if(error||!data){ await sb.auth.signOut({scope:'local'}).catch(()=>{}); mostrarLogin(); $('#loginErr').textContent='Tu usuario no tiene perfil/rol asignado.'; return; }
-  currentUser={ uid:user.id, nombre:data.nombre||user.email, email:user.email||'', rol:(data.rol==='admin'?'admin':'usuario') };
+  currentUser={ uid:user.id, nombre:data.nombre||user.email, email:user.email||'', rol:(data.rol==='admin'?'admin':'usuario'), super:false };
+  try{ let rs=await sb.from('perfiles').select('es_super,activo').eq('id',user.id).single();
+    if(rs.error) rs=await sb.from('perfiles').select('es_super').eq('id',user.id).single();
+    if(rs.data && rs.data.activo===false){ currentUser=null; await sb.auth.signOut({scope:'local'}).catch(()=>{}); mostrarLogin();
+      $('#loginErr').textContent='Su usuario está desactivado. Comuníquese con el administrador del sistema.'; return; }
+    currentUser.super=!!(rs.data && rs.data.es_super===true) && currentUser.rol==='admin'; }catch(_){}
+  document.querySelectorAll('.super-only').forEach(b=>b.classList.toggle('hidden',!currentUser.super));
+  $('#navGrpAdm').classList.toggle('hidden',!currentUser.super);
+  await cargarConfig();
   try{ localStorage.setItem('urip_ultimo_nombre', primerNombre(currentUser.nombre)); }catch(_){}
   await loadVehiculos();
   if(ordMode) closeOrderView();
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
   $('#uName').textContent=currentUser.nombre;
   $('#uAvatar').textContent=String(currentUser.nombre||'U').replace(/@.*/,'').split(/[\s._-]+/).filter(Boolean).slice(0,2).map(s=>s[0].toUpperCase()).join('')||'U';
-  $('#uRole').textContent=currentUser.rol==='admin'?'Administrador':'Usuario';
+  $('#uRole').textContent=currentUser.super?'Super usuario':(currentUser.rol==='admin'?'Administrador':'Usuario');
   mostrarBienvenida();
   transicionDipol();
   refreshMantAlerts();
@@ -4556,8 +5093,8 @@ $('#userBar').addEventListener('click',e=>{const b=e.target.closest('button');if
 function switchUser(v){
   /* Los usuarios normales no tienen acceso a las estadísticas (solo administradores) */
   if(v!=='abast') v='abast';
-  [...$('#userBar').children].forEach(x=>x.classList.toggle('active',x.dataset.u===v));
-  renderSelect();
+  $('#userBar').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.u===v));
+  renderSelect(); actualizarMigas();
 }
 
 /* Grupos de vehículos según el tipo registrado */
@@ -4598,7 +5135,7 @@ function pintarVehiculos(){
       (led?'<div class="veh-spec">'+led+'</div>':'')+
       (led?'<div class="veh-spec mant-acts">'+botonesMant(v.id,true)+'</div>':'')+
       '<div class="row-actions"><button class="btn sm" data-abast="1">Abastecer este vehículo</button>'+
-        '<button class="mini teal" data-gest="'+escH(v.id)+'" title="Datos para la cita en INGLOSA">Gestionar mantenimiento</button></div>';
+        '<button class="mini teal" data-gest="'+escH(v.id)+'" title="Abrir la página de citas de INGLOSA">Gestionar mantenimiento</button></div>';
     card.querySelector('[data-abast]').addEventListener('click',()=>selectVehicle(v));
     grid.appendChild(card);
   });
@@ -4735,12 +5272,16 @@ function showAdmin(){ $('#userBar').classList.add('hidden'); $('#adminBar').clas
 $('#adminBar').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;switchAdmin(b.dataset.v);});
 function switchAdmin(v){
   if(!currentUser || currentUser.rol!=='admin') return;   /* la base de datos también lo impide (RLS) */
-  [...$('#adminBar').children].forEach(x=>x.classList.toggle('active',x.dataset.v===v));
+  $('#adminBar').querySelectorAll('button').forEach(x=>x.classList.toggle('active',x.dataset.v===v));
   if(v==='abast'){ $('#adminView').classList.add('hidden'); renderSelect(); }
   else if(v==='graf'){ $('#adminView').classList.add('hidden'); showStats(); }
   else{ $('#statsSec').classList.add('hidden'); $('#opSelect').classList.add('hidden'); $('#opForm').classList.add('hidden'); $('#adminView').classList.remove('hidden');
+    if(['audit','usr','cfg'].includes(v) && !currentUser.super){ v='rep'; }
     $('#admReportes').classList.toggle('hidden',v!=='rep'); $('#admVehiculos').classList.toggle('hidden',v!=='veh'); $('#admOrden').classList.toggle('hidden',v!=='orden');
-    if(v==='rep')refreshAdmin(); else if(v==='orden')refreshOrdenes(); else renderAdmVehGrid(); }
+    $('#admAuditoria').classList.toggle('hidden',v!=='audit'); $('#admUsuarios').classList.toggle('hidden',v!=='usr'); $('#admConfig').classList.toggle('hidden',v!=='cfg');
+    if(v==='rep')refreshAdmin(); else if(v==='orden')refreshOrdenes(); else if(v==='audit') cargarAuditoria();
+    else if(v==='usr') cargarUsuarios(); else if(v==='cfg') abrirConfig(); else renderAdmVehGrid(); }
+  actualizarMigas();
 }
 $('#periodSeg').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;period=b.dataset.p;
   [...$('#periodSeg').children].forEach(x=>x.classList.toggle('active',x===b));
@@ -5270,7 +5811,7 @@ $('#ordExcelBtn').addEventListener('click',async()=>{
 
 /* ===================== ESTADÍSTICAS DE CONSUMO (solo administradores) ===================== */
 let statsPeriod='mes', consumoModo='l', lastStatsRecs=[]; const charts={};
-const ST={ navy:'#0B2E63', navyHover:'#061C3F', azul:'#0077AD', azulHover:'#005B85', ink:'#141A22', ink2:'#5A6474', muted:'#8791A0', grid:'#E9EDF2', line:'#D8DEE7', surface:'#FFFFFF', other:'#B8C2D1' };
+const ST={ navy:'#142D4E', navyHover:'#0D1F37', azul:'#25845A', azulHover:'#1C6845', ink:'#141A22', ink2:'#5A6474', muted:'#8791A0', grid:'#E9EDF2', line:'#D8DEE7', surface:'#FFFFFF', other:'#B8C2D1' };
 const MESES=['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 const MESES_C=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const isSmall=()=>window.innerWidth<600;
@@ -5481,6 +6022,8 @@ function renderCharts(recs){
   hbar('chGas','#boxGas',gs,g=>g.n,ST.navy,(v)=>v+' · '+Math.round(v/total*100)+'%',
     g=>({title:g.label,lines:[g.n+(g.n===1?' abastecimiento':' abastecimientos')+' ('+Math.round(g.n/total*100)+'%)',fmtNum(g.l)+' litros','Total: '+fmtLps(g.p)]}),false);
 
+  drawPies(sorted);
+
   /* Tabla detalle */
   const maxL=Math.max(...vs.map(g=>g.l))||1;
   $('#stTbody').innerHTML=[...vs].sort((a,b)=>b.l-a.l).map(g=>
@@ -5491,6 +6034,78 @@ function renderCharts(recs){
     '<td class="n">'+(g.rec>0?Math.round(g.rec).toLocaleString('es-HN')+' km':'—')+'</td>'+
     '<td class="n">'+(g.rend?'<b>'+fmtNum(g.rend)+'</b> km/L':'—')+'</td></tr>').join('');
 }
+
+
+/* ---------- Gráficos de pastel interactivos ----------
+   Pasar el dedo o el ratón muestra el detalle en el centro; tocar una sección la resalta;
+   tocar un nombre de la lista oculta o muestra esa sección y los porcentajes se recalculan. */
+const PIE_COLORS=['#142D4E','#25845A','#B69A42','#5C7A99','#8A2D2D','#263746','#7A8B5A','#A3B1C2','#4F6D7A','#C9B27A'];
+let pieVehModo='p';
+function pastel(key,boxSel,legSel,items,o){
+  const box=$(boxSel), leg=$(legSel); if(!box||!leg) return;
+  const cv=box.querySelector('canvas'), center=box.querySelector('.pie-center');
+  if(charts[key]){ charts[key].destroy(); delete charts[key]; }
+  if(!items.length){ leg.innerHTML=''; center.innerHTML='<span>Sin datos</span>'; return; }
+  const colors=items.map((x,i)=>x.other?ST.other:PIE_COLORS[i%PIE_COLORS.length]);
+  const oculto=items.map(()=>false); let sel=null;
+  const visTotal=()=>items.reduce((a,x,i)=>a+(oculto[i]?0:x.v),0);
+  const pct=i=>{ const t=visTotal(); return (oculto[i]||!t)?0:x100(items[i].v/t); };
+  function x100(f){ return Math.round(f*1000)/10; }
+  function pintarCentro(i){
+    center.classList.remove('pop'); void center.offsetWidth; center.classList.add('pop');
+    if(i==null||oculto[i]){ const vis=items.filter((_,k)=>!oculto[k]).length;
+      center.innerHTML='<small>'+escH(o.totalLbl)+'</small><b>'+escH(o.fmt(visTotal()))+'</b><span>'+vis+' '+escH(vis===1?o.unit1:o.unit)+'</span>'; return; }
+    const x=items[i];
+    center.innerHTML='<small style="color:'+colors[i]+'">'+escH(x.label)+'</small><b>'+escH(o.fmt(x.v))+'</b><span>'+pct(i).toLocaleString('es-HN')+'% del total'+(x.sub?'<br>'+escH(x.sub):'')+'</span>';
+  }
+  function marcar(i){ leg.querySelectorAll('.pl-item').forEach(b=>b.classList.toggle('on',+b.dataset.i===i)); }
+  function pintarLeyenda(){
+    leg.innerHTML=items.map((x,i)=>'<button type="button" class="pl-item'+(oculto[i]?' off':'')+'" data-i="'+i+'" aria-pressed="'+(!oculto[i])+'" title="Tocar para '+(oculto[i]?'mostrar':'ocultar')+'">'+
+      '<i style="background:'+colors[i]+'"></i><span class="pl-l">'+escH(x.label)+(x.desc?'<small>'+escH(x.desc)+'</small>':'')+'</span>'+
+      '<span class="pl-v">'+escH(o.fmt(x.v))+'</span><span class="pl-p">'+pct(i).toLocaleString('es-HN')+'%</span>'+
+      '<em class="pl-bar"><u style="width:'+pct(i)+'%;background:'+colors[i]+'"></u></em></button>').join('');
+  }
+  function activar(i){ const ch=charts[key]; if(!ch) return;
+    ch.setActiveElements(i==null||oculto[i]?[]:[{datasetIndex:0,index:i}]); ch.update(); pintarCentro(i); marcar(i); }
+  charts[key]=new Chart(cv,{ type:'doughnut',
+    data:{ labels:items.map(x=>x.label), datasets:[{ data:items.map(x=>x.v), backgroundColor:colors, hoverBackgroundColor:colors,
+      borderColor:'#fff', borderWidth:2, hoverBorderWidth:0, hoverOffset:16, borderRadius:5, spacing:2 }] },
+    options:{ responsive:true, maintainAspectRatio:false, cutout:'66%', layout:{padding:16},
+      animation:{ animateRotate:true, animateScale:true, duration:900, easing:'easeOutQuart' },
+      plugins:{ legend:{display:false}, tooltip:{enabled:false} },
+      onHover:(e,els)=>{ cv.style.cursor=els.length?'pointer':'default'; const i=els.length?els[0].index:sel; pintarCentro(i); marcar(i); },
+      onClick:(e,els)=>{ const i=els.length?els[0].index:null; sel=(i===sel)?null:i; activar(sel); } } });
+  cv.addEventListener('mouseleave',()=>{ pintarCentro(sel); marcar(sel); });
+  pintarLeyenda(); pintarCentro(null);
+  leg.onmouseover=e=>{ const b=e.target.closest('.pl-item'); if(b && !oculto[+b.dataset.i]) activar(+b.dataset.i); };
+  leg.onmouseleave=()=>activar(sel);
+  leg.onclick=e=>{ const b=e.target.closest('.pl-item'); if(!b) return; const i=+b.dataset.i;
+    if(!oculto[i] && items.filter((_,k)=>!oculto[k]).length===1){ toast('Debe quedar al menos una sección visible',true); return; }
+    oculto[i]=!oculto[i]; charts[key].toggleDataVisibility(i); if(sel===i) sel=null;
+    charts[key].update(); pintarLeyenda(); pintarCentro(sel); };
+}
+function drawPies(sorted){
+  const vs=groupVehiculos(sorted);
+  const campo=pieVehModo==='p'?'p':(pieVehModo==='l'?'l':'n');
+  const ord=topN([...vs].sort((a,b)=>b[campo]-a[campo]),campo,8);
+  const fmtV=pieVehModo==='p'?(v=>fmtLps(v)):(pieVehModo==='l'?(v=>fmtNum(v,1)+' L'):(v=>v+(v===1?' abast.':' abast.')));
+  pastel('pieVeh','#pbVeh','#plVeh',ord.map(g=>({label:g.placa,desc:g.desc,v:+(+g[campo]).toFixed(2),other:!!g.other,
+      sub:g.other?'':(g.n+(g.n===1?' abastecimiento':' abastecimientos'))})),
+    {fmt:fmtV, totalLbl:pieVehModo==='p'?'Total gastado':(pieVehModo==='l'?'Total litros':'Abastecimientos'), unit:'vehículos', unit1:'vehículo'});
+  const tm={}; const NOM={pickup:'Pick up',moto:'Motocicleta',otros:'Otros'};
+  sorted.forEach(r=>{ const k=grupoDe(vehChars(r)); if(!tm[k]) tm[k]={label:NOM[k],v:0,n:0}; tm[k].v+=Number(r.lempiras||0); tm[k].n++; });
+  pastel('pieTipo','#pbTipo','#plTipo',Object.values(tm).sort((a,b)=>b.v-a.v).map(x=>({label:x.label,v:+x.v.toFixed(2),sub:x.n+(x.n===1?' abastecimiento':' abastecimientos')})),
+    {fmt:v=>fmtLps(v), totalLbl:'Total gastado', unit:'tipos', unit1:'tipo'});
+  const gm={};
+  sorted.forEach(r=>{ const k=String(r.gasolinera||'—').trim()||'—'; if(!gm[k]) gm[k]={label:k,v:0,n:0}; gm[k].v+=Number(r.litros||0); gm[k].n++; });
+  let gs=Object.values(gm).sort((a,b)=>b.v-a.v);
+  if(gs.length>7){ const rest=gs.slice(6); gs=gs.slice(0,6).concat([{label:'Otras ('+rest.length+')',v:rest.reduce((a,x)=>a+x.v,0),n:rest.reduce((a,x)=>a+x.n,0),other:true}]); }
+  pastel('pieGas','#pbGas','#plGas',gs.map(x=>({label:x.label,v:+x.v.toFixed(2),other:!!x.other,sub:x.n+(x.n===1?' abastecimiento':' abastecimientos')})),
+    {fmt:v=>fmtNum(v,1)+' L', totalLbl:'Total litros', unit:'gasolineras', unit1:'gasolinera'});
+}
+$('#pieVehTg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; pieVehModo=b.dataset.m;
+  [...$('#pieVehTg').children].forEach(x=>x.classList.toggle('active',x===b));
+  drawPies([...lastStatsRecs].sort((a,c)=>new Date(a.fecha)-new Date(c.fecha))); });
 
 function openPhoto(src){ const u=urlFotoSegura(src); if(!u){ toast('Enlace de foto no válido',true); return; }
   $('#modalImg').src=u; $('#photoModal').classList.add('show'); }
@@ -5547,7 +6162,7 @@ async function renderAdmVehGrid(){
 async function seedVehiculos(){
   if(!currentUser || currentUser.rol!=='admin') return;
   const rows=DEFAULT_VEHICULOS.map(v=>({ marca:v.marca, tipo:v.tipo, color:v.color, modelo:v.modelo, motor:v.motor, chasis:v.chasis,
-    anio:v.anio, placa:v.placa, numero_equipo:v.numeroEquipo, limite_mantenimiento:5000, km_base_mantenimiento:0 }));
+    anio:v.anio, placa:v.placa, numero_equipo:v.numeroEquipo, limite_mantenimiento:MANT_INTERVALO, km_base_mantenimiento:0 }));
   const { error }=await sb.from('vehiculos').insert(rows);
   if(error){ toast('No se pudieron cargar',true); return; }
   await loadVehiculos(); renderAdmVehGrid(); toast('Vehículos iniciales cargados');
@@ -5566,7 +6181,7 @@ $('#saveVeh').addEventListener('click',async()=>{
   const nuevo={ marca:marca.toUpperCase(), modelo:modelo.toUpperCase(), tipo,
     color:t('nvColor',25).toUpperCase()||'—', anio, placa,
     numero_equipo:t('nvEquipo',15), motor:t('nvMotor',25).toUpperCase(), chasis:t('nvChasis',25).toUpperCase(),
-    limite_mantenimiento:5000, km_base_mantenimiento:0 };
+    limite_mantenimiento:MANT_INTERVALO, km_base_mantenimiento:0 };
   const { error }=await sb.from('vehiculos').insert(nuevo);
   if(error){ $('#nvErr').textContent='No se pudo guardar el vehículo.'; return; }
   await loadVehiculos(); $('#vehModal').classList.remove('show'); renderAdmVehGrid(); toast('Vehículo agregado');
@@ -5648,7 +6263,7 @@ function renderOdo(){
     '<div class="odo-bar"><i style="width:'+pct+'%"></i><em style="left:'+mark+'%"></em></div>'+
     '<div class="odo-msg">'+msg+'</div>';
   $('#odoRep').addEventListener('click',()=>openMantReport(selectedVeh.id));
-  $('#odoCita').addEventListener('click',()=>openGestionMant(selectedVeh.id));
+  $('#odoCita').addEventListener('click',abrirCitaInglosa);
   animarCuenta(st.restante);
 }
 function animarCuenta(target){
@@ -5763,6 +6378,7 @@ $('#mrSend').addEventListener('click',async()=>{
     const msgE=msgEntradaMant(mrVeh,km,taller,cond,desc);
     const memE=lsGet(); memE.taller=memE.taller||{}; memE.cond=memE.cond||{}; memE.taller[mrVeh.id]=taller; if(cond) memE.cond[mrVeh.id]=cond;
     memE.talleres=[taller].concat((memE.talleres||[]).filter(t=>t!==taller)).slice(0,8); lsSet(memE);
+    auditar('mant_entrada',{vehiculo:mrVeh.placa,km:km,taller:taller});
     if(abrirWhatsApp(msgE)){ toast('Entrada a mantenimiento lista para enviar'); cerrarMR(); }
     else { $('#mrOpen').href='https://wa.me/?text='+encodeURIComponent(msgE); $('#mrOpen').classList.remove('hidden'); $('#mrSend').classList.add('hidden'); }
     return;
@@ -5771,6 +6387,7 @@ $('#mrSend').addEventListener('click',async()=>{
   if(!taller){ err.textContent='Escriba el taller o lugar donde se realizó el mantenimiento.'; $('#mrTaller').focus(); return; }
   if(!desc){ err.textContent='Escriba la descripción de los cambios realizados en el mantenimiento.'; $('#mrDesc').focus(); return; }
   if(km>mrSt.cur+MANT_INTERVALO && !confirm('El kilometraje '+fmtKm(km)+' es mucho mayor que el actual ('+fmtKm(mrSt.cur)+'). ¿Es correcto?')) return;
+  if(!confirm('¿Registrar la salida de mantenimiento de '+mrVeh.placa+' a los '+fmtKm(km)+' km?\n\nEl conteo del próximo mantenimiento se reiniciará desde ese kilometraje.')) return;
   const msg=msgReporteMant(mrVeh,km,taller,cond,mrSt.limite,desc);
   const url='https://wa.me/?text='+encodeURIComponent(msg);
   const btn=$('#mrSend'); btn.disabled=true; btn.classList.add('loading'); btn.querySelector('span').textContent='Guardando…';
@@ -6021,12 +6638,477 @@ $('#privBack2').addEventListener('click',()=>cerrarPrivacidad(false));
 window.addEventListener('popstate',()=>{ if(privAbierta) cerrarPrivacidad(true); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && privAbierta) cerrarPrivacidad(false); });
 if(location.hash==='#privacidad'){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(_){} abrirPrivacidad(); }
+
+/* =====================================================================
+   AUDITORÍA (solo super usuarios)
+   Los cambios en la base (crear, modificar, eliminar) los registra Supabase con triggers;
+   la aplicación agrega inicios/cierres de sesión, descargas y envíos. Ver auditoria.sql.
+   ===================================================================== */
+function auditar(accion,detalle){
+  if(!sb||!currentUser) return Promise.resolve();
+  try{ return Promise.resolve(sb.rpc('registrar_auditoria',{p_accion:accion,p_detalle:detalle||null})).then(()=>{},()=>{}); }catch(_){ return Promise.resolve(); }
+}
+/* Descargas y envíos de reportes */
+document.addEventListener('click',e=>{ const b=e.target.closest('#downloadBtn,#downloadPdfBtn,#ordExcelBtn,#dailyPdfBtn,#auExcel'); if(!b) return;
+  const m={downloadBtn:['exportar_excel','Reportes'],downloadPdfBtn:['exportar_pdf','Reportes'],ordExcelBtn:['exportar_excel','Con orden'],
+    dailyPdfBtn:['compartir_reporte','Reporte diario'],auExcel:['exportar_excel','Auditoría']}[b.id];
+  auditar(m[0],{seccion:m[1],periodo:(b.id==='ordExcelBtn'||b.id==='auExcel')?undefined:period}); },true);
+
+const AU_TABLAS={abastecimientos:'abastecimiento',vehiculos:'vehículo',abastecimientos_orden:'abastecimiento con orden',
+  vehiculos_orden:'vehículo guardado (con orden)',perfiles:'perfil de usuario',mantenimientos:'mantenimiento',configuracion:'parámetro de configuración'};
+/* Íconos SVG (trazos estilo Lucide) */
+const AU_SVG=d=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+'</svg>';
+const AU_I={
+  mas:AU_SVG('<path d="M12 5v14M5 12h14"/>'), lapiz:AU_SVG('<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/>'),
+  basura:AU_SVG('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>'), llave:AU_SVG('<circle cx="7.5" cy="15.5" r="4.5"/><path d="m21 2-9.6 9.6M15.5 7.5l3 3L22 7l-3-3"/>'),
+  salir:AU_SVG('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5M21 12H9"/>'), reloj:AU_SVG('<circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>'),
+  descarga:AU_SVG('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/>'), enviar:AU_SVG('<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>'),
+  llaveIng:AU_SVG('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/>'),
+  externo:AU_SVG('<path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>'), punto:AU_SVG('<circle cx="12" cy="12" r="3"/>')
+};
+const AU_TIPOS={
+  INSERT:{n:'Creó',ico:AU_I.mas,c:'#25845A'}, UPDATE:{n:'Modificó',ico:AU_I.lapiz,c:'#1D3D64'}, DELETE:{n:'Eliminó',ico:AU_I.basura,c:'#B42318'},
+  inicio_sesion:{n:'Inicio de sesión',ico:AU_I.llave,c:'#142D4E'}, cierre_sesion:{n:'Cierre de sesión',ico:AU_I.salir,c:'#263746'},
+  cierre_inactividad:{n:'Cierre por inactividad',ico:AU_I.reloj,c:'#5A6474'}, exportar_excel:{n:'Descargó Excel',ico:AU_I.descarga,c:'#25845A'},
+  exportar_pdf:{n:'Descargó PDF',ico:AU_I.descarga,c:'#8A2D2D'}, compartir_reporte:{n:'Compartió reporte',ico:AU_I.enviar,c:'#1D3D64'},
+  mant_entrada:{n:'Entrada a mantenimiento',ico:AU_I.llaveIng,c:'#B69A42'}, cambio_clave:{n:'Restableció contraseña',ico:AU_I.llave,c:'#8A2D2D'}, inglosa:{n:'Abrió citas INGLOSA',ico:AU_I.externo,c:'#263746'}
+};
+const auTipo=a=>AU_TIPOS[a]||{n:String(a||'Otro').replace(/_/g,' '),ico:AU_I.punto,c:'#5A6474'};
+let auDatos=[], auPeriodo='7', auMostrar=60;
+function auDesde(){ const d=new Date(); d.setHours(0,0,0,0);
+  if(auPeriodo==='dia') return d; if(auPeriodo==='todo') return null; d.setDate(d.getDate()-(+auPeriodo-1)); return d; }
+async function cargarAuditoria(){
+  if(!currentUser||!currentUser.super) return;
+  const setup=$('#auSetup'), body=$('#auBody');
+  $('#auList').innerHTML='<div class="mant-box">Cargando auditoría…</div>';
+  let q=sb.from('auditoria').select('*').order('creado',{ascending:false}).limit(3000);
+  const d=auDesde(); if(d) q=q.gte('creado',d.toISOString());
+  const { data, error }=await q;
+  if(error){
+    body.classList.add('hidden'); setup.classList.remove('hidden');
+    setup.innerHTML=/does not exist|relation|schema cache|PGRST205|42P01/i.test((error.message||'')+' '+(error.code||''))
+      ? '<b>Falta activar la auditoría en Supabase.</b><br>Abra <b>Supabase → SQL Editor</b>, pegue el contenido del archivo <code>auditoria.sql</code> y pulse <b>Run</b>. Después recargue esta página.'
+      : '<b>No se pudo leer la auditoría.</b><br>'+escH(error.message||'Revise su conexión.')+'<br>Solo los usuarios con <code>es_super = true</code> en la tabla <code>perfiles</code> pueden verla.';
+    return;
+  }
+  setup.classList.add('hidden'); body.classList.remove('hidden');
+  auDatos=data||[]; auMostrar=60;
+  const tipos=[...new Set(auDatos.map(r=>r.accion))], users=[...new Set(auDatos.map(r=>r.usuario||'—'))].sort((a,b)=>a.localeCompare(b,'es'));
+  const tSel=$('#auTipo').value, uSel=$('#auUser').value;
+  $('#auTipo').innerHTML='<option value="">Todas</option>'+tipos.map(t=>'<option value="'+escH(t)+'"'+(t===tSel?' selected':'')+'>'+escH(auTipo(t).n)+'</option>').join('');
+  $('#auUser').innerHTML='<option value="">Todos</option>'+users.map(u=>'<option value="'+escH(u)+'"'+(u===uSel?' selected':'')+'>'+escH(u)+'</option>').join('');
+  pintarAuditoria();
+}
+function auFiltrados(){
+  const t=$('#auTipo').value, u=$('#auUser').value, q=$('#auBuscar').value.trim().toLowerCase();
+  return auDatos.filter(r=>(!t||r.accion===t)&&(!u||(r.usuario||'—')===u)&&
+    (!q||JSON.stringify([r.usuario,r.tabla,r.detalle,r.despues,r.antes]).toLowerCase().includes(q)));
+}
+function auResumen(r){
+  const obj=r.despues||r.antes||{}; const tabla=AU_TABLAS[r.tabla]||r.tabla||'';
+  const placa=obj.vehiculo_placa||obj.placa||(r.detalle&&r.detalle.vehiculo)||'';
+  const extra=[];
+  if(placa) extra.push('Placa '+placa);
+  if(obj.litros!=null) extra.push(fmtNum(obj.litros)+' L');
+  if(obj.lempiras!=null) extra.push(fmtLps(obj.lempiras));
+  if(obj.gasolinera) extra.push(obj.gasolinera);
+  if(obj.nombre && r.tabla==='perfiles') extra.push(obj.nombre);
+  if(r.detalle){ const dt=r.detalle; if(dt.seccion) extra.push(dt.seccion); if(dt.periodo) extra.push('Período: '+dt.periodo);
+    if(dt.taller) extra.push(dt.taller); if(dt.km) extra.push(fmtKm(dt.km)+' km'); }
+  const t=auTipo(r.accion);
+  const quien='<b>'+escH(r.usuario||'Sin usuario')+'</b>';
+  const titulo=tabla?(quien+' · '+t.n.toLowerCase()+' '+(r.accion==='DELETE'||r.accion==='INSERT'||r.accion==='UPDATE'?'un '+escH(tabla):escH(tabla))):(quien+' · '+escH(t.n));
+  return {titulo, extra:extra.map(escH).join(' · ')};
+}
+function auCambios(r){
+  const a=r.antes||{}, d=r.despues||{}; const keys=[...new Set(Object.keys(a).concat(Object.keys(d)))]
+    .filter(k=>!['updated_at','creado','created_at'].includes(k));
+  const fmt=v=>v==null||v===''?'—':(typeof v==='object'?JSON.stringify(v):String(v));
+  let filas;
+  if(r.accion==='UPDATE') filas=keys.filter(k=>JSON.stringify(a[k])!==JSON.stringify(d[k])).map(k=>'<tr><th>'+escH(k)+'</th><td class="old">'+escH(fmt(a[k]))+'</td><td class="new">'+escH(fmt(d[k]))+'</td></tr>');
+  else if(r.accion==='INSERT'||r.accion==='DELETE') filas=keys.map(k=>'<tr><th>'+escH(k)+'</th><td colspan="2" class="'+(r.accion==='DELETE'?'old':'')+'">'+escH(fmt(r.accion==='DELETE'?a[k]:d[k]))+'</td></tr>');
+  else filas=Object.keys(r.detalle||{}).map(k=>'<tr><th>'+escH(k)+'</th><td colspan="2">'+escH(fmt(r.detalle[k]))+'</td></tr>');
+  if(!filas.length) return '<div class="au-diff"><table><tr><td>Sin cambios en los datos.</td></tr></table></div>';
+  return '<div class="au-diff"><table>'+(r.accion==='UPDATE'?'<tr><th>Campo</th><th>Antes</th><th>Después</th></tr>':'')+filas.join('')+'</table></div>';
+}
+function pintarAuditoria(){
+  const lista=auFiltrados();
+  $('#auKEv').textContent=lista.length.toLocaleString('es-HN');
+  $('#auKEvS').textContent=auPeriodo==='dia'?'hoy':(auPeriodo==='todo'?'todo el historial':'últimos '+auPeriodo+' días');
+  $('#auKUs').textContent=new Set(lista.map(r=>r.usuario_id||r.usuario)).size;
+  $('#auKCam').textContent=lista.filter(r=>r.accion==='INSERT'||r.accion==='UPDATE').length;
+  $('#auKDel').textContent=lista.filter(r=>r.accion==='DELETE').length;
+  const tm={}; lista.forEach(r=>{ tm[r.accion]=(tm[r.accion]||0)+1; });
+  const um={}; lista.forEach(r=>{ const u=r.usuario||'Sin usuario'; um[u]=(um[u]||0)+1; });
+  if(typeof Chart!=='undefined'){
+    const tItems=Object.entries(tm).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({label:auTipo(k).n,v}));
+    let uItems=Object.entries(um).sort((a,b)=>b[1]-a[1]).map(([k,v])=>({label:k,v}));
+    if(uItems.length>8){ const r=uItems.slice(7); uItems=uItems.slice(0,7).concat([{label:'Otros ('+r.length+')',v:r.reduce((a,x)=>a+x.v,0),other:true}]); }
+    const fe=v=>v.toLocaleString('es-HN')+(v===1?' evento':' eventos');
+    pastel('auTipo','#pbAuTipo','#plAuTipo',tItems,{fmt:fe,totalLbl:'Eventos',unit:'tipos',unit1:'tipo'});
+    pastel('auUser','#pbAuUser','#plAuUser',uItems,{fmt:fe,totalLbl:'Eventos',unit:'usuarios',unit1:'usuario'});
+  }
+  $('#auEmpty').classList.toggle('hidden',!!lista.length);
+  let dia='', html='';
+  lista.slice(0,auMostrar).forEach((r,i)=>{
+    const f=new Date(r.creado); const dk=fechaLarga(f);
+    if(dk!==dia){ dia=dk; html+='<div class="au-day">'+escH(dk)+'</div>'; }
+    const t=auTipo(r.accion), s=auResumen(r);
+    const tieneDet=r.antes||r.despues||(r.detalle&&Object.keys(r.detalle).length);
+    html+='<div class="au-item" style="animation-delay:'+Math.min(i,12)*0.03+'s"><div class="au-ico" style="background:'+t.c+'">'+t.ico+'</div>'+
+      '<div class="au-main"><b>'+s.titulo+'</b>'+(s.extra?'<span>'+s.extra+'</span>':'')+
+      (tieneDet?'<button class="au-more" type="button" data-aui="'+i+'">Ver detalle</button>':'')+'</div>'+
+      '<div class="au-time"><b>'+pad(f.getHours())+':'+pad(f.getMinutes())+'</b>'+escH(t.n)+'</div></div>';
+  });
+  $('#auList').innerHTML=html;
+  $('#auMore').classList.toggle('hidden',lista.length<=auMostrar);
+}
+$('#auList').addEventListener('click',e=>{ const b=e.target.closest('[data-aui]'); if(!b) return;
+  const item=b.closest('.au-item'); const ex=item.querySelector('.au-diff');
+  if(ex){ ex.remove(); b.textContent='Ver detalle'; return; }
+  const r=auFiltrados()[+b.dataset.aui]; item.insertAdjacentHTML('beforeend',auCambios(r)); b.textContent='Ocultar detalle'; });
+$('#auPeriodSeg').addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; auPeriodo=b.dataset.ap;
+  [...$('#auPeriodSeg').children].forEach(x=>x.classList.toggle('active',x===b)); cargarAuditoria(); });
+['#auTipo','#auUser'].forEach(id=>$(id).addEventListener('change',()=>{ auMostrar=60; pintarAuditoria(); }));
+$('#auBuscar').addEventListener('input',()=>{ clearTimeout(window.__auT); window.__auT=setTimeout(()=>{ auMostrar=60; pintarAuditoria(); },250); });
+$('#auMore').addEventListener('click',()=>{ auMostrar+=60; pintarAuditoria(); });
+$('#auRefresh').addEventListener('click',cargarAuditoria);
+$('#auExcel').addEventListener('click',async()=>{
+  if(typeof ExcelJS==='undefined'){ toast('No se pudo cargar la librería de Excel',true); return; }
+  const lista=auFiltrados(); if(!lista.length){ toast('No hay eventos para descargar',true); return; }
+  const wb=new ExcelJS.Workbook(); const ws=wb.addWorksheet('Auditoría');
+  ws.columns=[{header:'Fecha',key:'f',width:12},{header:'Hora',key:'h',width:8},{header:'Usuario',key:'u',width:26},{header:'Acción',key:'a',width:24},
+    {header:'Tabla',key:'t',width:24},{header:'Resumen',key:'r',width:50},{header:'Detalle',key:'d',width:70}];
+  ws.getRow(1).font={bold:true,color:{argb:'FFFFFFFF'}}; ws.getRow(1).fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0B2E63'}};
+  lista.forEach(r=>{ const f=new Date(r.creado); const s=auResumen(r);
+    ws.addRow({f:fechaLabel(r.creado),h:pad(f.getHours())+':'+pad(f.getMinutes()),u:r.usuario||'Sin usuario',a:auTipo(r.accion).n,
+      t:AU_TABLAS[r.tabla]||r.tabla||'',r:s.extra.replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'"),
+      d:JSON.stringify(r.accion==='UPDATE'?{antes:r.antes,despues:r.despues}:(r.despues||r.antes||r.detalle||{})).slice(0,32000)}); });
+  ws.views=[{state:'frozen',ySplit:1}];
+  const buf=await wb.xlsx.writeBuffer(); const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}));
+  a.download='Auditoria_URIP_III_'+toDateStr(new Date())+'.xlsx'; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000); toast('Auditoría descargada');
+});
+
 /* Agendar mantenimiento: abre la página de citas de INGLOSA */
-const CITA_URL='https://citas.inglosa.hn/';
+let CITA_URL='https://citas.inglosa.hn/';
 function abrirCitaInglosa(){
   let w=null; try{ w=window.open(CITA_URL,'_blank'); if(w){ try{ w.opener=null; }catch(_){} } }catch(_){}
   if(!w) location.href=CITA_URL;
 }
+
+/* =====================================================================
+   TABLAS EMPRESARIALES: ordenar por columna, buscar y paginar.
+   Se aplica sobre las tablas que ya existen; cuando su contenido cambia
+   (un nuevo filtro o período), la tabla se vuelve a ordenar y paginar sola.
+   ===================================================================== */
+const TP_ICO_BUSCAR='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
+function tpNorm(t){ return String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase(); }
+function tpValor(fila,i){
+  const c=fila.cells[i]; if(!c) return '';
+  const t=c.textContent.trim();
+  let m=t.match(/^(\d{2})\/(\d{2})\/(\d{4})/); if(m) return +(m[3]+m[2]+m[1]);
+  m=t.match(/^(\d{1,2}):(\d{2})$/); if(m) return (+m[1])*60+(+m[2]);
+  const n=t.replace(/^L\s*/,'').replace(/(km\/L|km|lts|L|%)$/i,'').replace(/[,\s]/g,'');
+  if(n!=='' && n!=='—' && !isNaN(n)) return parseFloat(n);
+  return tpNorm(t);
+}
+function tablaPro(tabla,op){
+  if(!tabla || tabla.__tp) return; tabla.__tp=true;
+  op=Object.assign({buscar:true,porPagina:25,paginar:true},op||{});
+  const tbody=tabla.tBodies[0]; const wrap=tabla.closest('.table-wrap')||tabla.parentElement;
+  const st={col:-1,dir:1,pag:0,q:'',porPag:op.porPagina}; let filas=[];
+  let input=null, info=null;
+  if(op.buscar){
+    const bar=document.createElement('div'); bar.className='tp-bar';
+    bar.innerHTML='<div class="tp-search">'+TP_ICO_BUSCAR+'<input type="search" maxlength="60" placeholder="'+escH(op.placeholder||'Buscar en la tabla…')+'" aria-label="Buscar en la tabla"></div><span class="tp-info"></span>';
+    wrap.parentElement.insertBefore(bar,wrap); input=bar.querySelector('input'); info=bar.querySelector('.tp-info');
+    let t=null; input.addEventListener('input',()=>{ clearTimeout(t); t=setTimeout(()=>{ st.q=tpNorm(input.value.trim()); st.pag=0; aplicar(); },150); });
+  }
+  const pie=document.createElement('div'); pie.className='tp-foot'; wrap.appendChild(pie);
+  const ths=[...tabla.tHead.rows[0].cells];
+  ths.forEach((th,i)=>{ if(op.sinOrden && op.sinOrden.includes(i)) return;
+    th.classList.add('tp-sort'); th.tabIndex=0; th.setAttribute('aria-sort','none'); th.title='Ordenar por '+th.textContent.trim().toLowerCase();
+    const ord=()=>{ if(st.col===i) st.dir*=-1; else { st.col=i; st.dir=1; } aplicar(); };
+    th.addEventListener('click',ord); th.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); ord(); } }); });
+  let ocupado=false;
+  const obs=new MutationObserver(()=>{ if(ocupado) return; leer(); st.pag=0; aplicar(); });
+  function leer(){ filas=[...tbody.rows].filter(r=>!r.classList.contains('tp-empty')); }
+  function aplicar(){
+    ocupado=true;
+    let lista=st.q?filas.filter(r=>tpNorm(r.textContent).includes(st.q)):filas.slice();
+    if(st.col>=0){ lista.sort((a,b)=>{ const x=tpValor(a,st.col), y=tpValor(b,st.col);
+      return (typeof x==='number'&&typeof y==='number'?x-y:String(x).localeCompare(String(y),'es',{numeric:true}))*st.dir; }); }
+    ths.forEach((th,i)=>{ if(th.classList.contains('tp-sort')) th.setAttribute('aria-sort',i===st.col?(st.dir>0?'ascending':'descending'):'none'); });
+    const total=lista.length, por=op.paginar?st.porPag:Math.max(total,1), pags=Math.max(1,Math.ceil(total/por));
+    st.pag=Math.min(st.pag,pags-1); const ini=st.pag*por, vis=lista.slice(ini,ini+por);
+    filas.forEach(r=>{ r.style.display='none'; });
+    vis.forEach(r=>{ r.style.display=''; tbody.appendChild(r); });
+    let vacia=tbody.querySelector('.tp-empty');
+    if(filas.length && !total){ if(!vacia){ vacia=document.createElement('tr'); vacia.className='tp-empty'; vacia.innerHTML='<td colspan="'+ths.length+'">Ninguna fila coincide con la búsqueda.</td>'; } tbody.appendChild(vacia); }
+    else if(vacia) vacia.remove();
+    if(info) info.textContent=st.q?(total+(total===1?' resultado':' resultados')):'';
+    if(!filas.length){ pie.hidden=true; } else {
+      pie.hidden=false;
+      const bt=(lbl,p,dis,on,tit)=>'<button type="button" data-p="'+p+'"'+(dis?' disabled':'')+(on?' class="on" aria-current="page"':'')+' aria-label="'+tit+'">'+lbl+'</button>';
+      let nums=''; const ver=new Set([0,pags-1,st.pag-1,st.pag,st.pag+1]); let prev=-1;
+      for(let k=0;k<pags;k++){ if(!ver.has(k)) continue; if(prev>=0 && k-prev>1) nums+='<span class="gap">…</span>'; nums+=bt(k+1,k,false,k===st.pag,'Página '+(k+1)); prev=k; }
+      pie.innerHTML='<span>Mostrando '+(total?(ini+1)+'–'+(ini+vis.length):'0')+' de '+total+(st.q?' (filtrado de '+filas.length+')':'')+'</span>'+
+        (op.paginar?'<span class="tp-size"><label>Filas <select aria-label="Filas por página">'+[10,25,50,100].map(n=>'<option'+(n===st.porPag?' selected':'')+'>'+n+'</option>').join('')+'</select></label></span>'+
+        '<span class="tp-pager">'+bt('‹',st.pag-1,st.pag===0,false,'Página anterior')+nums+bt('›',st.pag+1,st.pag>=pags-1,false,'Página siguiente')+'</span>':'');
+    }
+    obs.takeRecords(); ocupado=false;
+  }
+  pie.addEventListener('click',e=>{ const b=e.target.closest('button[data-p]'); if(!b||b.disabled) return; st.pag=+b.dataset.p; aplicar();
+    const sc=tabla.closest('.table-scroll'); if(sc) sc.scrollTop=0; });
+  pie.addEventListener('change',e=>{ if(e.target.tagName==='SELECT'){ st.porPag=+e.target.value; st.pag=0; aplicar(); } });
+  obs.observe(tbody,{childList:true}); leer(); aplicar();
+}
+tablaPro($('#admTable'),{placeholder:'Buscar placa, gasolinera, usuario…'});
+tablaPro($('#ordBody').closest('table'),{buscar:false});
+tablaPro($('#stTbody').closest('table'),{buscar:false,paginar:false});
+
+/* =====================================================================
+   UBICACIÓN ACTUAL, FECHA Y PERMISOS DEL USUARIO
+   ===================================================================== */
+function actualizarMigas(){
+  const bar=$('#adminBar').classList.contains('hidden')?$('#userBar'):$('#adminBar');
+  const b=bar.querySelector('button.active'); $('#crumbCur').textContent=b?b.textContent.trim():'Inicio';
+  const f=fechaLarga(new Date()); $('#stripDate').textContent=f.charAt(0)+f.slice(1).toLowerCase();
+}
+const PERMISOS=[
+  ['usuario','Registrar abastecimientos'],['usuario','Reportar entrada y salida de mantenimiento'],['usuario','Ver alertas de mantenimiento'],
+  ['admin','Consultar y exportar reportes'],['admin','Administrar vehículos'],['admin','Abastecimientos con orden'],['admin','Estadísticas'],
+  ['super','Administrar usuarios'],['super','Configuración del sistema'],['super','Auditoría']];
+function pintarPermisos(){
+  if(!currentUser) return;
+  const nivel=currentUser.super?3:(currentUser.rol==='admin'?2:1), req={usuario:1,admin:2,super:3};
+  const ok='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+  const no='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
+  $('#permPop').innerHTML='<header><b>'+escH(currentUser.nombre)+'</b><span>'+escH(currentUser.email||'')+'</span></header>'+
+    '<h5>Rol: '+escH($('#uRole').textContent)+'</h5><ul>'+PERMISOS.map(([r,t])=>'<li class="'+(nivel>=req[r]?'':'no')+'">'+(nivel>=req[r]?ok:no)+escH(t)+'</li>').join('')+'</ul>';
+}
+$('#whoBtn').addEventListener('click',e=>{ e.stopPropagation(); const p=$('#permPop'); const abrir=p.classList.contains('hidden');
+  if(abrir) pintarPermisos(); p.classList.toggle('hidden',!abrir); $('#whoBtn').setAttribute('aria-expanded',abrir); });
+document.addEventListener('click',e=>{ const p=$('#permPop'); if(!p.classList.contains('hidden') && !e.target.closest('#permPop')){ p.classList.add('hidden'); $('#whoBtn').setAttribute('aria-expanded','false'); } });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') $('#permPop').classList.add('hidden'); });
+actualizarMigas();
+
+/* =====================================================================
+   CONFIGURACIÓN DEL SISTEMA (tabla "configuracion" en Supabase)
+   Todos los dispositivos leen estos valores al iniciar sesión.
+   ===================================================================== */
+const CFG_DEF={
+  mant_intervalo:MANT_INTERVALO, mant_intervalo_moto:MANT_INTERVALO_MOTO, mant_aviso:MANT_AVISO,
+  mant_propietario:MANT_PROPIETARIO, mant_asignado:MANT_ASIGNADO, mant_firma:MANT_FIRMA.slice(), cita_url:CITA_URL,
+  jefe_nombre:ROSTER_JEFE, jefe_grado:ROSTER_GRADO, jefe_cargo:ROSTER_CARGO, inactividad_min:SEG_INACTIVIDAD_MIN,
+  gasolineras:[...$('#fGas').options].map(o=>o.value).filter(Boolean)
+};
+let CFG=JSON.parse(JSON.stringify(CFG_DEF)), cfgMeta={};
+const GAS_PLACEHOLDER=($('#fGas').options[0]&&!$('#fGas').options[0].value)?$('#fGas').options[0].textContent:'Selecciona la gasolinera...';
+function cfgValida(k,v){
+  const d=CFG_DEF[k];
+  if(typeof d==='number') return (typeof v==='number' && isFinite(v) && v>0)?v:d;
+  if(Array.isArray(d)) return (Array.isArray(v) && v.length && v.every(x=>typeof x==='string'))?v.map(x=>x.slice(0,80)).slice(0,40):d;
+  if(k==='cita_url') return (typeof v==='string' && /^https:\/\/[^\s"'<>]+$/.test(v))?v:d;
+  return (typeof v==='string' && v.trim())?v.trim().slice(0,120):d;
+}
+function aplicarConfig(){
+  MANT_INTERVALO=CFG.mant_intervalo; MANT_INTERVALO_MOTO=CFG.mant_intervalo_moto; MANT_AVISO=CFG.mant_aviso;
+  MANT_PROPIETARIO=CFG.mant_propietario; MANT_ASIGNADO=CFG.mant_asignado; MANT_FIRMA=CFG.mant_firma.slice(); CITA_URL=CFG.cita_url;
+  ROSTER_JEFE=CFG.jefe_nombre; ROSTER_GRADO=CFG.jefe_grado; ROSTER_CARGO=CFG.jefe_cargo; SEG_INACTIVIDAD_MIN=CFG.inactividad_min;
+  const sel=$('#fGas'), actual=sel.value;
+  sel.innerHTML='<option value="">'+escH(GAS_PLACEHOLDER)+'</option>'+CFG.gasolineras.map(g=>'<option>'+escH(g)+'</option>').join('');
+  if(CFG.gasolineras.includes(actual)) sel.value=actual;
+}
+async function cargarConfig(){
+  if(!sb) return;
+  try{
+    let r=await sb.from('configuracion').select('clave,valor,actualizado,actualizado_por');
+    if(r.error) r=await sb.from('configuracion').select('clave,valor');
+    if(r.error || !Array.isArray(r.data)) return;
+    r.data.forEach(x=>{ if(x.clave in CFG_DEF){ CFG[x.clave]=cfgValida(x.clave,x.valor); cfgMeta[x.clave]={t:x.actualizado,u:x.actualizado_por}; } });
+    aplicarConfig();
+  }catch(_){}
+}
+cargarConfig();
+
+const CFG_CAMPOS=[['cfMantInt','mant_intervalo','n'],['cfMantMoto','mant_intervalo_moto','n'],['cfMantAviso','mant_aviso','n'],
+  ['cfProp','mant_propietario','t'],['cfAsig','mant_asignado','t'],['cfCita','cita_url','t'],['cfFirma','mant_firma','l'],
+  ['cfJefe','jefe_nombre','t'],['cfGrado','jefe_grado','t'],['cfCargo','jefe_cargo','t'],['cfGasList','gasolineras','l'],['cfInact','inactividad_min','n']];
+let cfgSucio=false;
+function cfgPintar(fuente){
+  CFG_CAMPOS.forEach(([id,k,t])=>{ const v=fuente[k]; $('#'+id).value=t==='l'?v.join('\n'):v; });
+  cfgSucio=false; cfgEstado(); cfgContarGas();
+  const ult=Object.values(cfgMeta).filter(x=>x&&x.t).sort((a,b)=>new Date(b.t)-new Date(a.t))[0];
+  $('#cfgInfo').innerHTML=[
+    ['Versión',($('.app-foot').textContent.match(/Versión\s*([^\s·]+)/)||[])[1]||'—'],
+    ['Usuario conectado',currentUser?currentUser.nombre:'—'],['Rol',$('#uRole').textContent||'—'],
+    ['Base de datos',(SUPABASE_URL.match(/https:\/\/([^.]+)/)||[])[1]||'—'],
+    ['Última modificación',ult?(fechaLabel(ult.t)+' '+horaLabel(ult.t)+(ult.u?' · '+ult.u:'')):'Valores predeterminados'],
+    ['Vehículos registrados',String(vehiculos.length)]].map(([a,b])=>'<dt>'+escH(a)+'</dt><dd>'+escH(b)+'</dd>').join('');
+}
+function cfgContarGas(){ const n=$('#cfGasList').value.split('\n').map(x=>x.trim()).filter(Boolean).length; $('#cfGasCount').textContent=n+(n===1?' gasolinera':' gasolineras'); }
+function cfgEstado(){ const e=$('#cfgState'); e.textContent=cfgSucio?'Hay cambios sin guardar.':'Sin cambios.'; e.classList.toggle('cfg-dirty',cfgSucio); }
+function cfgLeer(){
+  const out={}, err=[];
+  CFG_CAMPOS.forEach(([id,k,t])=>{ const raw=$('#'+id).value;
+    if(t==='n'){ const n=Number(raw); out[k]=n; }
+    else if(t==='l'){ out[k]=raw.split('\n').map(x=>limpiarTxt(x,80)).filter(Boolean); }
+    else out[k]=limpiarTxt(raw,k==='cita_url'?200:120); });
+  if(!(out.mant_intervalo>=1000&&out.mant_intervalo<=50000)) err.push(['cfMantInt','El intervalo de pick up debe estar entre 1,000 y 50,000 km.']);
+  if(!(out.mant_intervalo_moto>=500&&out.mant_intervalo_moto<=50000)) err.push(['cfMantMoto','El intervalo de motocicletas debe estar entre 500 y 50,000 km.']);
+  if(!(out.mant_aviso>=100&&out.mant_aviso<Math.min(out.mant_intervalo,out.mant_intervalo_moto))) err.push(['cfMantAviso','El aviso debe ser mayor de 100 km y menor que los intervalos.']);
+  if(!out.mant_propietario) err.push(['cfProp','Escriba el propietario de los vehículos.']);
+  if(!out.mant_asignado) err.push(['cfAsig','Escriba a quién están asignados los vehículos.']);
+  if(!/^https:\/\/[^\s"'<>]+\.[^\s"'<>]+$/.test(out.cita_url)) err.push(['cfCita','La página de citas debe ser una dirección que comience con https://']);
+  if(!out.mant_firma.length||out.mant_firma.length>5) err.push(['cfFirma','La firma debe tener entre 1 y 5 líneas.']);
+  if(!out.jefe_nombre||!out.jefe_grado||!out.jefe_cargo) err.push(['cfJefe','Complete nombre, grado y cargo de la jefatura.']);
+  if(!out.gasolineras.length||out.gasolineras.length>40) err.push(['cfGasList','Escriba entre 1 y 40 gasolineras.']);
+  if(!(out.inactividad_min>=5&&out.inactividad_min<=240)) err.push(['cfInact','El cierre por inactividad debe estar entre 5 y 240 minutos.']);
+  return {out,err};
+}
+function abrirConfig(){
+  if(!currentUser||!currentUser.super) return;
+  $('#cfgErr').textContent=''; $('#cfgSetup').classList.add('hidden');
+  cargarConfig().then(()=>cfgPintar(CFG));
+}
+$('#admConfig').addEventListener('input',e=>{ if(e.target.closest('.cfg-sec')){ cfgSucio=true; cfgEstado(); if(e.target.id==='cfGasList') cfgContarGas(); } });
+$('#cfgNav').addEventListener('click',e=>{ const a=e.target.closest('a'); if(!a) return; e.preventDefault();
+  $('#cfgNav').querySelectorAll('a').forEach(x=>x.classList.toggle('on',x===a)); const t=$(a.getAttribute('href')); if(t) t.scrollIntoView({behavior:'auto',block:'start'}); });
+$('#cfgReset').addEventListener('click',()=>{ if(cfgSucio && !confirm('¿Descartar los cambios sin guardar?')) return; cfgPintar(CFG); $('#cfgErr').textContent=''; });
+$('#cfgDefault').addEventListener('click',()=>{ cfgPintar(CFG_DEF); cfgSucio=true; cfgEstado(); toast('Valores predeterminados cargados. Pulse Guardar cambios para aplicarlos.'); });
+$('#cfgSave').addEventListener('click',async()=>{
+  if(!currentUser||!currentUser.super) return;
+  const {out,err}=cfgLeer(); const e=$('#cfgErr'); e.textContent='';
+  if(err.length){ e.textContent=err[0][1]; $('#'+err[0][0]).focus(); return; }
+  const cambios=Object.keys(out).filter(k=>JSON.stringify(out[k])!==JSON.stringify(CFG[k]));
+  if(!cambios.length){ toast('No hay cambios que guardar'); cfgSucio=false; cfgEstado(); return; }
+  if(!confirm('¿Guardar '+cambios.length+(cambios.length===1?' cambio':' cambios')+' en la configuración?\n\nSe aplicarán a todos los usuarios la próxima vez que inicien sesión.')) return;
+  const btn=$('#cfgSave'); btn.disabled=true; btn.classList.add('loading');
+  const ahora=new Date().toISOString();
+  const { error }=await sb.from('configuracion').upsert(cambios.map(k=>({clave:k,valor:out[k],actualizado:ahora,actualizado_por:currentUser.nombre})),{onConflict:'clave'});
+  btn.disabled=false; btn.classList.remove('loading');
+  if(error){
+    if(/relation|does not exist|schema cache|PGRST205|42P01/i.test((error.message||'')+' '+(error.code||''))){ $('#cfgSetup').classList.remove('hidden');
+      $('#cfgSetup').innerHTML='<b>Falta activar la configuración en Supabase.</b><br>Ejecute el archivo <code>usuarios_config.sql</code> en Supabase → SQL Editor y vuelva a intentarlo.'; }
+    else e.textContent='No se pudo guardar: '+(error.message||'sin conexión');
+    return;
+  }
+  cambios.forEach(k=>{ CFG[k]=out[k]; cfgMeta[k]={t:ahora,u:currentUser.nombre}; }); aplicarConfig();
+  cfgPintar(CFG); toast('Configuración guardada');
+});
+
+/* =====================================================================
+   ADMINISTRACIÓN DE USUARIOS (funciones seguras de Supabase; solo super usuarios)
+   ===================================================================== */
+let usrDatos=[], usrEdit=null, usrPwdId=null;
+const RX_CORREO=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+function claveReglas(p){ return [[p.length>=8,'8 caracteres o más'],[/[A-Za-zÁÉÍÓÚáéíóúÑñ]/.test(p),'una letra'],[/\d/.test(p),'un número']]; }
+function pintarReglas(el,p){ el.innerHTML='Debe tener: '+claveReglas(p).map(([ok,t])=>'<span class="'+(ok?'ok':'')+'">'+(ok?'✓ ':'')+t+'</span>').join(''); }
+function claveValida(p){ return claveReglas(p).every(x=>x[0]); }
+function rpcError(e){
+  const m=(e&&((e.message||'')+' '+(e.code||'')))||'';
+  if(/PGRST202|could not find|does not exist|schema cache/i.test(m)) return 'FALTA_SQL';
+  if(/duplicate|already|ya existe|users_email/i.test(m)) return 'Ya existe un usuario con ese correo electrónico.';
+  return (e&&e.message)||'Sin conexión con el servidor.';
+}
+async function cargarUsuarios(){
+  if(!currentUser||!currentUser.super) return;
+  $('#usrTbody').innerHTML='<tr><td colspan="6">Cargando usuarios…</td></tr>';
+  const { data, error }=await sb.rpc('admin_listar_usuarios');
+  if(error){ const m=rpcError(error); $('#usrBody').classList.add('hidden'); $('#usrSetup').classList.remove('hidden');
+    $('#usrSetup').innerHTML=m==='FALTA_SQL'?'<b>Falta activar la administración de usuarios en Supabase.</b><br>Abra Supabase → SQL Editor, pegue el archivo <code>usuarios_config.sql</code> y pulse Run. Después recargue esta página.':'<b>No se pudo cargar la lista de usuarios.</b><br>'+escH(m);
+    return; }
+  $('#usrSetup').classList.add('hidden'); $('#usrBody').classList.remove('hidden');
+  usrDatos=data||[]; pintarUsuarios();
+}
+function fechaHoraCorta(iso){ if(!iso) return '—'; return fechaLabel(iso)+' '+horaLabel(iso); }
+function pintarUsuarios(){
+  const rf=$('#usrRolF').value, ef=$('#usrEstF').value;
+  $('#usrKTot').textContent=usrDatos.length; $('#usrKAct').textContent=usrDatos.filter(u=>u.activo!==false).length;
+  $('#usrKAdm').textContent=usrDatos.filter(u=>u.rol==='admin').length; $('#usrKSup').textContent=usrDatos.filter(u=>u.es_super).length;
+  const lista=usrDatos.filter(u=>(!rf||(rf==='super'?u.es_super:u.rol===rf))&&(!ef||(ef==='1')===(u.activo!==false)))
+    .sort((a,b)=>String(a.nombre||'').localeCompare(String(b.nombre||''),'es'));
+  $('#usrTbody').innerHTML=lista.map(u=>{ const yo=currentUser&&u.id===currentUser.uid, act=u.activo!==false;
+    return '<tr><td><b>'+escH(u.nombre||'—')+'</b>'+(yo?' <span class="tag">Usted</span>':'')+'<span class="usr-mail">'+escH(u.email||'—')+'</span></td>'+
+      '<td><span class="tag '+(u.rol==='admin'?'admin':'')+'">'+(u.rol==='admin'?'Administrador':'Usuario')+'</span>'+(u.es_super?'<span class="tag super">Super usuario</span>':'')+'</td>'+
+      '<td><span class="st-act'+(act?'':' off')+'">'+(act?'Activo':'Inactivo')+'</span></td>'+
+      '<td>'+escH(fechaHoraCorta(u.ultimo_acceso))+'</td><td>'+escH(u.creado?fechaLabel(u.creado):'—')+'</td>'+
+      '<td class="acts"><button class="mini" type="button" data-ue="'+escH(u.id)+'">Editar</button><button class="mini" type="button" data-up="'+escH(u.id)+'">Contraseña</button>'+
+      (yo?'':'<button class="mini '+(act?'danger':'')+'" type="button" data-ua="'+escH(u.id)+'">'+(act?'Desactivar':'Activar')+'</button>')+'</td></tr>'; }).join('')||'';
+}
+tablaPro($('#usrTable'),{placeholder:'Buscar nombre o correo…',porPagina:25,sinOrden:[5]});
+['#usrRolF','#usrEstF'].forEach(id=>$(id).addEventListener('change',pintarUsuarios));
+function abrirUsuario(id){
+  usrEdit=id?usrDatos.find(u=>u.id===id):null; const nuevo=!usrEdit, yo=usrEdit&&currentUser&&usrEdit.id===currentUser.uid;
+  $('#usrTitle').textContent=nuevo?'Nuevo usuario':'Editar usuario';
+  $('#usrNombre').value=nuevo?'':(usrEdit.nombre||''); $('#usrEmail').value=nuevo?'':(usrEdit.email||''); $('#usrEmail').disabled=!nuevo;
+  $('#usrPwWrap').classList.toggle('hidden',!nuevo); $('#usrPass').value=''; $('#usrPass2').value=''; pintarReglas($('#usrPwRules'),'');
+  $('#usrRol').value=nuevo?'usuario':(usrEdit.rol==='admin'?'admin':'usuario'); $('#usrSuper').checked=!nuevo&&!!usrEdit.es_super;
+  $('#usrActivo').checked=nuevo||usrEdit.activo!==false; $('#usrActWrap').classList.toggle('hidden',nuevo);
+  [$('#usrRol'),$('#usrSuper'),$('#usrActivo')].forEach(x=>x.disabled=!!yo);
+  $('#usrErr').textContent=yo?'No puede cambiar su propio rol ni desactivar su cuenta.':'';
+  $('#usrModal').classList.add('show'); setTimeout(()=>$('#usrNombre').focus(),50);
+}
+$('#usrNuevo').addEventListener('click',()=>abrirUsuario(null));
+$('#usrSuper').addEventListener('change',()=>{ if($('#usrSuper').checked) $('#usrRol').value='admin'; });
+$('#usrRol').addEventListener('change',()=>{ if($('#usrRol').value!=='admin') $('#usrSuper').checked=false; });
+$('#usrPass').addEventListener('input',()=>pintarReglas($('#usrPwRules'),$('#usrPass').value));
+const cerrarUsr=()=>$('#usrModal').classList.remove('show');
+$('#usrClose').addEventListener('click',cerrarUsr); $('#usrCancel').addEventListener('click',cerrarUsr);
+$('#usrSave').addEventListener('click',async()=>{
+  const err=$('#usrErr'); err.textContent='';
+  const nombre=limpiarTxt($('#usrNombre').value,60), email=$('#usrEmail').value.trim().toLowerCase(), rol=$('#usrRol').value==='admin'?'admin':'usuario';
+  const sup=$('#usrSuper').checked&&rol==='admin', act=$('#usrActivo').checked;
+  if(nombre.length<3){ err.textContent='Escriba el nombre completo (al menos 3 letras).'; $('#usrNombre').focus(); return; }
+  const btn=$('#usrSave');
+  if(!usrEdit){
+    if(!RX_CORREO.test(email)){ err.textContent='Escriba un correo electrónico válido.'; $('#usrEmail').focus(); return; }
+    const p1=$('#usrPass').value, p2=$('#usrPass2').value;
+    if(!claveValida(p1)){ err.textContent='La contraseña no cumple los requisitos.'; $('#usrPass').focus(); return; }
+    if(p1!==p2){ err.textContent='Las contraseñas no coinciden.'; $('#usrPass2').focus(); return; }
+    if(!confirm('¿Crear el usuario '+nombre+' ('+email+') con rol '+(sup?'Super usuario':(rol==='admin'?'Administrador':'Usuario'))+'?')) return;
+    btn.disabled=true; btn.classList.add('loading');
+    const { error }=await sb.rpc('admin_crear_usuario',{p_email:email,p_password:p1,p_nombre:nombre,p_rol:rol,p_super:sup});
+    btn.disabled=false; btn.classList.remove('loading');
+    if(error){ const m=rpcError(error); err.textContent=m==='FALTA_SQL'?'Falta ejecutar usuarios_config.sql en Supabase.':m; return; }
+    toast('Usuario creado'); cerrarUsr(); cargarUsuarios(); return;
+  }
+  const cambiaAcceso=(rol!==usrEdit.rol)||(sup!==!!usrEdit.es_super)||(act!==(usrEdit.activo!==false));
+  if(cambiaAcceso && !confirm('¿Confirmar los cambios de rol o acceso de '+nombre+'?')) return;
+  btn.disabled=true; btn.classList.add('loading');
+  const { error }=await sb.rpc('admin_actualizar_usuario',{p_id:usrEdit.id,p_nombre:nombre,p_rol:rol,p_super:sup,p_activo:act});
+  btn.disabled=false; btn.classList.remove('loading');
+  if(error){ const m=rpcError(error); err.textContent=m==='FALTA_SQL'?'Falta ejecutar usuarios_config.sql en Supabase.':m; return; }
+  toast('Usuario actualizado'); cerrarUsr(); cargarUsuarios();
+});
+$('#usrTbody').addEventListener('click',async e=>{
+  const ed=e.target.closest('[data-ue]'); if(ed){ abrirUsuario(ed.dataset.ue); return; }
+  const pw=e.target.closest('[data-up]'); if(pw){ const u=usrDatos.find(x=>x.id===pw.dataset.up); if(!u) return; usrPwdId=u.id;
+    $('#pwdInfo').innerHTML='Usuario: <b>'+escH(u.nombre||'')+'</b><br>'+escH(u.email||''); $('#pwdNew').value=''; $('#pwdNew2').value=''; $('#pwdErr').textContent='';
+    pintarReglas($('#pwdRules'),''); $('#pwdModal').classList.add('show'); setTimeout(()=>$('#pwdNew').focus(),50); return; }
+  const ac=e.target.closest('[data-ua]'); if(ac){ const u=usrDatos.find(x=>x.id===ac.dataset.ua); if(!u) return; const act=u.activo!==false;
+    if(!confirm(act?('¿Desactivar a '+u.nombre+'?\n\nNo podrá iniciar sesión hasta que se active de nuevo. Sus registros se conservan.'):('¿Activar de nuevo a '+u.nombre+'?'))) return;
+    const { error }=await sb.rpc('admin_actualizar_usuario',{p_id:u.id,p_nombre:u.nombre,p_rol:u.rol,p_super:!!u.es_super&&!act?false:!!u.es_super,p_activo:!act});
+    if(error){ toast(rpcError(error)==='FALTA_SQL'?'Falta ejecutar usuarios_config.sql en Supabase':rpcError(error),true); return; }
+    toast(act?'Usuario desactivado':'Usuario activado'); cargarUsuarios(); }
+});
+$('#pwdNew').addEventListener('input',()=>pintarReglas($('#pwdRules'),$('#pwdNew').value));
+const cerrarPwd=()=>$('#pwdModal').classList.remove('show');
+$('#pwdClose').addEventListener('click',cerrarPwd); $('#pwdCancel').addEventListener('click',cerrarPwd);
+$('#pwdSave').addEventListener('click',async()=>{
+  const err=$('#pwdErr'); err.textContent=''; const p1=$('#pwdNew').value, p2=$('#pwdNew2').value;
+  if(!claveValida(p1)){ err.textContent='La contraseña no cumple los requisitos.'; return; }
+  if(p1!==p2){ err.textContent='Las contraseñas no coinciden.'; return; }
+  if(!confirm('¿Cambiar la contraseña de este usuario? Deberá usar la nueva contraseña desde su próximo inicio de sesión.')) return;
+  const btn=$('#pwdSave'); btn.disabled=true; btn.classList.add('loading');
+  const { error }=await sb.rpc('admin_cambiar_clave',{p_id:usrPwdId,p_password:p1});
+  btn.disabled=false; btn.classList.remove('loading');
+  if(error){ const m=rpcError(error); err.textContent=m==='FALTA_SQL'?'Falta ejecutar usuarios_config.sql en Supabase.':m; return; }
+  toast('Contraseña actualizada'); cerrarPwd();
+});
 /* Botones de mantenimiento: gestionar (cita INGLOSA), entrada y salida */
 function botonesMant(id,sinGestion){
   const i=escH(id);
@@ -6035,78 +7117,11 @@ function botonesMant(id,sinGestion){
     '<button class="mini gold" data-mrep="'+i+'">Reportar salida de mantenimiento</button>';
 }
 document.addEventListener('click',e=>{
-  const g=e.target.closest('[data-gest]'); if(g){ openGestionMant(g.getAttribute('data-gest')); return; }
+  const g=e.target.closest('[data-gest]'); if(g){ abrirCitaInglosa(); auditar('inglosa',{vehiculo:(vehById(g.getAttribute('data-gest')).placa||'')}); return; }
   const en=e.target.closest('[data-ment]'); if(en){ openMantReport(en.getAttribute('data-ment'),'entrada'); return; }
   const sa=e.target.closest('[data-mrep]');
   if(sa){ openMantReport(sa.getAttribute('data-mrep'),'salida'); }
 });
-/* Gestionar mantenimiento: datos del vehículo y del solicitante para la cita de INGLOSA */
-const LS_SOL='urip_solicitante_v1';
-let gmDatos=[];
-async function openGestionMant(id){
-  const v=vehById(id); if(!v || !v.id) return;
-  let kmMap={}; try{ kmMap=await kmActualMap(); }catch(_){}
-  const st=mantStatus(id, kmMap[id]);
-  let sol={}; try{ sol=JSON.parse(localStorage.getItem(LS_SOL)||'{}'); }catch(_){}
-  const usr=currentUser||{};
-  gmDatos=[
-    ['Placa',v.placa],['Marca',v.marca],['Modelo',v.modelo],['Tipo',v.tipo],['Color',v.color],['Año',v.anio],
-    ['Motor',v.motor],['Chasis',v.chasis],['Número de equipo',v.numeroEquipo],
-    ['Kilometraje',Math.round(st.cur)],
-    ['Servicio','Mantenimiento preventivo de '+fmtKm(st.proximo)+' km'],
-    ['Propietario',MANT_PROPIETARIO],['Institución',MANT_ASIGNADO],
-    ['Solicitante',usr.nombre&&!String(usr.nombre).includes('@')?usr.nombre:(sol.nombre||'')],
-    ['Correo',usr.email||sol.correo||''],
-    ['Teléfono',sol.tel||'']
-  ].map(([k,val])=>[k,String(val==null?'':val).trim()==='—'?'':String(val==null?'':val).trim()]);
-  $('#gmPlate').innerHTML=plateHTML(v.placa);
-  $('#gmMk').textContent=v.marca+' '+v.modelo;
-  $('#gmSub').textContent='Km actual '+fmtKm(st.cur)+' · Próximo mantenimiento a los '+fmtKm(st.proximo)+' km';
-  const editables={'Solicitante':1,'Correo':1,'Teléfono':1};
-  $('#gmList').innerHTML=gmDatos.map(([k,val],i)=>'<div class="gm-row"><small>'+escH(k)+'</small>'+
-    (editables[k]?'<input data-gmi="'+i+'" maxlength="80" value="'+escH(val)+'"'+(k==='Teléfono'?' inputmode="tel" placeholder="Número de contacto"':'')+'>':'<span>'+escH(val||'—')+'</span>')+
-    '<button class="mini" type="button" data-gmc="'+i+'">Copiar</button></div>').join('');
-  $('#gmModal').classList.add('show');
-}
-function gmLeer(){
-  document.querySelectorAll('#gmList [data-gmi]').forEach(inp=>{ gmDatos[+inp.getAttribute('data-gmi')][1]=limpiarTxt(inp.value,80); });
-  const g=k=>(gmDatos.find(x=>x[0]===k)||[])[1]||'';
-  try{ localStorage.setItem(LS_SOL,JSON.stringify({nombre:g('Solicitante'),correo:g('Correo'),tel:g('Teléfono')})); }catch(_){}
-}
-function gmTexto(){ gmLeer(); return ['URIP-INGLOSA'].concat(gmDatos.filter(x=>x[1]).map(x=>x[0]+': '+x[1])).join('\n'); }
-async function copiarTxt(t){
-  try{ await navigator.clipboard.writeText(t); return true; }catch(_){}
-  try{ const ta=document.createElement('textarea'); ta.value=t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
-    document.body.appendChild(ta); ta.select(); const ok=document.execCommand('copy'); ta.remove(); return ok; }catch(_){ return false; }
-}
-/* Marcador que se ejecuta en la página de INGLOSA: lee los datos copiados y llena los campos */
-const GM_BOOKMARKLET="(async()=>{let t='';try{t=await navigator.clipboard.readText()}catch(e){}"+
- "if(!/URIP-INGLOSA/.test(t))t=prompt('Pegue aquí los datos copiados desde Control de Abastecimiento URIP III')||'';"+
- "const d={};t.split(/\\n/).forEach(l=>{const m=l.match(/^([^:]+):\\s*(.*)$/);if(m)d[m[1].trim().toLowerCase()]=m[2].trim()});"+
- "const R=[[/correo|e-?mail/,'correo'],[/tel[eé]f|celular|m[oó]vil|phone|whats/,'teléfono'],[/placa|plate|matr[ií]cula/,'placa'],"+
- "[/chasis|chassis|\\bvin\\b|serie/,'chasis'],[/motor|engine/,'motor'],[/a[ñn]o|year/,'año'],[/marca|brand|make/,'marca'],[/modelo|model/,'modelo'],"+
- "[/color/,'color'],[/kilometr|odom|mileage|\\bkm\\b/,'kilometraje'],[/equipo/,'número de equipo'],[/empresa|instituci|compa[ñn]|dependencia/,'institución'],"+
- "[/nombre|name|cliente|solicitante|contacto|responsable/,'solicitante'],[/servicio|motivo|coment|observ|descrip|mensaje|nota|detalle/,'servicio']];"+
- "let n=0;document.querySelectorAll('input,select,textarea').forEach(el=>{if(el.disabled||el.readOnly)return;"+
- "if(/hidden|submit|button|checkbox|radio|file|password|date|time|image|reset/.test(el.type||''))return;if(el.tagName!=='SELECT'&&el.value)return;"+
- "let lb='';if(el.id){const l=document.querySelector('label[for=\"'+CSS.escape(el.id)+'\"]');if(l)lb=l.textContent}if(!lb&&el.closest('label'))lb=el.closest('label').textContent;"+
- "const s=(lb+' '+(el.name||'')+' '+(el.id||'')+' '+(el.placeholder||'')+' '+(el.getAttribute('aria-label')||'')).toLowerCase();"+
- "for(const[re,k]of R){if(!re.test(s))continue;if(!d[k])break;let v=d[k];if(el.tagName==='SELECT'){const q=v.toLowerCase();"+
- "const o=[...el.options].find(o=>{const x=o.text.trim().toLowerCase();return x&&(x.includes(q)||q.includes(x))});if(!o)break;v=o.value}"+
- "const ds=Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el),'value');if(ds&&ds.set)ds.set.call(el,v);else el.value=v;"+
- "el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));n++;break}});"+
- "alert(n?'Se completaron '+n+' campos. Revise los datos antes de enviar la cita.':'No se encontraron campos para completar en esta página.')})()";
-$('#gmBookmark').href='javascript:'+encodeURIComponent(GM_BOOKMARKLET);
-$('#gmBookmark').addEventListener('click',e=>{ e.preventDefault(); toast('Arrastre el botón a la barra de favoritos para guardarlo'); });
-$('#gmCopyBm').addEventListener('click',async()=>{ toast(await copiarTxt('javascript:'+GM_BOOKMARKLET)?'Código del marcador copiado':'No se pudo copiar',false); });
-$('#gmList').addEventListener('click',async e=>{ const b=e.target.closest('[data-gmc]'); if(!b) return; gmLeer();
-  const x=gmDatos[+b.getAttribute('data-gmc')]; if(!x||!x[1]){ toast('Ese dato está vacío',true); return; }
-  toast(await copiarTxt(x[1])?x[0]+' copiado':'No se pudo copiar',false); });
-$('#gmCopy').addEventListener('click',async()=>{ toast(await copiarTxt(gmTexto())?'Datos copiados':'No se pudieron copiar los datos',false); });
-$('#gmOpen').addEventListener('click',()=>{ copiarTxt(gmTexto()); abrirCitaInglosa(); toast('Datos copiados. En INGLOSA use el marcador "Autocompletar INGLOSA".'); });
-const cerrarGM=()=>$('#gmModal').classList.remove('show');
-$('#gmClose').addEventListener('click',cerrarGM);
-$('#gmModal').addEventListener('click',e=>{ if(e.target.id==='gmModal') cerrarGM(); });
 /* Coordinar mantenimiento */
 let mantTarget=null, mantTargetSt=null;
 async function openMant(id){
