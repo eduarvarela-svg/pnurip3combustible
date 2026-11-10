@@ -9,13 +9,13 @@
      - IMPORTANTE: si modifica el código JavaScript de este archivo, la huella cambia y el navegador
        bloqueará el script. Abra la consola del navegador (F12): el error indica la huella nueva
        ('sha256-…'); cópiela en lugar de la actual en script-src. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JbIv8Ao8QOaFXKiDkNSbHw569p+EmrxbjWo6fMzz0QM=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-DGDWN/SXpkTSyZ64h2PO4SMIbW6Cav450FQvnLaMOJc=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
 <title>Control de Abastecimiento de vehiculos URIP III</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Cinzel:wght@600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Cinzel:wght@600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <!-- Librerías con versión fija y huella de integridad (SRI): si alguien las altera en el CDN, el navegador no las ejecuta -->
 <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js" integrity="sha384-Pqp51FUN2/qzfxZxBCtF0stpc9ONI6MYZpVqmo8m20SoaQCzf+arZvACkLkirlPz" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js" integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -556,9 +556,9 @@
   }
   .login-pump {
     display: block;
-    margin: 0 auto 10px;
-    width: 96px;
-    height: 96px;
+    margin: 14px auto 10px;
+    width: 112px;
+    height: 112px;
     filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.35));
     animation: pumpIn 0.9s var(--ease) both 0.2s;
     overflow: visible;
@@ -905,7 +905,7 @@
   }
   #dipolFx.out {
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transition: opacity 0.35s ease;
   }
   .dfx-inner {
     text-align: center;
@@ -932,19 +932,19 @@
     text-shadow: 0 0 0 transparent;
   }
   #dipolFx.play .dfx-word span {
-    animation: dfxLetter 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: dfxLetter 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
   }
   #dipolFx.play .dfx-word span:nth-child(2) {
-    animation-delay: 0.09s;
+    animation-delay: 0.06s;
   }
   #dipolFx.play .dfx-word span:nth-child(3) {
-    animation-delay: 0.18s;
+    animation-delay: 0.12s;
   }
   #dipolFx.play .dfx-word span:nth-child(4) {
-    animation-delay: 0.27s;
+    animation-delay: 0.18s;
   }
   #dipolFx.play .dfx-word span:nth-child(5) {
-    animation-delay: 0.36s;
+    animation-delay: 0.24s;
   }
   .dfx-rule {
     height: 1px;
@@ -953,7 +953,7 @@
     background: linear-gradient(90deg, transparent, #c9a227 20%, #e6c65a 50%, #c9a227 80%, transparent);
   }
   #dipolFx.play .dfx-rule {
-    animation: dfxRule 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.75s forwards;
+    animation: dfxRule 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
   }
   .dfx-sub {
     font-family: "Inter", sans-serif;
@@ -974,10 +974,10 @@
     opacity: 0;
   }
   #dipolFx.play .dfx-sub {
-    animation: dfxFade 0.7s ease 1.15s forwards;
+    animation: dfxFade 0.45s ease 0.75s forwards;
   }
   #dipolFx.play .dfx-hello {
-    animation: dfxFade 0.7s ease 1.55s forwards;
+    animation: dfxFade 0.45s ease 1s forwards;
   }
   @media (prefers-reduced-motion: reduce) {
     #dipolFx.play .dfx-word span,
@@ -2026,6 +2026,157 @@
       animation: none;
     }
   }
+
+  /*  ===== NAVIDAD: GORRO Y SALUDO DEL LOGIN =====  */
+  .lp-hat { transform-box: view-box; transform-origin: 56px 27px; animation: hatIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both 0.7s, hatSway 4s ease-in-out infinite 1.6s; }
+  .lp-pom { transform-box: fill-box; transform-origin: center; animation: pomBob 2s ease-in-out infinite 1.6s; }
+  @keyframes hatSway { 0%, 100% { rotate: 0deg; } 50% { rotate: -4deg; } }
+  @keyframes pomBob { 0%, 100% { scale: 1; } 50% { scale: 1.12; } }
+  @keyframes hatIn { from { opacity: 0; translate: 0 -14px; } to { opacity: 1; translate: 0 0; } }
+  .login-welcome.xmas { position: relative; padding: 14px 10px 12px; margin-top: -4px; border-radius: 16px;
+    background: radial-gradient(120% 140% at 50% 0%, #fff4f4 0%, #fff 60%); border: 1px solid #f3d6d8; }
+  .xm-row { display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .xm-holly { width: 34px; height: 24px; flex: 0 0 auto; animation: hollyWiggle 3s ease-in-out infinite; transform-origin: 50% 60%; }
+  .xm-holly.r { animation-delay: 1.5s; }
+  @keyframes hollyWiggle { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+  .login-welcome.xmas b { font-size: 27px; line-height: 1.1; letter-spacing: 0.02em;
+    background: linear-gradient(90deg, #b3121f 0%, #e63946 25%, #c9a227 45%, #e63946 65%, #b3121f 100%);
+    background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: xmShine 4s linear infinite; }
+  .login-welcome.xmas b .xn { font-size: inherit; display: inline; color: transparent; }
+  @keyframes xmShine { from { background-position: 0% 0; } to { background-position: 220% 0; } }
+  .xm-wish { display: block; margin: 4px 0 6px; font-style: normal; font-size: 12.5px; font-weight: 600; color: #1f7a4a; letter-spacing: 0.02em; }
+  .login-welcome.xmas > span { display: block; }
+  @media (max-width: 440px) { .login-welcome.xmas b { font-size: 23px; } .xm-holly { width: 28px; height: 20px; } }
+
+  /*  ===== TEMA NAVIDEÑO DEL LOGIN (verde, dorado y rojo) =====  */
+  #login.xmas { background: radial-gradient(120% 80% at 50% 0%, #14432f 0%, #0b2a1e 45%, #06170f 100%); }
+  #login.xmas .login-bg { opacity: 0.5; }
+  #login.xmas .login-card { background: linear-gradient(180deg, rgba(20, 62, 43, 0.96) 0%, rgba(12, 42, 29, 0.97) 100%);
+    border: 1px solid rgba(217, 180, 74, 0.28); box-shadow: 0 30px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    color: #e9f1ec; overflow: visible; margin-top: 34px; }
+  #login.xmas .login-top { background: transparent; border-bottom: 0; padding: 0 26px 6px; overflow: visible; display: flow-root; }
+  #login.xmas .login-top::after { display: none; }
+  #login.xmas .garland { top: 4px; left: 10px; right: 10px; overflow: hidden; border-radius: 22px 22px 0 0; height: 34px; }
+  #login.xmas .login-pump { width: 104px; height: 104px; margin: -52px auto 6px; padding: 6px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, #1d5a3e, #0e3324); border: 1px solid rgba(217, 180, 74, 0.45);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45), 0 0 0 6px rgba(12, 42, 29, 0.9); position: relative; z-index: 3; }
+  #login.xmas .login-top h1 { font-family: "Playfair Display", Georgia, serif; font-size: 18px; letter-spacing: 0.12em; font-weight: 700;
+    color: #e6c65a; line-height: 1.25; }
+  #login.xmas .login-top p { color: #9fbcae; font-size: 12px; margin-top: 2px; }
+  #login.xmas .login-body { padding: 14px 24px 22px; }
+  #login.xmas .mode-tg { background: rgba(4, 22, 14, 0.55); border-color: rgba(255, 255, 255, 0.08); }
+  #login.xmas .mode-tg .tg-ind { background: linear-gradient(135deg, #d4213d, #9b0f24); box-shadow: 0 4px 14px rgba(180, 20, 40, 0.45); }
+  #login.xmas .mode-tg button { color: #9fbcae; }
+  #login.xmas .mode-tg button.active { color: #fff; }
+  #login.xmas .login-welcome.xmas { background: none; border: 0; padding: 4px 0 2px; margin: 0 0 16px; }
+  #login.xmas .login-welcome.xmas b { font-family: "Playfair Display", Georgia, serif; font-weight: 800; font-size: 31px; letter-spacing: 0.01em;
+    background: linear-gradient(90deg, #ffffff 0%, #ffffff 35%, #f6e6a8 48%, #ffffff 61%, #ffffff 100%); background-size: 220% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; }
+  #login.xmas .xm-wish { font-family: "Playfair Display", Georgia, serif; font-style: italic; font-weight: 600; color: #e6c65a; font-size: 14px; margin: 2px 0 4px; }
+  #login.xmas .login-welcome.xmas > span { color: #c9d6cf; font-size: 13.5px; }
+  #login.xmas .xm-wish span { color: inherit; font-size: inherit; display: inline; }
+  #login.xmas .login-alert { margin-bottom: 8px; }
+  #login.xmas .field label { color: #e6c65a; text-transform: uppercase; letter-spacing: 0.09em; font-size: 12px; font-weight: 700; }
+  #login.xmas .inp-ico { position: relative; }
+  #login.xmas .inp-ico::before { content: ""; position: absolute; left: 14px; top: 50%; width: 18px; height: 18px; transform: translateY(-50%);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d9b44a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2'/%3E%3Cpath d='m3 7 9 6 9-6'/%3E%3C/svg%3E") center / contain no-repeat; pointer-events: none; z-index: 1; }
+  #login.xmas .inp-ico.pw::before { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d9b44a'%3E%3Cpath d='M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zm-7-2a2 2 0 0 1 4 0v2h-4V7z'/%3E%3C/svg%3E"); }
+  #login.xmas .inp-ico input { background: rgba(4, 22, 14, 0.6) !important; border: 1.5px solid rgba(255, 255, 255, 0.1); color: #fff;
+    padding: 14px 14px 14px 44px; border-radius: 12px; font-size: 15px; transition: border-color 0.2s, box-shadow 0.2s; }
+  #login.xmas .inp-ico.pw input { padding-right: 52px; }
+  #login.xmas .inp-ico input::placeholder { color: #7f9a8c; }
+  #login.xmas .inp-ico input:focus { outline: none; border-color: #d9b44a; box-shadow: 0 0 0 3px rgba(217, 180, 74, 0.22); }
+  #login.xmas .inp-ico input:-webkit-autofill { -webkit-box-shadow: 0 0 0 40px #0a2519 inset; -webkit-text-fill-color: #fff; caret-color: #fff; }
+  #login.xmas .pw-toggle { width: 40px; height: 34px; padding: 0; font-size: 0; color: transparent; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c9d6cf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center / 20px no-repeat; }
+  #login.xmas .pw-toggle:hover { background-color: rgba(255, 255, 255, 0.06); }
+  #login.xmas .inp-ico input[type="text"] + .pw-toggle { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6c65a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M3 3l18 18'/%3E%3C/svg%3E"); }
+  #login.xmas #loginBtn { background: linear-gradient(135deg, #e0283f 0%, #b3132a 55%, #8a0c1e 100%); color: #fff; border-radius: 12px;
+    padding: 15px; font-size: 15.5px; font-weight: 700; box-shadow: 0 10px 24px -8px rgba(210, 30, 50, 0.6); margin-top: 6px; }
+  #login.xmas #loginBtn::after { content: " \2192"; display: inline-block; margin-left: 6px; transition: transform 0.25s; }
+  #login.xmas #loginBtn:hover::after { transform: translateX(4px); }
+  #login.xmas .err { color: #ff8a8a; }
+  #login.xmas .login-hint { background: rgba(4, 22, 14, 0.45); border-color: rgba(255, 255, 255, 0.08); color: #a9c1b4; }
+  #login.xmas .login-hint b { color: #fff; }
+  #login.xmas .login-footer { border-top-color: rgba(255, 255, 255, 0.1); color: #8fa99b; }
+  #login.xmas .login-footer .link-priv:hover { color: #e6c65a; }
+  #login.xmas .ord-intro h3 { font-family: "Playfair Display", Georgia, serif; color: #fff; }
+  #login.xmas .ord-intro p, #login.xmas .ord-steps { color: #c9d6cf; }
+  #login.xmas .ord-steps li b { background: #b3132a; }
+  #login.xmas .saved-h { color: #e6c65a; }
+  #login.xmas .ord-divider { color: #9fbcae; }
+  #login.xmas .ord-divider::before, #login.xmas .ord-divider::after { background: rgba(255, 255, 255, 0.12); }
+  #login.xmas .btn.ghost { background: rgba(4, 22, 14, 0.5); color: #e9f1ec; border-color: rgba(255, 255, 255, 0.14); }
+  #login.xmas .btn.ghost:hover { background: rgba(255, 255, 255, 0.06); }
+  #login.xmas .fuel { background: rgba(4, 22, 14, 0.6); border-color: rgba(217, 180, 74, 0.2); }
+  #login.xmas .login-alert.dyn.t-mant, #login.xmas .login-alert.dyn.t-fuel { background: linear-gradient(135deg, rgba(14, 50, 34, 0.95), rgba(22, 80, 55, 0.9)); border-color: rgba(217, 180, 74, 0.35); }
+  @media (max-width: 440px) { #login.xmas .login-welcome.xmas b { font-size: 26px; } #login.xmas .login-body { padding: 12px 18px 20px; } }
+  /*  ===== GUIRNALDA DE LUCES =====  */
+  .garland { position: absolute; top: -2px; left: 0; right: 0; height: 30px; z-index: 2; pointer-events: none; }
+  .garland svg { display: block; width: 100%; height: 30px; overflow: visible; }
+  .gl-b { transform-box: fill-box; transform-origin: 50% 0; animation: glTw 1.6s ease-in-out infinite; }
+  .gl-b.c0 { fill: #ff3b4e; color: #ff3b4e; } .gl-b.c1 { fill: #ffd34d; color: #ffd34d; }
+  .gl-b.c2 { fill: #3ddc84; color: #3ddc84; } .gl-b.c3 { fill: #4fb3ff; color: #4fb3ff; }
+  .gl-b.c4 { fill: #ff8ad8; color: #ff8ad8; }
+  @keyframes glTw { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 2px currentColor); }
+    50% { opacity: 0.28; filter: none; } }
+  .garland.m1 .gl-b { animation-name: glChase; animation-duration: 1.2s; }
+  @keyframes glChase { 0%, 60%, 100% { opacity: 0.25; filter: none; } 20% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); } }
+  .garland.m2 .gl-b { animation-name: glAll; animation-duration: 0.9s; animation-delay: 0s !important; }
+  @keyframes glAll { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px currentColor); } 50% { opacity: 0.35; filter: none; } }
+  /*  ===== NIEVE INTERACTIVA =====  */
+  #snowFx { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  /*  ===== NOTIFICACIONES DINÁMICAS (LOGIN) =====  */
+  .login-alert.dyn { align-items: center; overflow: hidden; min-height: 58px; cursor: pointer; user-select: none;
+    background: linear-gradient(135deg, rgba(11, 46, 99, 0.94), rgba(18, 72, 154, 0.9)); backdrop-filter: blur(6px);
+    box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.6); animation: nfIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .login-alert.dyn.t-mant-v { background: linear-gradient(135deg, rgba(110, 16, 16, 0.95), rgba(160, 30, 30, 0.9)); border-color: #c24141; }
+  .login-alert.dyn.t-xmas { background: linear-gradient(135deg, rgba(120, 14, 26, 0.94), rgba(22, 92, 58, 0.92)); border-color: #c9a227; }
+  .login-alert.dyn.t-fuel { background: linear-gradient(135deg, rgba(8, 70, 98, 0.95), rgba(18, 126, 152, 0.9)); border-color: #2aa8c4; }
+  @keyframes nfIn { from { opacity: 0; transform: translateY(-16px) scale(0.97); } to { opacity: 1; transform: none; } }
+  .nf-bell { position: relative; flex: 0 0 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+    background: rgba(255, 255, 255, 0.12); font-size: 17px; line-height: 1; }
+  .nf-bell.ring { animation: nfRing 0.9s ease; }
+  @keyframes nfRing { 0%, 100% { transform: rotate(0); } 15% { transform: rotate(16deg); } 30% { transform: rotate(-14deg); }
+    45% { transform: rotate(10deg); } 60% { transform: rotate(-6deg); } 75% { transform: rotate(3deg); } }
+  .nf-badge { position: absolute; top: -4px; right: -5px; min-width: 17px; height: 17px; padding: 0 4px; border-radius: 9px;
+    background: #e63946; color: #fff !important; font-size: 10px !important; font-weight: 800; display: grid !important; place-items: center;
+    box-shadow: 0 0 0 2px rgba(11, 46, 99, 0.9); }
+  .nf-body { flex: 1 1 auto; min-width: 0; }
+  .nf-msg { animation: nfSlide 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+  .nf-msg.out { animation: nfOut 0.3s ease both; }
+  @keyframes nfSlide { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes nfOut { to { opacity: 0; transform: translateY(-10px); } }
+  .login-alert .nf-msg b { margin: 0; }
+  .nf-foot { display: flex !important; align-items: center; gap: 8px; margin-top: 6px; }
+  .nf-dots { display: flex !important; gap: 4px; }
+  .nf-dots i { width: 6px; height: 6px; border-radius: 50%; background: rgba(255, 255, 255, 0.35); transition: all 0.3s; }
+  .nf-dots i.on { width: 16px; border-radius: 4px; background: #ffd34d; }
+  .nf-prog { flex: 1; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, 0.15); overflow: hidden; display: block !important; }
+  .nf-prog i { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #ffd34d, #fff); transform-origin: left; transform: scaleX(0); }
+  .nf-prog i.run { animation: nfProg linear forwards; }
+  .login-alert.dyn:hover .nf-prog i.run { animation-play-state: paused; }
+  @keyframes nfProg { to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    .xm-holly, .login-welcome.xmas b, .gl-b, .lp-pom, .nf-bell.ring { animation: none !important; }
+    .lp-hat { animation: none; }
+  }
+  @media (prefers-reduced-motion: reduce) { .lp-hat { animation: none; } }
+  /*  ===== GESTIONAR / ENTRADA / SALIDA DE MANTENIMIENTO =====  */
+  .mini.navy { background: linear-gradient(135deg, #1d4f9c 0%, #0b2e63 100%); color: #fff; border-color: #0b2e63; }
+  .mini.navy:hover { filter: brightness(1.1); background: linear-gradient(135deg, #1d4f9c, #0b2e63); }
+  .mant-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .gm-list { display: grid; gap: 6px; margin: 12px 0 14px; }
+  .gm-row { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px; background: #f8fafc; }
+  .gm-row small { flex: 0 0 120px; font-size: 11.5px; color: var(--ink-2); font-weight: 600; }
+  .gm-row span { flex: 1 1 auto; min-width: 0; font-size: 13.5px; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+  .gm-row input { flex: 1 1 auto; min-width: 0; padding: 6px 8px; font-size: 13.5px; }
+  .gm-row .mini { padding: 5px 9px; font-size: 11.5px; }
+  .gm-help { margin-top: 12px; font-size: 12.5px; color: var(--ink-2); line-height: 1.5; }
+  .gm-help summary { cursor: pointer; font-weight: 700; color: var(--navy); }
+  .gm-help ol { margin: 8px 0 8px 18px; padding: 0; }
+  .gm-bm { display: inline-block; margin: 4px 6px 4px 0; padding: 7px 12px; border-radius: 8px; border: 1.5px dashed #127e98; color: #127e98; font-weight: 700; text-decoration: none; cursor: grab; }
+  @media (max-width: 480px) { .gm-row { flex-wrap: wrap; } .gm-row small { flex-basis: 100%; } }
   /*  ===== BOTÓN AGENDAR MANTENIMIENTO (INGLOSA) =====  */
   .btn.teal, .mini.teal { background: linear-gradient(135deg, #2aa8c4 0%, #127e98 100%); color: #fff; border-color: #127e98; }
   .btn.teal { box-shadow: 0 6px 16px rgba(18, 126, 152, 0.3); }
@@ -3491,12 +3642,14 @@
 <div id="bootFail" role="alert">La aplicación no pudo iniciar. Revise su conexión a internet y recargue la página. Si el problema continúa, avise al administrador del sistema.</div>
 
 <!-- LOGIN -->
-<div id="login">
+<div id="login" class="xmas">
   <div class="login-bg" aria-hidden="true"></div>
-  <div class="login-alert hidden" id="loginAlert" role="status"></div>
+  <canvas id="snowFx" aria-hidden="true"></canvas>
+  <div class="login-alert hidden" id="loginAlert" role="status" aria-live="polite"></div>
   <div class="login-card">
     <div class="login-top">
-      <svg class="login-pump" role="img" aria-label="Bomba de combustible" viewBox="0 0 120 120" width="96" height="96" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lpBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2BB4EC"/><stop offset="1" stop-color="#0077AD"/></linearGradient><linearGradient id="lpGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6C65A"/><stop offset="1" stop-color="#A8871B"/></linearGradient><radialGradient id="lpHalo" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#0093D0" stop-opacity=".45"/><stop offset="1" stop-color="#0093D0" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="60" r="58" fill="url(#lpHalo)"/><circle cx="60" cy="60" r="52" fill="rgba(255,255,255,.06)" stroke="#C9A227" stroke-opacity=".55" stroke-width="1.5"/><circle cx="60" cy="60" r="46" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="1" stroke-dasharray="2 4"/><rect x="30" y="88" width="50" height="7" rx="3" fill="#051634"/><rect x="34" y="24" width="42" height="66" rx="8" fill="url(#lpBody)"/><rect x="34" y="24" width="42" height="10" rx="8" fill="#fff" fill-opacity=".18"/><rect x="40" y="32" width="30" height="18" rx="3" fill="#0A2450"/><rect x="43" y="36" width="16" height="3" rx="1.5" fill="#5FD0FF"/><rect x="43" y="42" width="11" height="3" rx="1.5" fill="#5FD0FF" fill-opacity=".65"/><circle cx="64" cy="41" r="2.4" fill="#C9A227"/><path d="M55 57c0 0-7 8-7 12.5a7 7 0 0 0 14 0C62 65 55 57 55 57z" fill="url(#lpGold)"/><path d="M52 69a3 3 0 0 0 3 3" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M76 40h5a4 4 0 0 1 4 4v30a5 5 0 0 0 10 0V48" fill="none" stroke="#E3EAF4" stroke-width="3.2" stroke-linecap="round"/><path d="M98 39h5a4 4 0 0 1 4 4v8" fill="none" stroke="#C9A227" stroke-width="3.2" stroke-linecap="round"/><path d="M91 36h8l-2 14h-6z" fill="url(#lpGold)"/><rect x="92.5" y="30" width="5" height="7" rx="1.5" fill="#0A2450"/><g class="lp-fuel"><path class="lp-stream" d="M107 53v9" stroke="#E6C65A" stroke-width="2.2" stroke-linecap="round"/><path class="lp-drop d1" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><path class="lp-drop d2" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><path class="lp-drop d3" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><ellipse class="lp-splash" cx="107" cy="97" rx="6" ry="1.6" fill="#E6C65A"/></g></svg>
+      <div class="garland" id="garland" aria-hidden="true"></div>
+      <svg class="login-pump" role="img" aria-label="Bomba de combustible" viewBox="0 0 120 120" width="96" height="96" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lpBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2BB4EC"/><stop offset="1" stop-color="#0077AD"/></linearGradient><linearGradient id="lpGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6C65A"/><stop offset="1" stop-color="#A8871B"/></linearGradient><radialGradient id="lpHalo" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#0093D0" stop-opacity=".45"/><stop offset="1" stop-color="#0093D0" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="60" r="58" fill="url(#lpHalo)"/><circle cx="60" cy="60" r="52" fill="rgba(255,255,255,.06)" stroke="#C9A227" stroke-opacity=".55" stroke-width="1.5"/><circle cx="60" cy="60" r="46" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="1" stroke-dasharray="2 4"/><rect x="30" y="88" width="50" height="7" rx="3" fill="#051634"/><rect x="34" y="24" width="42" height="66" rx="8" fill="url(#lpBody)"/><rect x="34" y="24" width="42" height="10" rx="8" fill="#fff" fill-opacity=".18"/><rect x="40" y="32" width="30" height="18" rx="3" fill="#0A2450"/><rect x="43" y="36" width="16" height="3" rx="1.5" fill="#5FD0FF"/><rect x="43" y="42" width="11" height="3" rx="1.5" fill="#5FD0FF" fill-opacity=".65"/><circle cx="64" cy="41" r="2.4" fill="#C9A227"/><path d="M55 57c0 0-7 8-7 12.5a7 7 0 0 0 14 0C62 65 55 57 55 57z" fill="url(#lpGold)"/><path d="M52 69a3 3 0 0 0 3 3" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M76 40h5a4 4 0 0 1 4 4v30a5 5 0 0 0 10 0V48" fill="none" stroke="#E3EAF4" stroke-width="3.2" stroke-linecap="round"/><path d="M98 39h5a4 4 0 0 1 4 4v8" fill="none" stroke="#C9A227" stroke-width="3.2" stroke-linecap="round"/><path d="M91 36h8l-2 14h-6z" fill="url(#lpGold)"/><rect x="92.5" y="30" width="5" height="7" rx="1.5" fill="#0A2450"/><g class="lp-fuel"><path class="lp-stream" d="M107 53v9" stroke="#E6C65A" stroke-width="2.2" stroke-linecap="round"/><path class="lp-drop d1" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><path class="lp-drop d2" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><path class="lp-drop d3" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><ellipse class="lp-splash" cx="107" cy="97" rx="6" ry="1.6" fill="#E6C65A"/></g><g class="lp-hat"><g transform="translate(56 27) rotate(-12) scale(1.42) translate(-56 -27)"><defs><linearGradient id="lpHatR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF4D5A"/><stop offset=".6" stop-color="#D21F2E"/><stop offset="1" stop-color="#8E0F1A"/></linearGradient><radialGradient id="lpPom" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#D9E2EE"/></radialGradient></defs><path d="M37 27C38 15 47 5 61 4C73 3 83 9 90 19C84 16 78 16 74 19C75 21 75.5 24 75.5 27Z" fill="url(#lpHatR)"/><path d="M61 4C73 3 83 9 90 19C84 16 78 16 74 19C72 12 67 7 61 4Z" fill="#7A0C16" fill-opacity=".35"/><path d="M45 13C50 8 56 6.5 62 6.5" stroke="#fff" stroke-opacity=".4" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="32" y="22" width="49" height="10" rx="5" fill="#F7F9FC"/><rect x="32" y="28" width="49" height="4" rx="2" fill="#D5DEEA"/><g fill="#E4EAF3"><circle cx="38" cy="25" r="1.3"/><circle cx="46" cy="27" r="1.1"/><circle cx="55" cy="24.6" r="1.3"/><circle cx="64" cy="27" r="1.1"/><circle cx="73" cy="25" r="1.3"/></g><g class="lp-pom"><circle cx="91" cy="20" r="6.2" fill="url(#lpPom)"/></g></g></g></svg>
       <h1>CONTROL DE  <br>ABASTECIMIENTO<br>URIP III</h1>
       <p>Vehículos y motocicletas</p>
     </div>
@@ -3530,16 +3683,22 @@
       </div>
 
       <div id="loginPane">
-      <div class="login-welcome"><b>Bienvenido</b><span>Inicie sesión para continuar</span></div>
+      <div class="login-welcome xmas">
+        <div class="xm-row"><svg class="xm-holly" viewBox="0 0 40 28" aria-hidden="true"><path d="M20 15C14 4 6 6 2 4c3 4 1 8 5 11-4 1-4 5-3 7 4-4 10-2 16-7z" fill="#1f7a4a"/><path d="M20 15C26 4 34 6 38 4c-3 4-1 8-5 11 4 1 4 5 3 7-4-4-10-2-16-7z" fill="#2a9a5e"/><circle cx="17" cy="17" r="3.3" fill="#d21f2e"/><circle cx="23" cy="17" r="3.3" fill="#e63946"/><circle cx="20" cy="21.5" r="3.3" fill="#b3121f"/></svg>
+        <b id="loginHello">¡Feliz Navidad!</b>
+        <svg class="xm-holly r" viewBox="0 0 40 28" aria-hidden="true"><path d="M20 15C14 4 6 6 2 4c3 4 1 8 5 11-4 1-4 5-3 7 4-4 10-2 16-7z" fill="#1f7a4a"/><path d="M20 15C26 4 34 6 38 4c-3 4-1 8-5 11 4 1 4 5 3 7-4-4-10-2-16-7z" fill="#2a9a5e"/><circle cx="17" cy="17" r="3.3" fill="#d21f2e"/><circle cx="23" cy="17" r="3.3" fill="#e63946"/><circle cx="20" cy="21.5" r="3.3" fill="#b3121f"/></svg></div>
+        <em class="xm-wish">y próspero Año Nuevo <span id="xmYear"></span></em>
+        <span>Ingrese a su cuenta para celebrar con nosotros</span>
+      </div>
       <div class="field"><label for="u">Correo</label>
         <div class="inp-ico">
-        <input id="u" maxlength="120" type="email" autocomplete="username"></div></div>
+        <input id="u" maxlength="120" type="email" autocomplete="username" placeholder="usuario@ejemplo.com"></div></div>
       <div class="field"><label for="p">Contrase&ntilde;a</label>
         <div class="inp-ico pw">
-        <input id="p" maxlength="128" type="password" autocomplete="current-password">
+        <input id="p" maxlength="128" type="password" autocomplete="current-password" placeholder="••••••••">
         <button type="button" class="pw-toggle" id="pwToggle" aria-label="Mostrar contraseña">Ver</button></div></div>
       <div class="err" id="loginErr"></div>
-      <button class="btn" id="loginBtn">Entrar</button>
+      <button class="btn" id="loginBtn">Iniciar sesión</button>
       <div class="login-hint" id="loginHint">
         Ingrese su correo y contraseña para iniciar sesión.
       </div>
@@ -3630,7 +3789,7 @@
       <li><b>GitHub Pages:</b> publica la aplicación.</li>
        <li><b>Vercel:</b> se encuentra desplegada la aplicacion.</li>
       <li><b>Google Fonts y jsDelivr:</b> entregan tipografías y componentes del programa. Pueden registrar datos técnicos de la conexión, como la dirección IP, pero no reciben la información de los registros.</li>
-      <li><b>INGLOSA (citas.inglosa.hn):</b> el botón "Agendar mantenimiento" solo abre su página; los datos de la cita se escriben directamente en ella.</li>
+      <li><b>INGLOSA (citas.inglosa.hn):</b> el botón "Gestionar mantenimiento" abre su página y copia en su dispositivo los datos del vehículo y del solicitante para autocompletar la cita. La aplicación no envía datos a INGLOSA; solo se escriben en su página cuando usted usa el marcador de autocompletado.</li>
       <li><b>WhatsApp:</b> solo recibe un mensaje cuando usted decide compartirlo. A partir de ese momento aplican las políticas de WhatsApp.</li>
     </ul>
     <p>Los precios del combustible se obtienen de publicaciones oficiales y no contienen datos personales.</p>
@@ -3973,7 +4132,7 @@
         <div class="veh-grid" id="admVehGrid"></div>
       </div>
     </div>
-      <footer class="app-foot">&copy; 2026 Eduar Varela · Versión 20-10-2026 B · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
+      <footer class="app-foot">&copy; 2026 Eduar Varela · Versión 2.2 · <button type="button" class="link-priv" data-open-privacy>Política de privacidad</button></footer>
   </main>
 </div>
 
@@ -4011,18 +4170,18 @@
 <!-- MODAL: actualizar y reportar mantenimiento -->
 <div class="modal" id="mrModal">
   <div class="modal-box">
-    <div class="mh"><h4>Actualizar y reportar mantenimiento</h4><button class="x" type="button" aria-label="Cerrar" id="mrClose">Cerrar</button></div>
+    <div class="mh"><h4 id="mrTitle">Reportar salida de mantenimiento</h4><button class="x" type="button" aria-label="Cerrar" id="mrClose">Cerrar</button></div>
     <div class="mb">
       <div class="mr-veh"><div class="plate" id="mrPlate"></div><div><div class="mk" id="mrMk"></div><div class="sub" id="mrSub"></div></div></div>
       <div class="grid2">
-        <div class="field"><label for="mrKm">Kilometraje del mantenimiento <span class="req" style="color:var(--red)">*</span></label>
+        <div class="field"><label for="mrKm"><span id="mrKmLbl">Kilometraje del mantenimiento</span> <span class="req" style="color:var(--red)">*</span></label>
           <div class="with-suffix"><input id="mrKm" type="number" max="2000000" inputmode="numeric" min="0"><span class="sfx">km</span></div></div>
         <div class="field"><label for="mrTaller">Taller / lugar <span class="req" style="color:var(--red)">*</span></label>
           <input id="mrTaller" maxlength="60" list="mrTalleres"><datalist id="mrTalleres"></datalist></div>
       </div>
       <div class="field"><label for="mrCond">Conductor (opcional)</label>
         <input id="mrCond" maxlength="60"></div>
-      <div class="field"><label for="mrDesc">Descripción de cambios en el mantenimiento <span class="req" style="color:var(--red)">*</span></label>
+      <div class="field"><label for="mrDesc"><span id="mrDescLbl">Descripción de cambios en el mantenimiento</span> <span class="req" id="mrDescReq" style="color:var(--red)">*</span></label>
         <textarea id="mrDesc" maxlength="3000" rows="4"></textarea>
         <div class="field-hint">Escriba un cambio por línea.</div></div>
       <div class="mr-next" id="mrNext"></div>
@@ -4034,6 +4193,32 @@
         <a class="btn wa mr-open hidden" id="mrOpen" target="_blank" rel="noopener noreferrer">Abrir WhatsApp con el reporte</a>
         <button class="btn ghost" id="mrCancel" type="button">Cancelar</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: gestionar mantenimiento (citas INGLOSA con datos autocompletados) -->
+<div class="modal" id="gmModal">
+  <div class="modal-box">
+    <div class="mh"><h4>Gestionar mantenimiento</h4><button class="x" type="button" aria-label="Cerrar" id="gmClose">Cerrar</button></div>
+    <div class="mb">
+      <div class="mr-veh"><div class="plate" id="gmPlate"></div><div><div class="mk" id="gmMk"></div><div class="sub" id="gmSub"></div></div></div>
+      <div class="gm-list" id="gmList"></div>
+      <div class="share-btns">
+        <button class="btn teal" id="gmOpen" type="button">Abrir citas INGLOSA y autocompletar</button>
+        <button class="btn ghost" id="gmCopy" type="button">Copiar todos los datos</button>
+      </div>
+      <details class="gm-help">
+        <summary>¿Cómo se autocompletan los campos en INGLOSA?</summary>
+        <p>Por seguridad, ninguna página puede escribir en otra. Por eso el botón copia los datos del vehículo y el autocompletado se hace con un marcador que se guarda <b>una sola vez</b>:</p>
+        <ol>
+          <li>Arrastre este botón a la barra de favoritos: <a class="gm-bm" id="gmBookmark" href="#">Autocompletar INGLOSA</a><br>
+            En el teléfono: <button class="mini" type="button" id="gmCopyBm">Copiar código</button>, cree un favorito llamado <b>Autocompletar INGLOSA</b> y pegue el código como dirección.</li>
+          <li>Pulse <b>Abrir citas INGLOSA y autocompletar</b> (los datos quedan copiados).</li>
+          <li>En la página de INGLOSA abra el favorito <b>Autocompletar INGLOSA</b> (en el teléfono, escriba ese nombre en la barra de direcciones y elíjalo). Los campos del vehículo y del solicitante se llenan solos.</li>
+        </ol>
+        <p>Si el navegador no permite leer lo copiado, el marcador le pedirá pegar los datos. Revise siempre la cita antes de enviarla.</p>
+      </details>
     </div>
   </div>
 </div>
@@ -4296,7 +4481,7 @@ async function doLogin(){
         : 'Correo o contraseña incorrectos.'+(r<=2?' Le quedan '+r+' intento(s).':''); }
     else { segExito(); }
   }catch(e){ $('#loginErr').textContent='No se pudo conectar. Revise su internet.'; }
-  finally{ btn.classList.remove('loading'); btn.textContent='Entrar'; }
+  finally{ btn.classList.remove('loading'); btn.textContent='Iniciar sesión'; }
 }
 $('#pwToggle').addEventListener('click',()=>{ const p=$('#p'); const show=p.type==='password'; p.type=show?'text':'password';
   $('#pwToggle').setAttribute('aria-label',show?'Ocultar contraseña':'Mostrar contraseña');
@@ -4349,7 +4534,8 @@ async function afterLogin(user){
   if(currentUser && currentUser.uid===user.id) return;
   const { data, error }=await sb.from('perfiles').select('nombre,rol').eq('id', user.id).single();
   if(error||!data){ await sb.auth.signOut({scope:'local'}).catch(()=>{}); mostrarLogin(); $('#loginErr').textContent='Tu usuario no tiene perfil/rol asignado.'; return; }
-  currentUser={ uid:user.id, nombre:data.nombre||user.email, rol:(data.rol==='admin'?'admin':'usuario') };
+  currentUser={ uid:user.id, nombre:data.nombre||user.email, email:user.email||'', rol:(data.rol==='admin'?'admin':'usuario') };
+  try{ localStorage.setItem('urip_ultimo_nombre', primerNombre(currentUser.nombre)); }catch(_){}
   await loadVehiculos();
   if(ordMode) closeOrderView();
   $('#login').classList.add('hidden'); $('#app').classList.remove('hidden');
@@ -4410,12 +4596,10 @@ function pintarVehiculos(){
         '<div class="sub">'+escH(v.tipo+' · '+v.color+' · Año '+(v.anio||'—'))+'</div></div>'+
       ((mb||v.numeroEquipo)?'<div class="veh-spec">'+mb+(v.numeroEquipo?'<span class="badge-eq">Equipo '+escH(v.numeroEquipo)+'</span>':'')+'</div>':'')+
       (led?'<div class="veh-spec">'+led+'</div>':'')+
-      (led?'<div class="veh-spec"><button class="mini gold" data-mrep="'+escH(v.id)+'">Actualizar y reportar mantenimiento</button></div>':'')+
+      (led?'<div class="veh-spec mant-acts">'+botonesMant(v.id,true)+'</div>':'')+
       '<div class="row-actions"><button class="btn sm" data-abast="1">Abastecer este vehículo</button>'+
-        '<button class="mini teal" data-cita="1" title="Abrir la página de citas de INGLOSA">Agendar mantenimiento</button></div>';
+        '<button class="mini teal" data-gest="'+escH(v.id)+'" title="Datos para la cita en INGLOSA">Gestionar mantenimiento</button></div>';
     card.querySelector('[data-abast]').addEventListener('click',()=>selectVehicle(v));
-    const mb2=card.querySelector('[data-mrep]'); if(mb2) mb2.addEventListener('click',()=>openMantReport(v.id));
-    card.querySelector('[data-cita]').addEventListener('click',abrirCitaInglosa);
     grid.appendChild(card);
   });
 }
@@ -5346,9 +5530,8 @@ async function renderAdmVehGrid(){
         '<div class="mant-ctrls">'+
           '<span>Límite (km):</span><input type="number" min="1000" step="500" value="'+escH(st.limite)+'" data-lim="'+escH(v.id)+'">'+
           '<button class="mini" data-savelim="'+escH(v.id)+'">Guardar</button>'+
-          '<button class="mini gold" data-mrep="'+escH(v.id)+'">Actualizar y reportar</button>'+
           '<button class="mini wa" data-coord="'+escH(v.id)+'">Coordinar</button>'+
-          '<button class="mini teal" data-cita="1">Agendar cita</button>'+
+          botonesMant(v.id)+
         '</div></div>'+
       '<div class="row-actions"><button class="del" data-del="'+escH(v.id)+'">Eliminar vehículo</button></div>';
     grid.appendChild(card);
@@ -5357,10 +5540,8 @@ async function renderAdmVehGrid(){
     const id=b.getAttribute('data-savelim'); const inp=[...grid.querySelectorAll('[data-lim]')].find(x=>x.getAttribute('data-lim')===id);
     const val=parseInt(inp.value,10); if(isNaN(val)||val<1000||val>50000){toast('El límite debe estar entre 1,000 y 50,000 km',true);return;}
     await saveMant(id,{limite:val}); await renderAdmVehGrid(); toast('Límite de mantenimiento actualizado'); }));
-  grid.querySelectorAll('[data-mrep]').forEach(b=>b.addEventListener('click',()=>openMantReport(b.getAttribute('data-mrep'))));
   renderMantAlerts(kmMap);
   grid.querySelectorAll('[data-coord]').forEach(b=>b.addEventListener('click',()=>openMant(b.getAttribute('data-coord'))));
-  grid.querySelectorAll('[data-cita]').forEach(b=>b.addEventListener('click',abrirCitaInglosa));
   grid.querySelectorAll('[data-del]').forEach(b=>b.addEventListener('click',()=>deleteVeh(b.getAttribute('data-del'))));
 }
 async function seedVehiculos(){
@@ -5423,10 +5604,7 @@ function renderMantAlerts(kmMap){
   box.innerHTML=items.map(({v,st})=>'<div class="ma-item '+escH(st.estado)+'">'+ledMantHTML(st)+
     '<div class="ma-txt"><b>'+escH(v.marca+' '+v.modelo)+' · Placa '+escH(v.placa)+(v.numeroEquipo?' · Equipo '+escH(v.numeroEquipo):'')+'</b>'+
     '<span>Km actual '+fmtKm(st.cur)+' · Próximo mantenimiento a los '+fmtKm(st.proximo)+' km</span></div>'+
-    '<button class="mini teal" data-cita="1">Agendar mantenimiento</button>'+
-    '<button class="mini gold" data-mrep="'+escH(v.id)+'">Actualizar y reportar mantenimiento</button></div>').join('');
-  box.querySelectorAll('[data-mrep]').forEach(b=>b.addEventListener('click',()=>openMantReport(b.getAttribute('data-mrep'))));
-  box.querySelectorAll('[data-cita]').forEach(b=>b.addEventListener('click',abrirCitaInglosa));
+    '<div class="mant-acts">'+botonesMant(v.id)+'</div></div>').join('');
   /* Resumen en la bienvenida */
   const wa=$('#wlAlert');
   if(items.length){
@@ -5462,7 +5640,7 @@ function renderOdo(){
   el.className='odo '+cls;
   el.innerHTML='<div class="odo-top"><span class="odo-lbl">Odómetro · kilometraje actual</span>'+ledMantHTML(st)+'</div>'+
     '<div class="odo-read"><span class="odo-digits">'+digits.map((d,i)=>'<span'+(i===digits.length-1?' class="last"':'')+'>'+d+'</span>').join('')+'</span><span class="odo-unit">KM</span>'+
-      '<span class="odo-acts"><button class="btn sm teal odo-rep" type="button" id="odoCita">Agendar mantenimiento</button>'+
+      '<span class="odo-acts"><button class="btn sm teal odo-rep" type="button" id="odoCita">Gestionar mantenimiento</button>'+
       '<button class="btn sm gold odo-rep" type="button" id="odoRep">Reportar mantenimiento</button></span></div>'+
     '<div class="odo-src">'+(useTyped?'Según el kilometraje que está escribiendo':(base!=null?(kmBaseRoster(selectedVeh)===base?'Kilometraje registrado de la unidad':'Según el último abastecimiento registrado'):'Sin abastecimientos registrados'))+'</div>'+
     '<div class="odo-grid"><div class="odo-cell"><small>Próximo mantenimiento</small><b>'+fmtKm(st.proximo)+' km</b></div>'+
@@ -5470,7 +5648,7 @@ function renderOdo(){
     '<div class="odo-bar"><i style="width:'+pct+'%"></i><em style="left:'+mark+'%"></em></div>'+
     '<div class="odo-msg">'+msg+'</div>';
   $('#odoRep').addEventListener('click',()=>openMantReport(selectedVeh.id));
-  $('#odoCita').addEventListener('click',abrirCitaInglosa);
+  $('#odoCita').addEventListener('click',()=>openGestionMant(selectedVeh.id));
   animarCuenta(st.restante);
 }
 function animarCuenta(target){
@@ -5483,12 +5661,19 @@ function animarCuenta(target){
 }
 
 /* ---------- Reporte de mantenimiento preventivo ---------- */
-let mrVeh=null, mrSt=null;
+let mrVeh=null, mrSt=null, mrModo='salida';
 const LS_MANT='urip_mant_v1';
 function lsGet(){ try{ return JSON.parse(localStorage.getItem(LS_MANT)||'{}'); }catch(_){ return {}; } }
 function lsSet(o){ try{ localStorage.setItem(LS_MANT, JSON.stringify(o)); }catch(_){} }
-async function openMantReport(id){
-  const v=vehById(id); if(!v || !v.id) return; mrVeh=v;
+async function openMantReport(id,modo){
+  const v=vehById(id); if(!v || !v.id) return; mrVeh=v; mrModo=(modo==='entrada'?'entrada':'salida');
+  const ent=mrModo==='entrada';
+  $('#mrTitle').textContent=ent?'Reportar entrada a mantenimiento':'Reportar salida de mantenimiento';
+  $('#mrKmLbl').textContent=ent?'Kilometraje de entrada al taller':'Kilometraje del mantenimiento';
+  $('#mrDescLbl').textContent=ent?'Trabajos solicitados / motivo de ingreso (opcional)':'Descripción de cambios en el mantenimiento';
+  $('#mrDescReq').classList.toggle('hidden',ent);
+  $('#mrNext').classList.toggle('hidden',ent);
+  $('#mrSend').querySelector('span').textContent=mrBtnTxt();
   let kmMap={}; try{ kmMap=await kmActualMap(); }catch(_){}
   mrSt=mantStatus(id, kmMap[id]);
   const mem=lsGet();
@@ -5523,8 +5708,27 @@ function msgReporteMant(v,km,taller,cond,limite,desc){
     'Sin más que informar','','Respetuosamente','',
     ...MANT_FIRMA.map(x=>'*'+x+'*')].join('\n');
 }
+function mrBtnTxt(){ return mrModo==='entrada'?'Compartir entrada por WhatsApp':'Guardar y compartir por WhatsApp'; }
+function msgEntradaMant(v,km,taller,cond,desc){
+  const d=new Date();
+  const items=[['Marca',v.marca],['Tipo',v.tipo],['Modelo',v.modelo],['Color',v.color],['Año',v.anio],['Placas',v.placa],
+    ['Motor',v.motor],['Chasis',v.chasis],['Número de equipo',v.numeroEquipo],['Conductor',cond]]
+    .filter(x=>x[1]!=null && String(x[1]).trim()!=='' && String(x[1]).trim()!=='—');
+  return ['*República de Honduras*','*Secretaría de Seguridad*','*Dirección General Policía Nacional*','*DIPOL-URIP-III*','',
+    '*'+fechaDiaCorta(d)+'*','',
+    '*Entrada a mantenimiento preventivo de vehículo asignado a la URIP-III*','',
+    saludoHora(d)+' señor, con todo respeto le reporto que el día de hoy ingresó a mantenimiento preventivo el vehículo con las siguientes características:','',
+    ...items.map((x,i)=>(i+1)+'. '+x[0]+': '+x[1]),'',
+    'Dicho vehículo es propiedad de '+MANT_PROPIETARIO+' y está asignado a '+MANT_ASIGNADO+'.','',
+    'Ingresó'+(taller?' a '+taller:' al taller')+' con *'+fmtKm(km)+' kilómetros*, hora '+pad(d.getHours())+':'+pad(d.getMinutes())+'.','',
+    ...(lineasDesc(desc).length?['*Trabajos solicitados:*',...lineasDesc(desc).map(x=>'• '+x),'']:[]),
+    '*NOTA:*','• Se informará la salida del vehículo al finalizar el mantenimiento.','',
+    'Sin más que informar','','Respetuosamente','',
+    ...MANT_FIRMA.map(x=>'*'+x+'*')].join('\n');
+}
 function mrPreview(){
   if(!mrVeh) return; const km=parseFloat($('#mrKm').value); const k=isNaN(km)?0:km;
+  if(mrModo==='entrada'){ $('#mrPrev').textContent=msgEntradaMant(mrVeh,k,$('#mrTaller').value.trim(),$('#mrCond').value.trim(),$('#mrDesc').value); return; }
   $('#mrNext').innerHTML='Próximo mantenimiento: <b>'+fmtKm(k+mrSt.limite)+' km</b> · la alerta se mostrará a los <b>'+fmtKm(k+mrSt.limite-MANT_AVISO)+' km</b>.';
   $('#mrPrev').textContent=msgReporteMant(mrVeh,k,$('#mrTaller').value.trim(),$('#mrCond').value.trim(),mrSt.limite,$('#mrDesc').value);
 }
@@ -5553,7 +5757,16 @@ async function registrarMantenimiento(v,km,taller,cond,desc){
 $('#mrSend').addEventListener('click',async()=>{
   const err=$('#mrErr'); err.textContent='';
   const km=numRango($('#mrKm').value,1,KM_MAX), taller=limpiarTxt($('#mrTaller').value,60), cond=limpiarTxt($('#mrCond').value,60), desc=lineasDesc($('#mrDesc').value).slice(0,30).map(x=>x.slice(0,200)).join('\n');
-  if(isNaN(km)){ err.textContent='Escriba el kilometraje en que se realizó el mantenimiento.'; $('#mrKm').focus(); return; }
+  if(isNaN(km)){ err.textContent=mrModo==='entrada'?'Escriba el kilometraje con que el vehículo entra al taller.':'Escriba el kilometraje en que se realizó el mantenimiento.'; $('#mrKm').focus(); return; }
+  if(mrModo==='entrada'){
+    if(!taller){ err.textContent='Escriba el taller o lugar donde ingresa el vehículo.'; $('#mrTaller').focus(); return; }
+    const msgE=msgEntradaMant(mrVeh,km,taller,cond,desc);
+    const memE=lsGet(); memE.taller=memE.taller||{}; memE.cond=memE.cond||{}; memE.taller[mrVeh.id]=taller; if(cond) memE.cond[mrVeh.id]=cond;
+    memE.talleres=[taller].concat((memE.talleres||[]).filter(t=>t!==taller)).slice(0,8); lsSet(memE);
+    if(abrirWhatsApp(msgE)){ toast('Entrada a mantenimiento lista para enviar'); cerrarMR(); }
+    else { $('#mrOpen').href='https://wa.me/?text='+encodeURIComponent(msgE); $('#mrOpen').classList.remove('hidden'); $('#mrSend').classList.add('hidden'); }
+    return;
+  }
   if(km<mrSt.kmBase){ err.textContent='El kilometraje no puede ser menor que el del último mantenimiento ('+fmtKm(mrSt.kmBase)+' km).'; return; }
   if(!taller){ err.textContent='Escriba el taller o lugar donde se realizó el mantenimiento.'; $('#mrTaller').focus(); return; }
   if(!desc){ err.textContent='Escriba la descripción de los cambios realizados en el mantenimiento.'; $('#mrDesc').focus(); return; }
@@ -5568,7 +5781,7 @@ $('#mrSend').addEventListener('click',async()=>{
       ? 'Su usuario no tiene permiso para actualizar el mantenimiento. Pida a un administrador que lo registre o que active la función "registrar_mantenimiento" en Supabase.'
       : 'No se pudo guardar el mantenimiento: '+((e&&e.message)||'sin conexión');
     return;
-  }finally{ btn.disabled=false; btn.classList.remove('loading'); btn.querySelector('span').textContent='Guardar y compartir por WhatsApp'; }
+  }finally{ btn.disabled=false; btn.classList.remove('loading'); btn.querySelector('span').textContent=mrBtnTxt(); }
   const mem=lsGet(); mem.taller=mem.taller||{}; mem.cond=mem.cond||{}; mem.taller[mrVeh.id]=taller; if(cond) mem.cond[mrVeh.id]=cond;
   mem.talleres=[taller].concat((mem.talleres||[]).filter(t=>t!==taller)).slice(0,8); lsSet(mem);
   toast('Mantenimiento registrado. Próximo a los '+fmtKm(km+mrSt.limite)+' km');
@@ -5627,21 +5840,130 @@ cargarPrecios();
 /* Aviso de mantenimiento en la pantalla de inicio de sesión.
    Usa la función pública "alertas_mantenimiento" de Supabase (solo marca/modelo y km, sin placas).
    Si no existe, muestra el último aviso visto en este dispositivo. */
-function pintarAlertaLogin(lista){
-  const el=$('#loginAlert'); if(!lista||!lista.length){ el.classList.add('hidden'); return; }
-  const venc=lista.filter(x=>x.estado==='vencido').length;
-  el.className='login-alert '+(venc?'vencido':'proximo');
-  el.innerHTML='<span class="led-bar" aria-hidden="true"><span class="led-dot red"></span><span class="led-dot blue"></span></span>'+
-    '<div><b>Mantenimiento preventivo</b>'+lista.slice(0,4).map(x=>'<span>'+escH(x.vehiculo)+': '+(Number(x.faltan)>0?'faltan '+fmtKm(x.faltan)+' km':'vencido por '+fmtKm(Math.abs(x.faltan))+' km')+'</span>').join('')+
-    (lista.length>4?'<span>y '+(lista.length-4)+' más</span>':'')+'</div>';
+/* Notificaciones dinámicas del login: rotan solas (mantenimiento, Navidad, combustible); tocar pasa a la siguiente */
+let nfLista=[], nfIdx=0, nfTimer=null;
+const NF_MS=4500;
+function diasParaNavidad(){ const h=new Date(); h.setHours(0,0,0,0); let n=new Date(h.getFullYear(),11,25);
+  if(h>n) n=new Date(h.getFullYear()+1,11,25); return Math.round((n-h)/864e5); }
+function construirNotis(lista){
+  const out=[];
+  (lista||[]).slice(0,6).forEach(x=>{ const v=Number(x.faltan)<=0;
+    out.push({t:v?'t-mant-v':'t-mant', ico:'🔧', h:v?'Mantenimiento vencido':'Mantenimiento preventivo',
+      m:escH(x.vehiculo)+': '+(v?'vencido por '+fmtKm(Math.abs(x.faltan))+' km':'faltan '+fmtKm(x.faltan)+' km')}); });
+  const d=diasParaNavidad();
+  out.push({t:'t-xmas', ico:'🎄', h:d===0?'¡Hoy es Navidad!':'Cuenta regresiva navideña',
+    m:d===0?'Feliz Navidad a todo el personal de la URIP III.':'Faltan <b style="display:inline;color:#ffd34d">'+d+'</b> '+(d===1?'día':'días')+' para Navidad.'});
+  const f=($('#fuelSub')&&$('#fuelSub').textContent.trim())||'';
+  if(f) out.push({t:'t-fuel', ico:'⛽', h:'Precios del combustible', m:escH(f)});
+  out.push({t:'t-xmas', ico:'🎁', h:saludoHora()+'', m:'Conduzca con precaución en estas fiestas. ¡Felices fiestas!'});
+  return out;
 }
+function nfPintar(anim){
+  const el=$('#loginAlert'); if(!nfLista.length){ el.classList.add('hidden'); return; }
+  const n=nfLista[nfIdx%nfLista.length], tot=nfLista.length;
+  const mants=nfLista.filter(x=>x.t.indexOf('t-mant')===0).length;
+  const doRender=()=>{
+    el.className='login-alert dyn '+n.t;
+    el.innerHTML='<div class="nf-bell'+(anim?' ring':'')+'" aria-hidden="true">'+n.ico+(mants?'<div class="nf-badge">'+mants+'</div>':'')+'</div>'+
+      '<div class="nf-body"><div class="nf-msg"><b>'+escH(n.h)+'</b><span>'+n.m+'</span></div>'+
+      '<span class="nf-foot"><span class="nf-dots">'+nfLista.map((_,i)=>'<i class="'+(i===nfIdx%tot?'on':'')+'"></i>').join('')+'</span>'+
+      '<span class="nf-prog"><i class="run" style="animation-duration:'+NF_MS+'ms"></i></span></span></div>';
+  };
+  const msg=el.querySelector('.nf-msg');
+  if(msg && anim){ msg.classList.add('out'); setTimeout(doRender,280); } else doRender();
+}
+function nfSiguiente(){ if(!nfLista.length) return; nfIdx=(nfIdx+1)%nfLista.length; nfPintar(true); nfProgramar(); }
+function nfProgramar(){ clearTimeout(nfTimer); if(nfLista.length>1) nfTimer=setTimeout(()=>{
+  if(!$('#login').classList.contains('hidden') && !document.hidden && !$('#loginAlert').matches(':hover')) nfSiguiente(); else nfProgramar(); }, NF_MS); }
+function pintarAlertaLogin(lista){
+  nfLista=construirNotis(lista); nfIdx=0; nfPintar(true); nfProgramar();
+}
+$('#loginAlert').addEventListener('click',nfSiguiente);
+(function(){ let x0=null; const el=$('#loginAlert');
+  el.addEventListener('touchstart',e=>{ x0=e.touches[0].clientX; },{passive:true});
+  el.addEventListener('touchend',e=>{ if(x0==null) return; const dx=e.changedTouches[0].clientX-x0; x0=null;
+    if(Math.abs(dx)>40){ e.preventDefault(); if(dx<0) nfSiguiente(); else { nfIdx=(nfIdx-1+nfLista.length)%nfLista.length; nfPintar(true); nfProgramar(); } } });
+})();
 async function cargarAlertaLogin(){
   let lista=null;
   if(sb){ try{ const r=await sb.rpc('alertas_mantenimiento'); if(!r.error && Array.isArray(r.data)) lista=r.data; }catch(_){} }
   if(lista===null){ try{ const c=JSON.parse(localStorage.getItem('urip_alertas')||'null'); if(c && Date.now()-c.t<7*864e5) lista=c.a; }catch(_){} }
   pintarAlertaLogin(lista);
+  /* Los precios del combustible llegan después: se agregan a las notificaciones cuando estén listos */
+  setTimeout(()=>{ const f=$('#fuelSub')&&$('#fuelSub').textContent.trim(); if(f && !nfLista.some(x=>x.t==='t-fuel')){ const i=nfIdx; nfLista=construirNotis(lista); nfIdx=i%nfLista.length; } },3000);
 }
 cargarAlertaLogin();
+/* ---------- Guirnalda de luces animada ---------- */
+let glModo=0;
+function pintarGuirnalda(){
+  const g=$('#garland'); if(!g) return; const W=Math.max(200,g.clientWidth||400);
+  const n=Math.max(6,Math.round(W/34)), step=W/n;
+  let path='M0 3', bulbs='';
+  for(let i=0;i<n;i++){ const x0=i*step, x1=x0+step, cx=x0+step/2;
+    path+=' Q'+cx.toFixed(1)+' 19 '+x1.toFixed(1)+' 3';
+    const cy=11; const c='c'+(i%5);
+    bulbs+='<g><rect x="'+(cx-2.6).toFixed(1)+'" y="'+cy+'" width="5.2" height="4" rx="1" fill="#2c3e2f"/>'+
+      '<path class="gl-b '+c+'" d="M'+cx.toFixed(1)+' '+(cy+3.5)+'c-3.4 0-4.6 3.4-4.6 6.2 0 3 2 5.8 4.6 5.8s4.6-2.8 4.6-5.8c0-2.8-1.2-6.2-4.6-6.2z"/></g>';
+  }
+  g.className='garland m'+glModo;
+  g.innerHTML='<svg viewBox="0 0 '+W+' 30" preserveAspectRatio="none"><path d="'+path+'" fill="none" stroke="#1d3b26" stroke-width="1.6"/>'+bulbs+'</svg>';
+  /* retrasos: alternado, persecución o todas a la vez según el modo */
+  g.querySelectorAll('.gl-b').forEach((b,i)=>{ b.style.animationDelay=(glModo===1?(i%3)*0.4:(i%2?0.8:0))+'s'; });
+}
+pintarGuirnalda();
+window.addEventListener('resize',()=>{ clearTimeout(window.__glT); window.__glT=setTimeout(pintarGuirnalda,200); });
+setInterval(()=>{ if($('#login').classList.contains('hidden')||document.hidden) return; glModo=(glModo+1)%3; pintarGuirnalda(); },8000);
+$('#garland').parentElement.addEventListener('click',e=>{ if(e.target.closest('.login-pump,.garland')||e.target.classList.contains('login-top')){ glModo=(glModo+1)%3; pintarGuirnalda(); } });
+/* ---------- Nieve interactiva: los copos esquivan el dedo o el ratón; tocar crea una ráfaga ---------- */
+(function(){
+  const cv=$('#snowFx'), box=$('#login'); if(!cv||!cv.getContext) return;
+  if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const ctx=cv.getContext('2d'); let W=0,H=0,dpr=1, flakes=[], ptr={x:-999,y:-999,on:false}, viento=0, t=0;
+  function size(){ dpr=Math.min(2,window.devicePixelRatio||1); W=box.clientWidth; H=box.clientHeight;
+    cv.width=W*dpr; cv.height=H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+    const objetivo=Math.min(240,Math.round(W*H/5500));
+    while(flakes.length<objetivo) flakes.push(nuevo(true)); flakes.length=Math.min(flakes.length,objetivo+80); }
+  function nuevo(cualquierY,x,y){ const r=Math.random()*3+1;
+    return {x:x!=null?x:Math.random()*W, y:y!=null?y:(cualquierY?Math.random()*H:-10), r, vy:0.35+r*0.32, vx:0, ph:Math.random()*6.28, a:0.45+Math.random()*0.5}; }
+  function pos(e){ const b=box.getBoundingClientRect(); const p=e.touches?e.touches[0]:e; return {x:p.clientX-b.left, y:p.clientY-b.top}; }
+  box.addEventListener('pointermove',e=>{ const p=pos(e); viento+=(e.movementX||0)*0.004; ptr.x=p.x; ptr.y=p.y; ptr.on=true; },{passive:true});
+  box.addEventListener('pointerleave',()=>{ ptr.on=false; });
+  box.addEventListener('touchmove',e=>{ const p=pos(e); ptr.x=p.x; ptr.y=p.y; ptr.on=true; },{passive:true});
+  box.addEventListener('touchend',()=>{ ptr.on=false; },{passive:true});
+  box.addEventListener('pointerdown',e=>{ if(e.target.closest('input,button,a,select,textarea,label')) return; const p=pos(e);
+    for(let i=0;i<24;i++){ const f=nuevo(false,p.x,p.y); const an=Math.random()*6.28, sp=1+Math.random()*3.5;
+      f.vx=Math.cos(an)*sp; f.vy0=f.vy; f.vy=Math.sin(an)*sp; f.burst=1; flakes.push(f); } });
+  function tick(){
+    requestAnimationFrame(tick);
+    if(box.classList.contains('hidden')||document.hidden) return;
+    t+=0.016; viento*=0.96; ctx.clearRect(0,0,W,H);
+    for(let i=flakes.length-1;i>=0;i--){ const f=flakes[i];
+      if(ptr.on){ const dx=f.x-ptr.x, dy=f.y-ptr.y, d2=dx*dx+dy*dy;
+        if(d2<9000){ const d=Math.sqrt(d2)||1, fu=(95-d)/95*1.6; f.vx+=dx/d*fu; f.y+=dy/d*fu*0.6; } }
+      if(f.burst){ f.vx*=0.95; f.vy+=(f.vy0-f.vy)*0.05; if(Math.abs(f.vy-f.vy0)<0.05) f.burst=0; }
+      else f.vx*=0.92;
+      f.x+=f.vx+Math.sin(t*1.3+f.ph)*0.35*(f.r/2)+viento*f.r; f.y+=f.vy;
+      if(f.y>H+10 || f.x<-20 || f.x>W+20){ if(flakes.length>Math.min(240,Math.round(W*H/5500))) flakes.splice(i,1); else Object.assign(f,nuevo(false)); continue; }
+      ctx.globalAlpha=f.a; ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,6.283); ctx.fillStyle='#fff'; ctx.fill();
+    }
+    ctx.globalAlpha=1;
+  }
+  size(); window.addEventListener('resize',size); new ResizeObserver(size).observe(box); requestAnimationFrame(tick);
+})();
+/* Saludo navideño del login: usa el nombre del último usuario o el del correo que se escribe */
+function saludoNavidadLogin(){
+  const el=$('#loginHello'); if(!el) return;
+  let n=primerNombre(($('#u')&&$('#u').value)||'');
+  if(!n){ try{ n=localStorage.getItem('urip_ultimo_nombre')||''; }catch(_){} }
+  el.textContent='';
+  el.appendChild(document.createTextNode('¡Feliz Navidad'+(n?', ':'')));
+  if(n){ const s=document.createElement('span'); s.className='xn'; s.textContent=n; el.appendChild(s); }
+  el.appendChild(document.createTextNode('!'));
+  const y=$('#xmYear'); if(y){ const h=new Date(); y.textContent=String(h.getMonth()===0&&h.getDate()<15?h.getFullYear():h.getFullYear()+1); }
+}
+saludoNavidadLogin();
+['input','change'].forEach(ev=>$('#u').addEventListener(ev,saludoNavidadLogin));
+setTimeout(saludoNavidadLogin,600);
 
 /* =====================================================================
    DESPEDIDA Y TRANSICIÓN "DIPOL" AL INICIAR SESIÓN
@@ -5672,8 +5994,8 @@ function transicionDipol(){
   const reducido=window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   let t1, t2;
   const cerrar=()=>{ clearTimeout(t1); clearTimeout(t2); fx.classList.add('out');
-    t2=setTimeout(()=>{ fx.classList.add('hidden'); fx.classList.remove('play','out'); },500); };
-  t1=setTimeout(cerrar, reducido?900:2900);
+    t2=setTimeout(()=>{ fx.classList.add('hidden'); fx.classList.remove('play','out'); },350); };
+  t1=setTimeout(cerrar, reducido?900:1650);   /* 1.65 s + 0.35 s de salida = 2 s */
   fx.onclick=cerrar;
 }
 
@@ -5699,12 +6021,92 @@ $('#privBack2').addEventListener('click',()=>cerrarPrivacidad(false));
 window.addEventListener('popstate',()=>{ if(privAbierta) cerrarPrivacidad(true); });
 document.addEventListener('keydown',e=>{ if(e.key==='Escape' && privAbierta) cerrarPrivacidad(false); });
 if(location.hash==='#privacidad'){ try{ history.replaceState(null,'',location.pathname+location.search); }catch(_){} abrirPrivacidad(); }
-/* Agendar mantenimiento: abre la página de citas de INGLOSA para llenarla manualmente */
+/* Agendar mantenimiento: abre la página de citas de INGLOSA */
 const CITA_URL='https://citas.inglosa.hn/';
 function abrirCitaInglosa(){
   let w=null; try{ w=window.open(CITA_URL,'_blank'); if(w){ try{ w.opener=null; }catch(_){} } }catch(_){}
   if(!w) location.href=CITA_URL;
 }
+/* Botones de mantenimiento: gestionar (cita INGLOSA), entrada y salida */
+function botonesMant(id,sinGestion){
+  const i=escH(id);
+  return (sinGestion?'':'<button class="mini teal" data-gest="'+i+'">Gestionar mantenimiento</button>')+
+    '<button class="mini navy" data-ment="'+i+'">Reportar entrada a mantenimiento</button>'+
+    '<button class="mini gold" data-mrep="'+i+'">Reportar salida de mantenimiento</button>';
+}
+document.addEventListener('click',e=>{
+  const g=e.target.closest('[data-gest]'); if(g){ openGestionMant(g.getAttribute('data-gest')); return; }
+  const en=e.target.closest('[data-ment]'); if(en){ openMantReport(en.getAttribute('data-ment'),'entrada'); return; }
+  const sa=e.target.closest('[data-mrep]');
+  if(sa){ openMantReport(sa.getAttribute('data-mrep'),'salida'); }
+});
+/* Gestionar mantenimiento: datos del vehículo y del solicitante para la cita de INGLOSA */
+const LS_SOL='urip_solicitante_v1';
+let gmDatos=[];
+async function openGestionMant(id){
+  const v=vehById(id); if(!v || !v.id) return;
+  let kmMap={}; try{ kmMap=await kmActualMap(); }catch(_){}
+  const st=mantStatus(id, kmMap[id]);
+  let sol={}; try{ sol=JSON.parse(localStorage.getItem(LS_SOL)||'{}'); }catch(_){}
+  const usr=currentUser||{};
+  gmDatos=[
+    ['Placa',v.placa],['Marca',v.marca],['Modelo',v.modelo],['Tipo',v.tipo],['Color',v.color],['Año',v.anio],
+    ['Motor',v.motor],['Chasis',v.chasis],['Número de equipo',v.numeroEquipo],
+    ['Kilometraje',Math.round(st.cur)],
+    ['Servicio','Mantenimiento preventivo de '+fmtKm(st.proximo)+' km'],
+    ['Propietario',MANT_PROPIETARIO],['Institución',MANT_ASIGNADO],
+    ['Solicitante',usr.nombre&&!String(usr.nombre).includes('@')?usr.nombre:(sol.nombre||'')],
+    ['Correo',usr.email||sol.correo||''],
+    ['Teléfono',sol.tel||'']
+  ].map(([k,val])=>[k,String(val==null?'':val).trim()==='—'?'':String(val==null?'':val).trim()]);
+  $('#gmPlate').innerHTML=plateHTML(v.placa);
+  $('#gmMk').textContent=v.marca+' '+v.modelo;
+  $('#gmSub').textContent='Km actual '+fmtKm(st.cur)+' · Próximo mantenimiento a los '+fmtKm(st.proximo)+' km';
+  const editables={'Solicitante':1,'Correo':1,'Teléfono':1};
+  $('#gmList').innerHTML=gmDatos.map(([k,val],i)=>'<div class="gm-row"><small>'+escH(k)+'</small>'+
+    (editables[k]?'<input data-gmi="'+i+'" maxlength="80" value="'+escH(val)+'"'+(k==='Teléfono'?' inputmode="tel" placeholder="Número de contacto"':'')+'>':'<span>'+escH(val||'—')+'</span>')+
+    '<button class="mini" type="button" data-gmc="'+i+'">Copiar</button></div>').join('');
+  $('#gmModal').classList.add('show');
+}
+function gmLeer(){
+  document.querySelectorAll('#gmList [data-gmi]').forEach(inp=>{ gmDatos[+inp.getAttribute('data-gmi')][1]=limpiarTxt(inp.value,80); });
+  const g=k=>(gmDatos.find(x=>x[0]===k)||[])[1]||'';
+  try{ localStorage.setItem(LS_SOL,JSON.stringify({nombre:g('Solicitante'),correo:g('Correo'),tel:g('Teléfono')})); }catch(_){}
+}
+function gmTexto(){ gmLeer(); return ['URIP-INGLOSA'].concat(gmDatos.filter(x=>x[1]).map(x=>x[0]+': '+x[1])).join('\n'); }
+async function copiarTxt(t){
+  try{ await navigator.clipboard.writeText(t); return true; }catch(_){}
+  try{ const ta=document.createElement('textarea'); ta.value=t; ta.setAttribute('readonly',''); ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select(); const ok=document.execCommand('copy'); ta.remove(); return ok; }catch(_){ return false; }
+}
+/* Marcador que se ejecuta en la página de INGLOSA: lee los datos copiados y llena los campos */
+const GM_BOOKMARKLET="(async()=>{let t='';try{t=await navigator.clipboard.readText()}catch(e){}"+
+ "if(!/URIP-INGLOSA/.test(t))t=prompt('Pegue aquí los datos copiados desde Control de Abastecimiento URIP III')||'';"+
+ "const d={};t.split(/\\n/).forEach(l=>{const m=l.match(/^([^:]+):\\s*(.*)$/);if(m)d[m[1].trim().toLowerCase()]=m[2].trim()});"+
+ "const R=[[/correo|e-?mail/,'correo'],[/tel[eé]f|celular|m[oó]vil|phone|whats/,'teléfono'],[/placa|plate|matr[ií]cula/,'placa'],"+
+ "[/chasis|chassis|\\bvin\\b|serie/,'chasis'],[/motor|engine/,'motor'],[/a[ñn]o|year/,'año'],[/marca|brand|make/,'marca'],[/modelo|model/,'modelo'],"+
+ "[/color/,'color'],[/kilometr|odom|mileage|\\bkm\\b/,'kilometraje'],[/equipo/,'número de equipo'],[/empresa|instituci|compa[ñn]|dependencia/,'institución'],"+
+ "[/nombre|name|cliente|solicitante|contacto|responsable/,'solicitante'],[/servicio|motivo|coment|observ|descrip|mensaje|nota|detalle/,'servicio']];"+
+ "let n=0;document.querySelectorAll('input,select,textarea').forEach(el=>{if(el.disabled||el.readOnly)return;"+
+ "if(/hidden|submit|button|checkbox|radio|file|password|date|time|image|reset/.test(el.type||''))return;if(el.tagName!=='SELECT'&&el.value)return;"+
+ "let lb='';if(el.id){const l=document.querySelector('label[for=\"'+CSS.escape(el.id)+'\"]');if(l)lb=l.textContent}if(!lb&&el.closest('label'))lb=el.closest('label').textContent;"+
+ "const s=(lb+' '+(el.name||'')+' '+(el.id||'')+' '+(el.placeholder||'')+' '+(el.getAttribute('aria-label')||'')).toLowerCase();"+
+ "for(const[re,k]of R){if(!re.test(s))continue;if(!d[k])break;let v=d[k];if(el.tagName==='SELECT'){const q=v.toLowerCase();"+
+ "const o=[...el.options].find(o=>{const x=o.text.trim().toLowerCase();return x&&(x.includes(q)||q.includes(x))});if(!o)break;v=o.value}"+
+ "const ds=Object.getOwnPropertyDescriptor(Object.getPrototypeOf(el),'value');if(ds&&ds.set)ds.set.call(el,v);else el.value=v;"+
+ "el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}));n++;break}});"+
+ "alert(n?'Se completaron '+n+' campos. Revise los datos antes de enviar la cita.':'No se encontraron campos para completar en esta página.')})()";
+$('#gmBookmark').href='javascript:'+encodeURIComponent(GM_BOOKMARKLET);
+$('#gmBookmark').addEventListener('click',e=>{ e.preventDefault(); toast('Arrastre el botón a la barra de favoritos para guardarlo'); });
+$('#gmCopyBm').addEventListener('click',async()=>{ toast(await copiarTxt('javascript:'+GM_BOOKMARKLET)?'Código del marcador copiado':'No se pudo copiar',false); });
+$('#gmList').addEventListener('click',async e=>{ const b=e.target.closest('[data-gmc]'); if(!b) return; gmLeer();
+  const x=gmDatos[+b.getAttribute('data-gmc')]; if(!x||!x[1]){ toast('Ese dato está vacío',true); return; }
+  toast(await copiarTxt(x[1])?x[0]+' copiado':'No se pudo copiar',false); });
+$('#gmCopy').addEventListener('click',async()=>{ toast(await copiarTxt(gmTexto())?'Datos copiados':'No se pudieron copiar los datos',false); });
+$('#gmOpen').addEventListener('click',()=>{ copiarTxt(gmTexto()); abrirCitaInglosa(); toast('Datos copiados. En INGLOSA use el marcador "Autocompletar INGLOSA".'); });
+const cerrarGM=()=>$('#gmModal').classList.remove('show');
+$('#gmClose').addEventListener('click',cerrarGM);
+$('#gmModal').addEventListener('click',e=>{ if(e.target.id==='gmModal') cerrarGM(); });
 /* Coordinar mantenimiento */
 let mantTarget=null, mantTargetSt=null;
 async function openMant(id){
