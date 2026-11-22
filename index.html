@@ -9,7 +9,7 @@
      - IMPORTANTE: si modifica el código JavaScript de este archivo, la huella cambia y el navegador
        bloqueará el script. Abra la consola del navegador (F12): el error indica la huella nueva
        ('sha256-…'); cópiela en lugar de la actual en script-src. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-n+TjUb3DL+HXjJje2xaI8lg+SIColVn09kwbO7equDY=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-jdPqzD1seYIaHxTzh/mMasnDyYcJkg/prUkojEl60vc=' 'wasm-unsafe-eval' https://cdn.jsdelivr.net blob:; worker-src 'self' blob: https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co; connect-src 'self' data: blob: https://ignvdkvunbxacvuqehzo.supabase.co wss://ignvdkvunbxacvuqehzo.supabase.co https://cdn.jsdelivr.net https://tessdata.projectnaptha.com; media-src 'self' data: blob:; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="robots" content="noindex, nofollow">
 <title>Control de Abastecimiento de vehiculos URIP III</title>
@@ -2111,6 +2111,73 @@
   #login.xmas .fuel { background: rgba(4, 22, 14, 0.6); border-color: rgba(217, 180, 74, 0.2); }
   #login.xmas .login-alert.dyn.t-mant, #login.xmas .login-alert.dyn.t-fuel { background: linear-gradient(135deg, rgba(14, 50, 34, 0.95), rgba(22, 80, 55, 0.9)); border-color: rgba(217, 180, 74, 0.35); }
   @media (max-width: 440px) { #login.xmas .login-welcome.xmas b { font-size: 26px; } #login.xmas .login-body { padding: 12px 18px 20px; } }
+
+  /*  ===== INICIO DE SESIÓN · DISEÑO INSTITUCIONAL DE TEMPORADA =====  */
+  #login.inst { background: #e9edf2; justify-content: flex-start; padding: 0 0 28px; gap: 14px; color: #1b2733; }
+  #login.inst .login-bg { display: none; }
+  #login.inst .garland { display: none !important; }
+  #login.inst .login-card { max-width: 440px; border-radius: 0; background: transparent; box-shadow: none; overflow: visible; animation: none; }
+  #login.inst .login-top { background: #142d4e; border-bottom: 3px solid #b69a42; padding: 34px 24px 56px; overflow: hidden; text-align: center; animation: none; }
+  #login.inst .login-top::before, #login.inst .login-top::after { display: none !important; }
+  #login.inst .li-orn { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  #login.inst .li-emblem { position: relative; width: 74px; height: 74px; margin: 0 auto 12px; border: 1px solid #b69a42; border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+  #login.inst .li-emblem svg { width: 60px; height: 60px; overflow: visible; }
+  #login.inst .li-kicker { position: relative; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #d8c27a; }
+  #login.inst .login-top h1 { position: relative; margin: 4px 0 0; font-family: "Inter", sans-serif; font-size: 19px; font-weight: 600; letter-spacing: 0; line-height: 1.3; color: #fff; text-shadow: none; }
+  #login.inst .login-body { position: relative; z-index: 2; margin: -30px 16px 0; background: #fff; border: 1px solid #d3dae3; border-radius: 4px; padding: 20px 20px 16px; }
+  #login.inst .li-banner { display: flex; align-items: center; gap: 10px; padding: 10px 12px; margin-bottom: 14px; background: #fbf7ea; border: 1px solid #e6d8a6; border-radius: 3px; font-size: 12.5px; color: #4f430f; }
+  #login.inst .li-banner svg { width: 18px; height: 18px; flex: none; color: #7a6528; }
+  #login.inst .li-banner b { color: #4f430f; }
+  #login.inst .login-welcome.inst { text-align: left; margin: 0 0 14px; }
+  #login.inst .login-welcome.inst b { display: block; font-family: "Inter", sans-serif; font-size: 22px; font-weight: 600; color: #142d4e; letter-spacing: -0.01em; }
+  #login.inst .login-welcome.inst span { display: block; margin-top: 3px; font-size: 13px; color: #55657a; }
+  #login.inst .mode-tg { border-radius: 3px; background: #fff; border: 1px solid #b9c4d2; padding: 0; margin-bottom: 16px; overflow: hidden; }
+  #login.inst .mode-tg .tg-ind { top: 0; bottom: 0; left: 0; width: 50%; border-radius: 0; background: #142d4e; box-shadow: none; }
+  #login.inst .mode-tg button { border-radius: 0; min-height: 44px; font-weight: 500; color: #55657a; }
+  #login.inst .mode-tg button.active { color: #fff; font-weight: 600; }
+  #login.inst .field label { font-size: 12.5px; font-weight: 600; color: #263746; text-transform: none; letter-spacing: 0; }
+  #login.inst .inp-ico input { background: #fff !important; border: 1px solid #b9c4d2 !important; border-radius: 3px !important; box-shadow: none !important; min-height: 44px; padding: 0 12px; font-size: 14px; color: #1b2733; }
+  #login.inst .inp-ico.pw input { padding-right: 70px; }
+  #login.inst .inp-ico input::placeholder { color: #8a97a8; }
+  #login.inst .inp-ico input:focus { outline: none; border-color: #1d3d64 !important; box-shadow: 0 0 0 2px rgba(29, 61, 100, 0.18) !important; }
+  #login.inst .pw-toggle { color: #1d3d64; font-weight: 600; background: transparent; border-radius: 3px; }
+  #login.inst .pw-toggle:hover { background: #f1f4f8; }
+  #login.inst #loginBtn { background: #142d4e !important; background-image: none !important; color: #fff; border: 0; border-radius: 3px !important; box-shadow: none !important; min-height: 46px; font-size: 15px; font-weight: 600; transform: none !important; }
+  #login.inst #loginBtn:hover { background: #1d3d64 !important; }
+  #login.inst #loginBtn::before, #login.inst #loginBtn::after { box-shadow: none; }
+  #login.inst .err { color: #b42318; }
+  #login.inst .login-hint { border-radius: 3px; background: #f5f7fa; border: 1px solid #e4e9ef; color: #55657a; }
+  #login.inst .login-footer { color: #55657a; border-top-color: #e4e9ef; }
+  #login.inst .login-footer .link-priv { color: #1d3d64; }
+  #login.inst .ord-intro h3 { color: #142d4e; font-family: "Inter", sans-serif; font-weight: 600; font-size: 20px; }
+  #login.inst .btn { border-radius: 3px; box-shadow: none; background-image: none; }
+  #login.inst .btn.gold { background: #b69a42; color: #1f1a08; }
+  #login.inst .btn.ghost { background: #fff; color: #142d4e; border: 1px solid #b9c4d2; }
+  #login.inst .ord-steps li b { background: #142d4e; border-radius: 2px; }
+  /* Avisos de mantenimiento debajo del formulario */
+  #login.inst .login-alert { width: calc(100% - 32px); max-width: 408px; box-sizing: border-box; margin: 0; background: #fff !important; color: #1b2733;
+    border: 1px solid #d3dae3 !important; border-left: 3px solid #b4690e !important; border-radius: 4px; box-shadow: none !important; backdrop-filter: none; animation: none; }
+  #login.inst .login-alert.t-mant-v { border-left-color: #b42318 !important; }
+  #login.inst .login-alert.t-fuel { border-left-color: #1d3d64 !important; }
+  #login.inst .login-alert.t-saludo { border-left-color: #25845a !important; }
+  #login.inst .login-alert b { color: #1b2733; }
+  #login.inst .login-alert span:not(.nf-dots):not(.nf-prog):not(.nf-foot) { color: #55657a; }
+  #login.inst .nf-bell { background: #f1f4f8; color: #b4690e; border-radius: 3px; }
+  #login.inst .login-alert.t-mant-v .nf-bell { color: #b42318; }
+  #login.inst .login-alert.t-fuel .nf-bell { color: #1d3d64; }
+  #login.inst .login-alert.t-saludo .nf-bell { color: #25845a; }
+  #login.inst .nf-bell svg { width: 18px; height: 18px; }
+  #login.inst .nf-bell.ring { animation: none; }
+  #login.inst .nf-badge { background: #b42318; box-shadow: 0 0 0 2px #fff; border-radius: 2px; }
+  #login.inst .nf-dots i { background: #c9d2dd; }
+  #login.inst .nf-dots i.on { background: #142d4e; }
+  #login.inst .nf-prog { background: #e4e9ef; }
+  #login.inst .nf-prog i { background: #142d4e; }
+  #login.inst .fuel { width: calc(100% - 32px); max-width: 408px; box-sizing: border-box; background: #142d4e; border: 1px solid #142d4e; border-radius: 4px; }
+  @media (min-width: 480px) {
+    #login.inst { padding-top: 32px; }
+    #login.inst .login-top { border-radius: 4px 4px 0 0; }
+  }
   /*  ===== GUIRNALDA DE LUCES =====  */
   .garland { position: absolute; top: -2px; left: 0; right: 0; height: 30px; z-index: 2; pointer-events: none; }
   .garland svg { display: block; width: 100%; height: 30px; overflow: visible; }
@@ -4017,18 +4084,47 @@
 <div id="bootFail" role="alert">La aplicación no pudo iniciar. Revise su conexión a internet y recargue la página. Si el problema continúa, avise al administrador del sistema.</div>
 
 <!-- LOGIN -->
-<div id="login" class="xmas">
+<div id="login" class="inst">
   <div class="login-bg" aria-hidden="true"></div>
-  <canvas id="snowFx" aria-hidden="true"></canvas>
-  <div class="login-alert hidden" id="loginAlert" role="status" aria-live="polite"></div>
   <div class="login-card">
     <div class="login-top">
-      <div class="garland" id="garland" aria-hidden="true"></div>
-      <svg class="login-pump" role="img" aria-label="Bomba de combustible" viewBox="0 0 120 120" width="96" height="96" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lpBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2BB4EC"/><stop offset="1" stop-color="#0077AD"/></linearGradient><linearGradient id="lpGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E6C65A"/><stop offset="1" stop-color="#A8871B"/></linearGradient><radialGradient id="lpHalo" cx=".5" cy=".45" r=".55"><stop offset="0" stop-color="#0093D0" stop-opacity=".45"/><stop offset="1" stop-color="#0093D0" stop-opacity="0"/></radialGradient></defs><circle cx="60" cy="60" r="58" fill="url(#lpHalo)"/><circle cx="60" cy="60" r="52" fill="rgba(255,255,255,.06)" stroke="#C9A227" stroke-opacity=".55" stroke-width="1.5"/><circle cx="60" cy="60" r="46" fill="none" stroke="#fff" stroke-opacity=".12" stroke-width="1" stroke-dasharray="2 4"/><rect x="30" y="88" width="50" height="7" rx="3" fill="#051634"/><rect x="34" y="24" width="42" height="66" rx="8" fill="url(#lpBody)"/><rect x="34" y="24" width="42" height="10" rx="8" fill="#fff" fill-opacity=".18"/><rect x="40" y="32" width="30" height="18" rx="3" fill="#0A2450"/><rect x="43" y="36" width="16" height="3" rx="1.5" fill="#5FD0FF"/><rect x="43" y="42" width="11" height="3" rx="1.5" fill="#5FD0FF" fill-opacity=".65"/><circle cx="64" cy="41" r="2.4" fill="#C9A227"/><path d="M55 57c0 0-7 8-7 12.5a7 7 0 0 0 14 0C62 65 55 57 55 57z" fill="url(#lpGold)"/><path d="M52 69a3 3 0 0 0 3 3" stroke="#fff" stroke-opacity=".7" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M76 40h5a4 4 0 0 1 4 4v30a5 5 0 0 0 10 0V48" fill="none" stroke="#E3EAF4" stroke-width="3.2" stroke-linecap="round"/><path d="M98 39h5a4 4 0 0 1 4 4v8" fill="none" stroke="#C9A227" stroke-width="3.2" stroke-linecap="round"/><path d="M91 36h8l-2 14h-6z" fill="url(#lpGold)"/><rect x="92.5" y="30" width="5" height="7" rx="1.5" fill="#0A2450"/><g class="lp-fuel"><path class="lp-stream" d="M107 53v9" stroke="#E6C65A" stroke-width="2.2" stroke-linecap="round"/><path class="lp-drop d1" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><path class="lp-drop d2" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><path class="lp-drop d3" d="M107 53c0 0-3 3.6-3 5.6a3 3 0 0 0 6 0C110 56.6 107 53 107 53z" fill="url(#lpGold)"/><ellipse class="lp-splash" cx="107" cy="97" rx="6" ry="1.6" fill="#E6C65A"/></g><g class="lp-hat"><g transform="translate(56 27) rotate(-12) scale(1.42) translate(-56 -27)"><defs><linearGradient id="lpHatR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF4D5A"/><stop offset=".6" stop-color="#D21F2E"/><stop offset="1" stop-color="#8E0F1A"/></linearGradient><radialGradient id="lpPom" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#D9E2EE"/></radialGradient></defs><path d="M37 27C38 15 47 5 61 4C73 3 83 9 90 19C84 16 78 16 74 19C75 21 75.5 24 75.5 27Z" fill="url(#lpHatR)"/><path d="M61 4C73 3 83 9 90 19C84 16 78 16 74 19C72 12 67 7 61 4Z" fill="#7A0C16" fill-opacity=".35"/><path d="M45 13C50 8 56 6.5 62 6.5" stroke="#fff" stroke-opacity=".4" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="32" y="22" width="49" height="10" rx="5" fill="#F7F9FC"/><rect x="32" y="28" width="49" height="4" rx="2" fill="#D5DEEA"/><g fill="#E4EAF3"><circle cx="38" cy="25" r="1.3"/><circle cx="46" cy="27" r="1.1"/><circle cx="55" cy="24.6" r="1.3"/><circle cx="64" cy="27" r="1.1"/><circle cx="73" cy="25" r="1.3"/></g><g class="lp-pom"><circle cx="91" cy="20" r="6.2" fill="url(#lpPom)"/></g></g></g></svg>
-      <h1>CONTROL DE  <br>ABASTECIMIENTO<br>URIP III</h1>
-      <p>Vehículos y motocicletas</p>
+      <div class="garland" id="garland" aria-hidden="true" hidden></div>
+      <svg class="li-orn" aria-hidden="true" viewBox="0 0 390 220" preserveAspectRatio="xMidYMin slice">
+        <g fill="none" stroke="#B69A42" stroke-width="1.2" stroke-opacity="0.45">
+          <path d="M40 0v58M34 58h12"/><circle cx="40" cy="70" r="12"/>
+          <path d="M92 0v28"/><circle cx="92" cy="38" r="9"/>
+          <path d="M306 0v40M300 40h12"/><circle cx="306" cy="52" r="11"/>
+          <path d="M352 0v76"/><circle cx="352" cy="86" r="9"/>
+        </g>
+        <g stroke="#B69A42" stroke-opacity="0.6" stroke-width="1.2" stroke-linecap="round">
+          <path d="M60 190v8M56 194h8M330 196v8M326 200h8"/>
+        </g>
+      </svg>
+      <div class="li-emblem">
+        <svg viewBox="0 0 120 120" role="img" aria-label="Bomba de combustible">
+          <rect x="28" y="98" width="54" height="8" rx="2" fill="#B69A42"/>
+          <rect x="34" y="32" width="42" height="68" rx="3" fill="none" stroke="#FFFFFF" stroke-width="5"/>
+          <rect x="43" y="42" width="24" height="14" rx="1" fill="#FFFFFF"/>
+          <path d="M76 46h7a6 6 0 0 1 6 6v28a5 5 0 0 0 10 0V50l-6-8" stroke="#FFFFFF" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <g transform="rotate(-12 56 30)">
+            <path d="M31 34C33 20 45 9 61 8C75 7 87 14 95 25C88 21 81 21 76 25C78 28 79 31 79 34Z" fill="#B42318"/>
+            <rect x="27" y="29" width="56" height="10" rx="2" fill="#FFFFFF"/>
+            <circle cx="97" cy="26" r="6.5" fill="#FFFFFF"/>
+          </g>
+        </svg>
+      </div>
+      <div class="li-kicker">DIPOL · URIP III LA PAZ</div>
+      <h1>Control de Abastecimiento</h1>
     </div>
     <div class="login-body">
+      <div class="li-banner" id="liBanner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l3 6 6 .9-4.5 4.3 1 6.3L12 16.5 6.5 19.5l1-6.3L3 8.9 9 8z"/></svg>
+        <span id="liBannerTxt">Faltan días para Navidad.</span>
+      </div>
+      <div class="login-welcome inst">
+        <b id="loginHello">Buenos días</b>
+        <span>Inicie sesión para continuar.</span>
+      </div>
       <div class="mode-tg" id="modeTg" role="tablist" data-m="login">
         <span class="tg-ind" aria-hidden="true"></span>
         <button data-mode="login" class="active" role="tab">Funcionarios URIP III</button>
@@ -4058,10 +4154,6 @@
       </div>
 
       <div id="loginPane">
-      <div class="login-welcome xmas">
-        <div class="xm-row"><svg class="xm-holly" viewBox="0 0 40 28" aria-hidden="true"><path d="M20 15C14 4 6 6 2 4c3 4 1 8 5 11-4 1-4 5-3 7 4-4 10-2 16-7z" fill="#1f7a4a"/><path d="M20 15C26 4 34 6 38 4c-3 4-1 8-5 11 4 1 4 5 3 7-4-4-10-2-16-7z" fill="#2a9a5e"/><circle cx="17" cy="17" r="3.3" fill="#d21f2e"/><circle cx="23" cy="17" r="3.3" fill="#e63946"/><circle cx="20" cy="21.5" r="3.3" fill="#b3121f"/></svg
-        <svg class="xm-holly r" viewBox="0 0 40 28" aria-hidden="true"><path d="M20 15C14 4 6 6 2 4c3 4 1 8 5 11-4 1-4 5-3 7 4-4 10-2 16-7z" fill="#1f7a4a"/><path d="M20 15C26 4 34 6 38 4c-3 4-1 8-5 11 4 1 4 5 3 7-4-4-10-2-16-7z" fill="#2a9a5e"/><circle cx="17" cy="17" r="3.3" fill="#d21f2e"/><circle cx="23" cy="17" r="3.3" fill="#e63946"/><circle cx="20" cy="21.5" r="3.3" fill="#b3121f"/></svg></div>
-      </div>
       <div class="field"><label for="u">Correo</label>
         <div class="inp-ico">
         <input id="u" maxlength="120" type="email" autocomplete="username" placeholder="usuario@ejemplo.com"></div></div>
@@ -4082,6 +4174,7 @@
       </div>
     </div>
   </div>
+  <div class="login-alert hidden" id="loginAlert" role="status" aria-live="polite"></div>
   <!-- PRECIOS DEL COMBUSTIBLE (se actualizan solos desde precios.json) -->
   <section class="fuel" id="fuelBox" aria-labelledby="fuelTitle">
     <div class="fuel-h">
@@ -6459,17 +6552,18 @@ let nfLista=[], nfIdx=0, nfTimer=null;
 const NF_MS=4500;
 function diasParaNavidad(){ const h=new Date(); h.setHours(0,0,0,0); let n=new Date(h.getFullYear(),11,25);
   if(h>n) n=new Date(h.getFullYear()+1,11,25); return Math.round((n-h)/864e5); }
+const NF_SVG=d=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+d+'</svg>';
+const NF_LLAVE=NF_SVG('<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/>');
+const NF_GAS=NF_SVG('<path d="M3 22h12M4 9h10"/><path d="M14 22V4a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v18"/><path d="M14 13h2a2 2 0 0 1 2 2v2a2 2 0 0 0 4 0V9.8a2 2 0 0 0-.6-1.4L18 5"/>');
+const NF_ESCUDO=NF_SVG('<path d="M20 13c0 5-3.5 7.5-7.7 9a1 1 0 0 1-.6 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.2-2.7a1.2 1.2 0 0 1 1.6 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>');
 function construirNotis(lista){
   const out=[];
   (lista||[]).slice(0,6).forEach(x=>{ const v=Number(x.faltan)<=0;
-    out.push({t:v?'t-mant-v':'t-mant', ico:'🔧', h:v?'Mantenimiento vencido':'Mantenimiento preventivo',
+    out.push({t:v?'t-mant-v':'t-mant', ico:NF_LLAVE, h:v?'Mantenimiento vencido':'Mantenimiento preventivo',
       m:escH(x.vehiculo)+': '+(v?'vencido por '+fmtKm(Math.abs(x.faltan))+' km':'faltan '+fmtKm(x.faltan)+' km')}); });
-  const d=diasParaNavidad();
-  out.push({t:'t-xmas', ico:'🎄', h:d===0?'¡Hoy es Navidad!':'Cuenta regresiva navideña',
-    m:d===0?'Feliz Navidad a todo el personal de la URIP III.':'Faltan <b style="display:inline;color:#ffd34d">'+d+'</b> '+(d===1?'día':'días')+' para Navidad.'});
   const f=($('#fuelSub')&&$('#fuelSub').textContent.trim())||'';
-  if(f) out.push({t:'t-fuel', ico:'⛽', h:'Precios del combustible', m:escH(f)});
-  out.push({t:'t-xmas', ico:'🎁', h:saludoHora()+'', m:'Conduzca con precaución en estas fiestas. ¡Felices fiestas!'});
+  if(f) out.push({t:'t-fuel', ico:NF_GAS, h:'Precios del combustible', m:escH(f)});
+  out.push({t:'t-saludo', ico:NF_ESCUDO, h:saludoHora(), m:'Conduzca con precaución y use siempre el cinturón de seguridad.'});
   return out;
 }
 function nfPintar(anim){
@@ -6569,16 +6663,19 @@ function saludoNavidadLogin(){
   const el=$('#loginHello'); if(!el) return;
   let n=primerNombre(($('#u')&&$('#u').value)||'');
   if(!n){ try{ n=localStorage.getItem('urip_ultimo_nombre')||''; }catch(_){} }
-  el.textContent='';
-  el.appendChild(document.createTextNode('¡Feliz Navidad'+(n?', ':'')));
-  if(n){ const s=document.createElement('span'); s.className='xn'; s.textContent=n; el.appendChild(s); }
-  el.appendChild(document.createTextNode('!'));
+  el.textContent=saludoHora()+(n?', '+n:'');
+  const bt=$('#liBannerTxt');
+  if(bt){ const d=diasParaNavidad(); bt.textContent='';
+    const b=document.createElement('b');
+    b.textContent=d===0?'Hoy es Navidad.':('Faltan '+d+(d===1?' día':' días')+' para Navidad.');
+    bt.appendChild(b); }
   const y=$('#xmYear'); if(y){ const h=new Date(); y.textContent=String(h.getMonth()===0&&h.getDate()<15?h.getFullYear():h.getFullYear()+1); }
 }
 saludoNavidadLogin();
 ['input','change'].forEach(ev=>$('#u').addEventListener(ev,saludoNavidadLogin));
 setTimeout(saludoNavidadLogin,600);
-
+setInterval(saludoNavidadLogin,60000);
+git pull
 /* =====================================================================
    DESPEDIDA Y TRANSICIÓN "DIPOL" AL INICIAR SESIÓN
    La transición se muestra una vez por sesión (no en cada recarga). Tocar la pantalla la omite.
